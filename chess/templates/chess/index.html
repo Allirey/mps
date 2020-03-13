@@ -1,0 +1,40 @@
+{% extends "chess/base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block body %}
+    <div class="p-3">
+    <form action="." method="post" class="form-inline">
+        {% csrf_token %}
+
+        {{ form }}
+
+        <input type="submit" class="btn btn-primary" value="search">
+    </form>
+        </div>
+    {% if games %}
+        <table class="table table-condensed table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th>#</th>
+                <th>date</th>
+                <th>white</th>
+                <th>black</th>
+                <th>result</th>
+                <th>event</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for game in games %}
+                <tr>
+                    <td>{{ forloop.counter }}   </td>
+                    <td>{{ game.date }}</td>
+                    <td>{{ game.white }}</td>
+                    <td>{{ game.black }}</td>
+                    <td>{{ game.result }}</td>
+                    <td>{{ game.event }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}
