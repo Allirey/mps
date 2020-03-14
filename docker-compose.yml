@@ -3,7 +3,7 @@ version: '3.7'
 services:
   backend:
     build: .
-    command: bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn mps.wsgi:application --bind 0.0.0.0:8000"
+    command: gunicorn mps.wsgi:application --bind 0.0.0.0:8000
   nginx:
     image: nginx:latest
     ports:
