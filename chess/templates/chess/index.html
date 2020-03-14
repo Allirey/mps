@@ -12,15 +12,16 @@
     </form>
         </div>
     {% if games %}
-        <table class="table table-condensed table-striped">
+        <table class="table table-condensed table-striped table-sm">
             <thead class="thead-dark">
             <tr>
                 <th>#</th>
                 <th>date</th>
                 <th>white</th>
                 <th>black</th>
-                <th>result</th>
-                <th>event</th>
+{#                <th>result</th>#}
+{#                <th>event</th>#}
+                <th>moves</th>
             </tr>
             </thead>
             <tbody>
@@ -30,8 +31,9 @@
                     <td>{{ game.date }}</td>
                     <td>{{ game.white }}</td>
                     <td>{{ game.black }}</td>
-                    <td>{{ game.result }}</td>
-                    <td>{{ game.event }}</td>
+{#                    <td>{{ game.result }}</td>#}
+{#                    <td>{{ game.event }}</td>#}
+                    <td>{{ game.moves }}</td>
                 </tr>
             {% endfor %}
             </tbody>

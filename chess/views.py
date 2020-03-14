@@ -19,23 +19,32 @@ class HomeView(View):
             white = cd.get('white')
             black = cd.get('black')
 
-            if black and not white and len(black) < 3 \
-                    or white and not black and len(white) < 3 \
-                    or white and black and len(black) + len(white) < 4:
-                return render(request, 'chess/index.html', {'games': [], 'form': SearchForm()})
+            if (black and not white and len(black) < 3) \
+                    or (white and not black and len(white) < 3) \
+                    or (white and black and len(black) + len(white) < 4) \
+                    or (not white and not black):
+                return render(request, 'chess/index.html', {'games': [], 'form': form})
 
             ignore_color = cd.get('ignore_color')
             if ignore_color:
                 games = ChessGame.objects.filter(Q(white__icontains=white)
                                                  & Q(black__icontains=black)
                                                  | Q(white__icontains=black)
-                                                 & Q(black__icontains=white)).order_by('-date')[:1000]
+                                                 & Q(black__icontains=white)) \
+                            .exclude(Q(black='Bye') | Q(white='Bye') | Q(black='Draw by default'))\
+                .order_by('-date')[:1000]
             elif white and black:
-                games = ChessGame.objects.filter(white__icontains=white, black__icontains=black).order_by('-date')[:1000]
+                games = ChessGame.objects.filter(white__icontains=white, black__icontains=black)\
+                            .exclude(Q(black='Bye') | Q(white='Bye') | Q(black='Draw by default')) \
+                            .order_by('-date')[:1000]
             elif white and not black:
-                games = ChessGame.objects.filter(white__icontains=white).order_by('-date')[:1000]
+                games = ChessGame.objects.filter(white__icontains=white) \
+                            .exclude(Q(black='Bye') | Q(white='Bye') | Q(black='Draw by default'))\
+                            .order_by('-date')[:1000]
             elif not white and black:
-                games = ChessGame.objects.filter(black__icontains=black).order_by('-date')[:1000]
+                games = ChessGame.objects.filter(black__icontains=black)\
+                            .exclude(Q(black='Bye') | Q(white='Bye') | Q(black='Draw by default'))\
+                            .order_by('-date')[:1000]
             else:
                 return redirect(reverse('home'))
             return render(request, 'chess/index.html', {'games': games, 'form': form})
