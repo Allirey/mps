@@ -22,11 +22,16 @@ INSTALLED_APPS = [
     'chess.apps.ChessConfig',
     'blog.apps.BlogConfig',
     'rest_framework',
+
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -64,7 +69,7 @@ DATABASES = {
         'PORT': env("POSTGRES_PORT")
     }
 }
-
+import django.contrib.auth.password_validation
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -80,6 +85,14 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_WHITELIST = [
+#     # "https://example.com",
+#     # "https://sub.example.com",
+#     "http://localhost:3000",
+#     "http://10.10.86.217:3000",
+#     "http://frontend",
+# ]
 
 LANGUAGE_CODE = 'en-us'
 

@@ -4,11 +4,16 @@ services:
   backend:
     build: .
     command: gunicorn mps.wsgi:application --bind 0.0.0.0:8000
-  nginx:
-    image: nginx:latest
+#  nginx:
+#    image: nginx:latest
+#    ports:
+#      - 80:80
+#    volumes:
+#    - ./nginx:/etc/nginx/conf.d
+#    depends_on:
+#      - backend
+  frontend:
+    build: ./frontend
     ports:
       - 80:80
-    volumes:
-    - ./nginx:/etc/nginx/conf.d
-    depends_on:
-      - backend
+
