@@ -3,8 +3,9 @@ import {
     FormControl, TextField, Grid, Button, Checkbox, FormControlLabel
 } from '@material-ui/core';
 import GamesTable from "./GamesTable";
+import {observer, inject} from 'mobx-react';
 
-export default class extends React.Component {
+class GamesSearchForm extends React.Component {
     state = {
         games: [],
         white: '',
@@ -14,37 +15,14 @@ export default class extends React.Component {
         open: false,
     };
 
-    handleClickOpen = () => {
-        this.setState({open: true});
-    };
-
-    handleClose = () => {
-        this.setState({open: false});
-    };
-
     handleForm = () => {
         if (this.state.is_query_new === false) {
             return
         }
 
+        // "http://10.10.86.217:8000/api/games/"
         // "/api/games/"
-        fetch("/api/games/",
-            {
-                method: "POST",
-                headers: {'Content-Type': "application/json"},
-                body: JSON.stringify({
-                    white: this.state.white,
-                    black: this.state.black,
-                    ignore: this.state.ignore ? '1' : ''
-                })
-            }).then(response => {
-            if (!response.ok) {
-                throw new Error('Something went wrong ...');
-            }
-            return response.json();
-        }).then(data => {
-            this.setState({games: data.games})
-        });
+        this.props.stores.chess.getGames({...this.state})
         this.setState({is_query_new: false})
     };
 
@@ -78,8 +56,10 @@ export default class extends React.Component {
                         </FormControl>
                     </Grid>
                 </Grid>
-                <GamesTable games={this.state.games}/>
+                <GamesTable games={this.props.stores.chess.games}/>
             </div>
         )
     }
 }
+
+export default inject('stores')(observer(GamesSearchForm));

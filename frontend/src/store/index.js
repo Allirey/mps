@@ -1,4 +1,4 @@
-import { configure } from 'mobx';
+// import { configure } from 'mobx';
 
 import chessStore from './ChessGames';
 
