@@ -1,5 +1,10 @@
 import {observable, computed, action, decorate} from 'mobx';
 
+const dev_api = 'http://localhost:8000'
+const base_api = '/api'
+const api_game = base_api+'/game/'
+const api_games = base_api+'/games/'
+
 class ChessGames {
     games = [];
     game = null;
@@ -26,7 +31,7 @@ class ChessGames {
             }
         }
 
-        fetch("/api/game/",
+        fetch(api_game,
             {
                 method: "POST",
                 headers: {'Content-Type': "application/json"},
@@ -57,7 +62,7 @@ class ChessGames {
             this.games = this.table_games_cache[filters.white + filters.black + filters.ignore]
         } else {
 
-            fetch("/api/games/",
+            fetch(api_games,
                 {
                     method: "POST",
                     headers: {'Content-Type': "application/json"},
@@ -74,7 +79,7 @@ class ChessGames {
             }).then(data => {
                 this.games = data.games
                 this.table_games_cache[filters.white + filters.black + filters.ignore] = data.games
-            })
+            }).catch(()=>(console.log('privet')))
         }
 
     }

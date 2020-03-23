@@ -3,7 +3,7 @@ import GamesSearchForm from "../components/chess/GamesSearchForm";
 import ChessGame from '../pages/chess/ChessGame'
 import ChessBoard from '../components/chess/LichessBoard'
 import P404 from "../errors/error404"
-import {Grid, CardHeader, CardContent} from "@material-ui/core";
+import {Grid} from "@material-ui/core";
 import {
     BrowserRouter as Router,
     Switch,
@@ -18,15 +18,12 @@ class App extends React.Component {
         return (
             <>
                 <Router>
-                    {/*<CardHeader title={''}>*/}
-                    {/*</CardHeader>*/}
                     <div>
                         <nav>
                             <Grid container
                                   direction="row"
                                   justify="center"
                                   alignItems="center"
-                            // style={{margin: 10}}
                             >
                                 <Link to="/">games</Link> | <Link to="/analysis">Analysis</Link>
                             </Grid>

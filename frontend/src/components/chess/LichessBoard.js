@@ -15,7 +15,7 @@ export default class extends React.Component {
 
     state = {
         index: 0,
-        // lastMove: null
+        lastMove: null
     };
 
     toNext = () => {
@@ -25,35 +25,37 @@ export default class extends React.Component {
             // console.log(this.moves)
             // console.log(this.props.game.moves)
             let index = this.state.index + 1;
-            // this.setState({index, lastMove: move?[move.from, move.to]:null})
-            this.setState({index})
+            this.setState({index, lastMove: move?[move.from, move.to]:null})
         }
 
     }
     toPrev = () => {
         if (this.state.index > 0) {
-            let move = this.chess.undo()
-
+            this.chess.undo()
+            let move = null
+            if (this.chess.history({verbose:true}).length > 0){
+                move = this.chess.history({verbose:true})[this.chess.history().length -1]
+            }
 
             let index = this.state.index - 1;
-            // this.setState({index, lastMove: move?[move.from, move.to]:null})
-            this.setState({index})
+            this.setState({index, lastMove: move?[move.from, move.to]:null})
         }
     }
 
     toFirst = () => {
         console.log(this.moves)
         this.chess.reset()
-        this.setState({index: 0})
+        this.setState({index: 0, lastMove:null})
     }
 
     toLast = () => {
+        let move = null
         let index = this.state.index
         while (index < this.moves.length - 2) {
-            this.chess.move(this.moves[index])
+            move = this.chess.move(this.moves[index])
             index++;
         }
-        this.setState({index: this.moves.length -2})
+        this.setState({index: this.moves.length -2, lastMove: move?[move.from, move.to]:null})
     }
 
     handleWheel = (e) => {
@@ -78,7 +80,7 @@ export default class extends React.Component {
                         ref={el => {
                             this.chessground = el
                         }}
-                        // lastMove={this.state.lastMove}
+                        lastMove={this.state.lastMove}
                     />
                 </div>
                 <br/>
