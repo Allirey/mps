@@ -13,19 +13,21 @@ export default class extends React.PureComponent {
     render() {
         return (
             <TableContainer>
-                <Table size="small">
+                <Table size={"small"} style={{ width: "80vw", padding: "0px"}}>
                     <TableHead>
                         <TableRow>
-                            <TableCell>date</TableCell>
-                            <TableCell>white</TableCell>
-                            <TableCell>black</TableCell>
-                            <TableCell>result</TableCell>
+                            {/*<TableCell style={{ width: "10px", padding: "10px"}}>date</TableCell>*/}
+                            <TableCell style={{ width: "7px", padding: "5px"}}>#</TableCell>
+                            <TableCell style={{ width: "100px", padding: "5px"}}>white</TableCell>
+                            <TableCell style={{ width: "100px", padding: "5px"}}>black</TableCell>
+                            <TableCell style={{ width: "100px", padding: "5px"}}>result</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {this.props.games.map(row => (
+                        {this.props.games.map((row, i) => (
                             <TableRow key={row.id}>
-                                <TableCell>{row.date.split('.')[0]}</TableCell>
+                                <TableCell>{i+1}</TableCell>
+                                {/*<TableCell>{row.date.split('.')[0]}</TableCell>*/}
                                 <TableCell>{row.white}</TableCell>
                                 <TableCell>{row.black}</TableCell>
                                 <TableCell><Link to={{pathname: "/games/"+row.url, state:{moves: row.moves}}}>{row.result}</Link></TableCell>

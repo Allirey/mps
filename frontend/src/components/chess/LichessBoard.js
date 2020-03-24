@@ -7,7 +7,12 @@ import "react-chessground/dist/styles/chessground.css"
 // import rook from "./images/wR.svg"
 // import bishop from "./images/wB.svg"
 // import knight from "./images/wN.svg"
-import {Button, Grid} from "@material-ui/core";
+import {Button, Grid, Paper} from "@material-ui/core";
+import SkipNextTwoToneIcon from '@material-ui/icons/SkipNextTwoTone';
+import SkipPreviousTwoToneIcon from '@material-ui/icons/SkipPreviousTwoTone';
+import FastForwardTwoToneIcon from '@material-ui/icons/FastForwardTwoTone';
+import FastRewindTwoToneIcon from '@material-ui/icons/FastRewindTwoTone';
+import SwapVertTwoToneIcon from '@material-ui/icons/SwapVertTwoTone';
 
 export default class extends React.Component {
     chess = new Chess();
@@ -25,7 +30,7 @@ export default class extends React.Component {
             // console.log(this.moves)
             // console.log(this.props.game.moves)
             let index = this.state.index + 1;
-            this.setState({index, lastMove: move?[move.from, move.to]:null})
+            this.setState({index, lastMove: move?[move.from, move.to]:[]})
         }
 
     }
@@ -38,24 +43,29 @@ export default class extends React.Component {
             }
 
             let index = this.state.index - 1;
-            this.setState({index, lastMove: move?[move.from, move.to]:null})
+            this.setState({index, lastMove: move?[move.from, move.to]:[]})
         }
     }
 
     toFirst = () => {
-        console.log(this.moves)
+        // console.log(this.moves)
         this.chess.reset()
-        this.setState({index: 0, lastMove:null})
+        this.setState({index: 0, lastMove:[]})
     }
 
     toLast = () => {
         let move = null
         let index = this.state.index
         while (index < this.moves.length - 2) {
-            move = this.chess.move(this.moves[index])
+            move = this.chess.move(this.moves[index], {sloppy:true})
             index++;
         }
-        this.setState({index: this.moves.length -2, lastMove: move?[move.from, move.to]:null})
+        // let move = null
+        //             if (this.chess.history({verbose:true}).length > 0){
+        //         move = this.chess.history({verbose:true})[this.chess.history().length -1]
+        //     }
+
+        this.setState({index: this.moves.length -2, lastMove: move?[move.from, move.to]:[]})
     }
 
     handleWheel = (e) => {
@@ -67,12 +77,13 @@ export default class extends React.Component {
     }
 
     render() {
+        console.log('render')
         return (
             <>
                 <div onWheel={this.handleWheel}>
                     <Chessground
-                        width="38vw"
-                        height="38vw"
+                        width={window.innerWidth < 700?"90vw":"35vw"}
+                        height={window.innerWidth < 700?"90vw":"35vw"}
                         viewOnly={this.props.viewOnly}
                         orientation={this.props.orientation}
                         fen={this.chess.fen()}
@@ -81,16 +92,20 @@ export default class extends React.Component {
                             this.chessground = el
                         }}
                         lastMove={this.state.lastMove}
+                        coordinates={false}
+                        // resizable={true}
+                        // disableContextMenu={true}
                     />
                 </div>
                 <br/>
                 <Grid container alignItems="center" direction={"row"} justify={"center"}>
-                    <Button variant={"outlined"} onClick={this.toFirst}>first</Button>
-                    <Button variant={"contained"} onClick={this.toPrev}>prev</Button>
-                    <Button variant={"contained"} onClick={this.toNext}>next</Button>
-                    <Button variant={"outlined"} onClick={this.toLast}>last</Button>
-                    <Button variant={"contained"} color={"primary"} onClick={this.props.onFlip}>flip</Button>
+                    <Button onClick={this.toFirst}><FastRewindTwoToneIcon/></Button>
+                    <Button variant={"contained"} onClick={this.toPrev}><SkipPreviousTwoToneIcon/></Button>
+                    <Button variant={"contained"} onClick={this.toNext}><SkipNextTwoToneIcon/></Button>
+                    <Button onClick={this.toLast}><FastForwardTwoToneIcon/></Button>
+                    <Button variant={"contained"} color={"primary"} onClick={this.props.onFlip}><SwapVertTwoToneIcon/></Button>
                 </Grid>
+                <br/>
             </>
         )
     }

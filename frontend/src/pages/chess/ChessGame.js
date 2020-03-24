@@ -1,7 +1,8 @@
 import React from 'react'
 import ChessBoard from "../../components/chess/LichessBoard"
 import {observer, inject} from 'mobx-react';
-import {Grid} from "@material-ui/core";
+import {Grid, Paper} from "@material-ui/core";
+import ChessNotation from '../../components/chess/GameNotation'
 
 class ChessGame extends React.Component {
     componentDidMount() {
@@ -19,7 +20,7 @@ class ChessGame extends React.Component {
         if (game !== null) {
             return (
                 <Grid container direction={"row"} justify="space-evenly">
-                    <Grid item >
+                    <Grid item>
                     </Grid>
                     <Grid item>
                         <ChessBoard
@@ -30,14 +31,14 @@ class ChessGame extends React.Component {
                         />
                     </Grid>
                     <Grid item>
-                        <p>{this.props.stores.chess.game.white} - {this.props.stores.chess.game.black} {this.props.stores.chess.game.result}</p>
-                    {/*<p>{this.props.stores.chess.game.moves.replace(/\n/g, ' ').replace(/\d+\. |{.+} |\$\d+ /g, '').split(' ')}</p>*/}
+                        <Paper style={{padding: 15, background: "rgb(240, 235, 235)"}}>
+                        <ChessNotation game={game}/>
+                        </Paper>
                     </Grid>
                 </Grid>
             )
         } else {
             return <h1>
-
             </h1>
         }
     }
