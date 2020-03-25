@@ -2,8 +2,8 @@ import {observable, computed, action, decorate} from 'mobx';
 
 const dev_api = 'http://localhost:8000'
 const base_api = '/api'
-const api_game = base_api+'/game/'
-const api_games = base_api+'/games/'
+const api_game = base_api + '/game/'
+const api_games = base_api + '/games/'
 
 class ChessGames {
     games = [];
@@ -20,8 +20,6 @@ class ChessGames {
     }
 
     getGameByUrl(url) {
-        // "/api/games/"
-
         for (let obj of Object.values(this.table_games_cache)) {
             for (let game of obj) {
                 if (game.url === url) {
@@ -79,9 +77,8 @@ class ChessGames {
             }).then(data => {
                 this.games = data.games
                 this.table_games_cache[filters.white + filters.black + filters.ignore] = data.games
-            }).catch(()=>(console.log('privet')))
+            }).catch(() => (console.log('privet')))
         }
-
     }
 
 }

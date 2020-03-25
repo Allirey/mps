@@ -7,25 +7,25 @@ import {observer, inject} from 'mobx-react';
 
 class GamesSearchForm extends React.Component {
     state = {
-        games: [],
         white: '',
         black: '',
         ignore: false,
         is_query_new: true,
-        open: false,
     };
 
     handleForm = () => {
         if (this.state.is_query_new === false) {
             return
         }
-
-        // "http://10.10.86.217:8000/api/games/"
-        // "/api/games/"
         this.props.stores.chess.getGames({...this.state})
         this.setState({is_query_new: false})
     };
 
+    onKeyPressed = (e) => {
+        if (e.keyCode === 13) {
+            this.handleForm()
+        }
+    }
 
     handleInput = (event) => {
         this.setState({[event.target.name]: event.target.value, is_query_new: true});
@@ -44,13 +44,17 @@ class GamesSearchForm extends React.Component {
                         <FormControl>
                             <Grid item>
                                 <TextField autoComplete={"off"} value={this.state.white} placeholder={"White"}
-                                           name={"white"} onChange={this.handleInput}/>
+                                           name={"white"} onChange={this.handleInput}
+                                           onKeyDown={this.onKeyPressed}
+                                />
                                 <TextField autoComplete={"off"} value={this.state.black} placeholder={"Black"}
-                                           name={"black"} onChange={this.handleInput}/>
+                                           name={"black"} onChange={this.handleInput}
+                                           onKeyDown={this.onKeyPressed}/>
                                 <FormControlLabel label="ignore colours" labelPlacement="start" control={
                                     <Checkbox color="primary" onChange={(e) => {
                                         this.handleCheckBox(e)
-                                    }}/>} name={"ignore"}/>
+                                    }}
+                                    onKeyDown={this.onKeyPressed}/>} name={"ignore"}/>
                             </Grid>
                             <Button variant="outlined" color="primary" onClick={this.handleForm}>Search</Button>
                         </FormControl>
