@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import P404 from "../errors/error404"
 import withStore from '../hocs/withStore'
-import AppHeader from "../components/AppHeader";
+import Header from '../components/header'
 import ChessGame from '../pages/chess/ChessGame'
 import HomePage from "../pages/HomePage";
 import GamesSearch from "../pages/chess/GamesSearch";
@@ -18,9 +18,10 @@ import OpeningExplorer from "../pages/chess/OpeningExplorer";
 
 class App extends React.Component {
     render() {
+
         return (
             <Router>
-                <AppHeader/>
+                <Header/>
                 <Container style={{ padding: 7}}>
                     <div>
                         <Switch>

@@ -8,13 +8,9 @@ export default class extends React.PureComponent {
     render() {
         const games = this.props.games;
 
-        console.log(games)
-
-
-
         if (games.length !== 0) {
             return (<TableContainer>
-                <Table size={"small"} style={{width: "80vw", padding: "0px"}}>
+                <Table size={"small"} style={{maxWidth: "80vw", padding: "0px"}}>
                     <TableHead>
                         <TableRow>
                             {/*<TableCell style={{ width: "10px", padding: "10px"}}>date</TableCell>*/}
@@ -25,7 +21,7 @@ export default class extends React.PureComponent {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {this.props.games.map((row, i) => (
+                        {games.map((row, i) => (
                             <TableRow key={row.id}>
                                 <TableCell>{i + 1}</TableCell>
                                 {/*<TableCell>{row.date.split('.')[0]}</TableCell>*/}
@@ -33,8 +29,7 @@ export default class extends React.PureComponent {
                                 <TableCell>{row.black}</TableCell>
                                 <TableCell><Link to={{
                                     pathname: "/chess/games/" + row.url,
-                                    state: {moves: row.moves}
-                                }}>{row.result}</Link></TableCell>
+                                }} style={{textDecoration: 'none', color: "blue"}}>{row.result}</Link></TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

@@ -43,18 +43,21 @@ class GamesSearchForm extends React.Component {
                     <Grid item>
                         <FormControl>
                             <Grid item>
-                                <TextField autoComplete={"off"} value={this.state.white} placeholder={"White"}
+                                <TextField autoComplete={"off"} value={this.state.white}
                                            name={"white"} onChange={this.handleInput}
                                            onKeyDown={this.onKeyPressed}
-                                />
-                                <TextField autoComplete={"off"} value={this.state.black} placeholder={"Black"}
+                                           style={{padding: 5}}
+                                           label={'White'}/>
+                                <TextField autoComplete={"off"} value={this.state.black}
                                            name={"black"} onChange={this.handleInput}
-                                           onKeyDown={this.onKeyPressed}/>
+                                           onKeyDown={this.onKeyPressed}
+                                           style={{padding: 5}}
+                                label={'Black'}/>
                                 <FormControlLabel label="ignore colours" labelPlacement="start" control={
                                     <Checkbox color="primary" onChange={(e) => {
                                         this.handleCheckBox(e)
                                     }}
-                                    onKeyDown={this.onKeyPressed}/>} name={"ignore"}/>
+                                              onKeyDown={this.onKeyPressed}/>} name={"ignore"}/>
                             </Grid>
                             <Button variant="outlined" color="primary" onClick={this.handleForm}>Search</Button>
                         </FormControl>

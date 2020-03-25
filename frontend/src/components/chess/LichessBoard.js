@@ -82,8 +82,8 @@ export default class extends React.Component {
             <>
                 <div onWheel={this.handleWheel}>
                     <Chessground
-                        width={window.innerWidth < 700?"90vw":"35vw"}
-                        height={window.innerWidth < 700?"90vw":"35vw"}
+                        width={window.innerWidth < 880?"90vw":"35vw"}
+                        height={window.innerWidth < 880?"90vw":"35vw"}
                         viewOnly={this.props.viewOnly}
                         orientation={this.props.orientation}
                         fen={this.chess.fen()}

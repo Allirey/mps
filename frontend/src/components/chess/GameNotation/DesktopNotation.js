@@ -7,7 +7,7 @@ export default class extends PureComponent {
         return (
             <div>
                 <p>{this.props.game.white} - {this.props.game.black} {this.props.game.result}</p>
-                <div style={{overflow: "auto", height: window.innerWidth < 700?"80vw":"30vw"}}>
+                <div style={{overflow: "auto", height: "30vw"}}>
                     <Table size={"small"}>
                         <TableBody>
                             {this.props.game.moves.replace(/\n/g, ' ').replace(/\d+\. |{.+} |\$\d+ /g, '').split(' ').map((row, i) => (
@@ -22,7 +22,6 @@ export default class extends PureComponent {
                                     <TableCell style={{height: "10px", padding: "0px"}}>
                                         {row}
                                     </TableCell>
-
                                 </TableRow>
                             ))}
                         </TableBody>
