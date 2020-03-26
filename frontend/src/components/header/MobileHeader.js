@@ -2,12 +2,13 @@ import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import {
     SwipeableDrawer, List, Divider, ListItem, ListItemIcon, ListItemText,
-    IconButton, AppBar, Toolbar, Typography
+    IconButton, AppBar, Toolbar, Typography, Button
 } from "@material-ui/core";
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import {Link} from "react-router-dom";
+import {Search, Home, AccountTree} from '@material-ui/icons';
 
 const useStyles = makeStyles({
     list: {
@@ -39,10 +40,27 @@ export default function SwipeableTemporaryDrawer() {
             onKeyDown={toggleDrawer('left', false)}
         >
             <List>
-                <ListItem button component={Link} to={"/"}><ListItemText primary={"Home"}/></ListItem>
-                <ListItem button component={Link} to={"/chess/games"}><ListItemText primary={"Games search"}/></ListItem>
-                <ListItem button component={Link} to={"/chess/explorer"}><ListItemText primary="Opening explorer"/></ListItem>
-                <ListItem button component={Link} to={"/about"}><ListItemText primary={"About"}/></ListItem>
+                <ListItem button component={Link} to={"/"}>
+                    <ListItemIcon>
+                        <Home/>
+                    </ListItemIcon>
+                    <ListItemText primary={"Home"}/>
+                </ListItem>
+                <ListItem button component={Link} to={"/chess/games"}>
+                    <ListItemIcon>
+                        <Search/>
+                    </ListItemIcon>
+                    <ListItemText primary={"Games search"}/>
+                </ListItem>
+                <ListItem button component={Link} to={"/chess/explorer"}>
+                    <ListItemIcon>
+                        <AccountTree/>
+                    </ListItemIcon>
+                    <ListItemText primary="Opening explorer"/>
+                </ListItem>
+                <ListItem button component={Link} to={"/about"}>
+                    <ListItemText primary={"About"}/>
+                </ListItem>
             </List>
             <Divider/>
         </div>
@@ -51,28 +69,31 @@ export default function SwipeableTemporaryDrawer() {
     return (
 
         <div style={{flexGrow: 1}}>
-            <AppBar position="static" style={{background: "#4c2882", flexGrow: 1, marginBottom: 7}}>
+            <AppBar position="static" style={{background: "#4c2882", flexGrow: 1, marginBottom: 5}}>
                 <Toolbar>
                     <IconButton
                         onClick={toggleDrawer('left', true)}
                         aria-label="menu"
                         style={{marginRight: 10, color: "white"}}
                     ><MenuIcon/></IconButton>
-                    <SwipeableDrawer
-                        anchor={'left'}
-                        open={state['left']}
-                        onClose={toggleDrawer('left', false)}
-                        onOpen={toggleDrawer('left', true)}
-                        disableBackdropTransition={!iOS}
-                        disableDiscovery={iOS}
-                    >
-                        {list}
-                    </SwipeableDrawer>
+
                     <Typography variant="h6" style={{flexGrow: 1}}>
                         MPS
                     </Typography>
+                    <Button color="inherit" component={Link} to={"/login"}>Login</Button>
                 </Toolbar>
             </AppBar>
+
+            <SwipeableDrawer
+                anchor={'left'}
+                open={state['left']}
+                onClose={toggleDrawer('left', false)}
+                onOpen={toggleDrawer('left', true)}
+                disableBackdropTransition={!iOS}
+                disableDiscovery={iOS}
+            >
+                {list}
+            </SwipeableDrawer>
         </div>
     );
 }

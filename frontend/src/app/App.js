@@ -8,6 +8,8 @@ import {
 } from "react-router-dom";
 import P404 from "../errors/error404"
 import withStore from '../hocs/withStore'
+import Login from "../pages/Login";
+import SignUp from "../pages/SignUp";
 import Header from '../components/header'
 import ChessGame from '../pages/chess/ChessGame'
 import HomePage from "../pages/HomePage";
@@ -26,6 +28,8 @@ class App extends React.Component {
                     <div>
                         <Switch>
                             <Route path="/" exact={true} component={HomePage}/>
+                            <Route path="/login" exact={true} component={Login}/>
+                            <Route path="/signup" exact={true} component={SignUp}/>
                             <Route path="/chess/games" exact={true} component={GamesSearch}/>
                             <Route path="/chess/games/:url" component={ChessGame}/>
                             <Route path="/chess/explorer" component={OpeningExplorer}/>

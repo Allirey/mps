@@ -3,6 +3,7 @@ import Chess from "chess.js"
 import Chessground from "react-chessground"
 import "react-chessground/dist/assets/chessground.css"
 import "react-chessground/dist/styles/chessground.css"
+import "react-chessground/dist/assets/theme.css"
 // import queen from "./images/wQ.svg"
 // import rook from "./images/wR.svg"
 // import bishop from "./images/wB.svg"
@@ -13,6 +14,7 @@ import SkipPreviousTwoToneIcon from '@material-ui/icons/SkipPreviousTwoTone';
 import FastForwardTwoToneIcon from '@material-ui/icons/FastForwardTwoTone';
 import FastRewindTwoToneIcon from '@material-ui/icons/FastRewindTwoTone';
 import SwapVertTwoToneIcon from '@material-ui/icons/SwapVertTwoTone';
+
 
 export default class extends React.Component {
     chess = new Chess();
@@ -75,24 +77,25 @@ export default class extends React.Component {
             this.toNext()
         }
     }
-
+'8px + 9 * ((100vw - 320px) / 880)'
     render() {
-        console.log('render')
         return (
             <>
                 <div onWheel={this.handleWheel}>
                     <Chessground
-                        width={window.innerWidth < 880?"90vw":"35vw"}
-                        height={window.innerWidth < 880?"90vw":"35vw"}
+                        width={window.innerWidth < 880? "90vw":"8px + 9 * ((100vw - 320px) / 880)"}
+                        height={window.innerWidth < 880?"90vw":"8px + 9 * ((100vw - 320px) / 880)"}
+                        coordinates={false}
                         viewOnly={this.props.viewOnly}
                         orientation={this.props.orientation}
                         fen={this.chess.fen()}
-                        style={{margin: "auto"}}
+                        // style={{margin: "auto"}}
+
+                        lastMove={this.state.lastMove}
+
                         ref={el => {
                             this.chessground = el
                         }}
-                        lastMove={this.state.lastMove}
-                        coordinates={false}
                         // resizable={true}
                         // disableContextMenu={true}
                     />
