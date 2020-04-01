@@ -77,7 +77,6 @@ export default class extends React.Component {
             this.toNext()
         }
     }
-'8px + 9 * ((100vw - 320px) / 880)'
     render() {
         return (
             <>
@@ -89,7 +88,7 @@ export default class extends React.Component {
                         viewOnly={this.props.viewOnly}
                         orientation={this.props.orientation}
                         fen={this.chess.fen()}
-                        // style={{margin: "auto"}}
+                        style={{margin: "auto"}}
 
                         lastMove={this.state.lastMove}
 
@@ -103,8 +102,8 @@ export default class extends React.Component {
                 <br/>
                 <Grid container alignItems="center" direction={"row"} justify={"center"}>
                     <Button onClick={this.toFirst}><FastRewindTwoToneIcon/></Button>
-                    <Button variant={"contained"} onClick={this.toPrev}><SkipPreviousTwoToneIcon/></Button>
-                    <Button variant={"contained"} onClick={this.toNext}><SkipNextTwoToneIcon/></Button>
+                    <Button variant={"contained"} style={{backgroundColor: "#00CED1"}} onClick={this.toPrev}><SkipPreviousTwoToneIcon/></Button>
+                    <Button variant={"contained"} style={{backgroundColor: "#00CED1"}} onClick={this.toNext}><SkipNextTwoToneIcon/></Button>
                     <Button onClick={this.toLast}><FastForwardTwoToneIcon/></Button>
                     <Button variant={"contained"} color={"primary"} onClick={this.props.onFlip}><SwapVertTwoToneIcon/></Button>
                 </Grid>

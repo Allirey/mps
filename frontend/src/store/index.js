@@ -1,8 +1,4 @@
-// import { configure } from 'mobx';
-
-import chessStore from './ChessGames';
-
-// configure({ enforceActions: "observed" })
+import chessStore from './chessStore';
 
 class RootStore{
     constructor(){

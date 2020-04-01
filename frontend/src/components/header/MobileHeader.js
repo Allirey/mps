@@ -69,7 +69,7 @@ export default function SwipeableTemporaryDrawer() {
     return (
 
         <div style={{flexGrow: 1}}>
-            <AppBar position="static" style={{background: "#4c2882", flexGrow: 1, marginBottom: 5}}>
+            <AppBar position="static" style={{background: "#008B8B", flexGrow: 1, marginBottom: 5, borderRadius:10}}>
                 <Toolbar>
                     <IconButton
                         onClick={toggleDrawer('left', true)}
@@ -77,10 +77,9 @@ export default function SwipeableTemporaryDrawer() {
                         style={{marginRight: 10, color: "white"}}
                     ><MenuIcon/></IconButton>
 
-                    <Typography variant="h6" style={{flexGrow: 1}}>
-                        MPS
-                    </Typography>
-                    <Button color="inherit" component={Link} to={"/login"}>Login</Button>
+                    {/*<Typography variant="h6" style={{flexGrow: 1}}>*/}
+                    {/*    Title*/}
+                    {/*</Typography>*/}
                 </Toolbar>
             </AppBar>
 

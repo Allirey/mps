@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from .serializers import ChessGameSerializer
 from rest_framework import status
 
+
 class ChessGamesView(APIView):
     def post(self, request):
         white = request.data.get('white', '')
@@ -17,6 +18,13 @@ class ChessGamesView(APIView):
 
         serializer = ChessGameSerializer(games, many=True)
         return Response({"games": serializer.data})
+
+
+class ChessPlayersView(APIView):
+    def get(self, request):
+        players = ChessGame.objects.values('black').distinct()[:500]
+
+        return Response({"players": players})
 
 
 class ChessGameView(APIView):

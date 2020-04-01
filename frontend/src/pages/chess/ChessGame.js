@@ -31,7 +31,7 @@ class ChessGame extends React.Component {
                         />
                     </Grid>
                     <Grid item>
-                        <Paper style={{padding: 15, background: "rgb(240, 235, 235)"}}>
+                        <Paper style={{padding: 15, background: "rgb(255, 245, 245)"}}>
                         <ChessNotation game={game}/>
                         </Paper>
                     </Grid>

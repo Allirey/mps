@@ -87,10 +87,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ORIGIN_WHITELIST = [
-#     # "https://example.com",
-#     # "https://sub.example.com",
 #     "http://localhost:3000",
-#     "http://10.10.86.217:3000",
 #     "http://frontend",
 # ]
 

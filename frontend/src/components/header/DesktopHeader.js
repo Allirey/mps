@@ -6,7 +6,7 @@ export default class extends React.Component {
     render() {
         return (
             <>
-                <AppBar position="static" style={{background: "#4c2882", flexGrow: 1, marginBottom: 5}}>
+                <AppBar position="static" style={{background: "#008B8B", flexGrow: 1, marginBottom: 5}}>
                     <Toolbar>
 
                         <Button color={"primary"} style={{maxWidth: "100px", backgroundColor: "#783782"}}>
@@ -22,8 +22,6 @@ export default class extends React.Component {
                         <Button style={{maxWidth: "200px"}}>
                             <Link to="/about" style={{textDecoration: 'none', color: "white"}}>About</Link>
                         </Button>
-
-                        <Button variant={"outlined"} style={{marginLeft:"auto", color: "lightgrey"}} color="inherit" component={Link} to={"/login"}>Login</Button>
 
                     </Toolbar>
                 </AppBar>
