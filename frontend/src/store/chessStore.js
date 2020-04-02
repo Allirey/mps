@@ -181,7 +181,7 @@ decorate(ChessStore, {
         setIgnore: action,
         resetSearchValues: action,
         treeData: computed,
-        tree: computed,
+        movesTree: computed,
     }
 );
 
