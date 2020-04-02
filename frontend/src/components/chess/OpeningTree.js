@@ -33,7 +33,7 @@ export default function OpeningTree(props) {
             defaultExpanded={['root']}
             defaultExpandIcon={<ChevronRightIcon/>}
         >
-            {renderTree(props.tree)}
+            {props.tree ? renderTree(props.tree) : null}
         </TreeView>
     );
 }

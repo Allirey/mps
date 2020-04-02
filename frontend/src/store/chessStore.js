@@ -94,7 +94,7 @@ class ChessStore {
     }
 
     get treeData() {
-        return this.games.map((game, i) => {
+        return this.games.length === 0? null: this.games.map((game, i) => {
             let moves = game.moves.replace(/\n/g, ' ').replace(/\d+\. |{.+} |\$\d+ /g, '').split(' ').slice(0, 20)
                 .filter(value => !['1-0', '0-1', '1/2-1/2'].includes(value));
             return {
@@ -107,6 +107,8 @@ class ChessStore {
     }
 
     get movesTree() {
+        if (!this.treeData) return null;
+
         let id = 1;
         let tree = {
             id: 'root',
