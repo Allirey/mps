@@ -20,12 +20,7 @@ class ChessStore {
         black: '',
         ignore: false,
     };
-
-    lastSearchQuery = {
-        white: '',
-        black: '',
-        ignore: false,
-    };
+    lastSearchQuery = {...this.searchValues};
 
     setWhite(white) {
         this.searchValues.white = white;
@@ -97,6 +92,75 @@ class ChessStore {
                 }).catch(() => (console.log('privet')))
         }
     }
+
+    get treeData() {
+        return this.games.map((game, i) => {
+            let moves = game.moves.replace(/\n/g, ' ').replace(/\d+\. |{.+} |\$\d+ /g, '').split(' ').slice(0, 20)
+                .filter(value => !['1-0', '0-1', '1/2-1/2'].includes(value));
+            return {
+                id: game.id,
+                result: game.result,
+                moves: moves.join(' '),
+                date: parseInt(game.date.split('.')[0])
+            }
+        }).filter(value => value.moves !== '');
+    }
+
+    get movesTree() {
+        let id = 1;
+        let tree = {
+            id: 'root',
+            name: 'root',
+            games: 0,
+            result: 0,
+            date: 0,
+            children: []
+        };
+
+        let resultsMap = {
+            '1-0': 1,
+            '0-1': 0,
+            '1/2-1/2': 0.5
+        };
+
+        this.treeData.forEach(game => {
+            let currNode = tree;
+
+            currNode.games++;
+            currNode.result += resultsMap[game.result];
+            currNode.date = Math.max(currNode.date, game.date);
+
+            let moves = game.moves.split(' ');
+
+            moves.forEach(move => {
+                if (move === '') return;
+                if (!currNode.children.map(val => (val.name)).includes(move)) {
+                    currNode.children.push({
+                        id: id.toString(),
+                        name: move,
+                        games: 0,
+                        result: 0,
+                        date: 0,
+                        children: []
+                    });
+                    id++;
+                }
+                currNode = currNode.children.filter(value => value.name === move)[0];
+
+                currNode.games++;
+                currNode.result += resultsMap[game.result];
+                currNode.date = Math.max(currNode.date, game.date);
+            });
+        });
+
+        let sortTree = (tree) => {
+            tree.children.sort((a, b) => a.games < b.games ? 1 : -1);
+            tree.children.forEach(child => sortTree(child));
+        };
+        sortTree(tree);
+
+        return tree
+    }
 }
 
 decorate(ChessStore, {
@@ -114,6 +178,8 @@ decorate(ChessStore, {
         setBlack: action,
         setIgnore: action,
         resetSearchValues: action,
+        treeData: computed,
+        tree: computed,
     }
 );
 

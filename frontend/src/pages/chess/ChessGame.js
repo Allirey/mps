@@ -14,8 +14,7 @@ class ChessGame extends React.Component {
     }
 
     render() {
-        // console.log(this.props.stores.chess.game)
-        let game = this.props.stores.chess.game
+        let game = this.props.stores.chess.game;
 
         if (game !== null) {
             return (

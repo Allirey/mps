@@ -8,6 +8,7 @@ export default function (props) {
         <FormControl>
             <Grid item>
                 <TextField
+                    autoFocus={true}
                     autoComplete={"off"}
                     value={props.white}
                     onChange={props.handleWhiteChange}

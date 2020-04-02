@@ -17,7 +17,7 @@ class GamesSearch extends React.Component {
                             onKeyPressed={(e) => e.keyCode === 13 ? chess.searchGames() : []}
                             handleWhiteChange={e => this.props.stores.chess.setWhite(e.target.value)}
                             handleBlackChange={e => chess.setBlack(e.target.value)}
-                            handleIgnoreChange={e => chess.setIgnore(!chess.searchValues.ignore)}
+                            handleIgnoreChange={e => chess.setIgnore(e.target.checked)}
                             handleSubmitForm={() => chess.searchGames()}
                         />
                     </Grid>
