@@ -2,10 +2,8 @@ import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import {
     SwipeableDrawer, List, Divider, ListItem, ListItemIcon, ListItemText,
-    IconButton, AppBar, Toolbar, Typography, Button
+    IconButton, AppBar, Toolbar
 } from "@material-ui/core";
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import {Link} from "react-router-dom";
 import {Search, Home, AccountTree} from '@material-ui/icons';
@@ -67,10 +65,9 @@ export default function SwipeableTemporaryDrawer() {
     );
 
     return (
-
-        <div style={{flexGrow: 1}}>
-            <AppBar position="static" style={{background: "#008B8B", flexGrow: 1, marginBottom: 5, borderRadius:10}}>
-                <Toolbar>
+        <div>
+            <AppBar position="static" style={{background: "#6B5B95", flexGrow: 1}}>
+                <Toolbar variant={"dense"}>
                     <IconButton
                         onClick={toggleDrawer('left', true)}
                         aria-label="menu"

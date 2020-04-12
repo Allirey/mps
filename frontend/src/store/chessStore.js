@@ -1,7 +1,7 @@
 import {observable, computed, action, decorate} from 'mobx';
 
-const dev_api = 'http://localhost:8000';
-const base_api = '/api';
+const dev_api = 'http://10.10.86.217:8000';
+const base_api = dev_api + '/api';
 const api_game = base_api + '/game/';
 const api_games = base_api + '/games/';
 
@@ -94,7 +94,7 @@ class ChessStore {
     }
 
     get treeData() {
-        return this.games.length === 0? null: this.games.map((game, i) => {
+        return this.games.length === 0 ? null : this.games.map((game, i) => {
             let moves = game.moves.replace(/\n/g, ' ').replace(/\d+\. |{.+} |\$\d+ /g, '').split(' ').slice(0, 20)
                 .filter(value => !['1-0', '0-1', '1/2-1/2'].includes(value));
             return {

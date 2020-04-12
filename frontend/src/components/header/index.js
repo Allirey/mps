@@ -1,13 +1,18 @@
 import React from 'react'
 import MobileHeader from "./MobileHeader";
 import DesktopHeader from "./DesktopHeader";
+import {Box} from "@material-ui/core";
 
-export default function () {
+export default function (props) {
 
-    if (window.innerWidth > 880){
-        return <DesktopHeader/>
-    }
-    else{
-        return <MobileHeader/>
-    }
+    return (
+        <>
+            <Box display={{xs: "none", md: "block"}}>
+                <DesktopHeader/>
+            </Box>
+            <Box display={{xs: "block", md: "none"}}>
+                <MobileHeader/>
+            </Box>
+        </>
+    )
 }

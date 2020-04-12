@@ -4,6 +4,7 @@ import {
 } from '@material-ui/core';
 
 export default function (props) {
+    //todo ctrl+x ignores value change on input field
     return (
         <FormControl>
             <Grid item>

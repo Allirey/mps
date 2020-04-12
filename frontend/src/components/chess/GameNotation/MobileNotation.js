@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react'
-import {Paper, Typography} from "@material-ui/core";
+import {Typography} from "@material-ui/core";
 
 export default class extends PureComponent {
 

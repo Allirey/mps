@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react'
-import {Table, TableBody, TableCell, TableRow, TableHead} from "@material-ui/core";
+import {Table, TableBody, TableCell, TableRow} from "@material-ui/core";
 
 export default class extends PureComponent {
     render() {
