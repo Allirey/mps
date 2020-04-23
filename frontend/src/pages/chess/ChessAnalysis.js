@@ -1,5 +1,4 @@
 import React from "react";
-import {inject, observer} from "mobx-react";
 import ChessBoard from "../../components/chess/analysis/ChessBoard";
 import GamesTable from "../../components/chess/analysis/GamesTable";
 import GamesSearch from "../../components/chess/analysis/GamesSearch";
@@ -10,6 +9,7 @@ import NavButtons from "../../components/chess/analysis/NavButtons";
 import {Grid, Box, makeStyles} from "@material-ui/core";
 
 import TabPanel from "../../components/chess/analysis/mobile/TabPanel";
+import withStore from "../../hocs/withStore";
 
 class ChessAnalysis extends React.Component {
     componentDidMount() {
@@ -130,4 +130,4 @@ class ChessAnalysis extends React.Component {
     }
 }
 
-export default inject('stores')(observer(ChessAnalysis))
+export default withStore(ChessAnalysis)

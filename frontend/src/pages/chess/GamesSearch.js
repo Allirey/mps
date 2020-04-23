@@ -1,8 +1,8 @@
 import React from "react";
 import GamesSearchForm from "../../components/chess/GamesSearchForm";
-import {inject, observer} from "mobx-react";
 import {Grid} from "@material-ui/core";
 import GamesTable from "../../components/chess/GamesTable";
+import withStore from "../../hocs/withStore";
 
 class GamesSearch extends React.Component {
     render() {
@@ -28,4 +28,4 @@ class GamesSearch extends React.Component {
     }
 }
 
-export default inject('stores')(observer(GamesSearch));
+export default withStore(GamesSearch);

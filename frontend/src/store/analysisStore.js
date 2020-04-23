@@ -18,7 +18,7 @@ class AnalysisStore {
     games = [];
 
     table_games_cache = {};
-    bookData = null;
+    bookData = [];
 
     chessGame = new Chess();
 
@@ -72,7 +72,8 @@ class AnalysisStore {
             })
                 .then(data => {
                     this.games = data.games;
-                    this.table_games_cache[JSON.stringify(this.searchData)] = data.games
+                    this.table_games_cache[JSON.stringify(this.searchData)] = data.games;
+                    this.bookData = this.movesTree()
                 }).catch(() => (console.log('privet')))
         }
 
@@ -80,11 +81,9 @@ class AnalysisStore {
         this.rootStore.chessNotation.resetNode();
     };
 
-    get processGames() {
-        let sliceSize = this.games.length < 100? 24: (this.games.length < 200? 20: 16);
-
-        return this.games.length === 0 ? null : this.games.map((game, i) => {
-            let moves = game.moves.replace(/\n/g, ' ').replace(/\d+\. |{.+} |\$\d+ /g, '').split(' ').slice(0, sliceSize)
+    movesTree = () => {
+        const processGames = this.games.length === 0 ? null : this.games.map((game, i) => {
+            let moves = game.moves.replace(/\n/g, ' ').replace(/\d+\. |{.+} |\$\d+ /g, '').split(' ').slice(0, this.games.length < 100 ? 24 : (this.games.length < 200 ? 20 : 16))
                 .filter(value => !['1-0', '0-1', '1/2-1/2'].includes(value));
             return {
                 id: game.id,
@@ -94,10 +93,10 @@ class AnalysisStore {
                 url: game.url
             }
         }).filter(value => value.moves !== '');
-    }
 
-    get movesTree() {
-        if (!this.processGames) return null;
+        console.log('hi')
+        console.log(processGames)
+        if (!processGames) return null;
 
         let chessManager = new Chess();
 
@@ -113,7 +112,7 @@ class AnalysisStore {
             '1/2-1/2': 0.5
         };
 
-        this.processGames.forEach((game, i) => {
+        processGames.forEach((game, i) => {
             let currentFen = chessManager.fen();
             // let root = moveExplorer[0];
 
@@ -134,7 +133,6 @@ class AnalysisStore {
                     })
                 } else {
                     let node = moveExplorer.find(node => node.fen === currentFen);
-
                     let nodeChild = node.children.find(child => child.san === move);
 
                     if (!!nodeChild) {
@@ -161,15 +159,15 @@ class AnalysisStore {
         console.log(JSON.stringify(moveExplorer).length);
 
         return moveExplorer
-    }
+    };
 
     get analysisMovesTree() {
         // {move: 'e4', gamesCount: 32, score: '20%', lastPlayed: 2019},
 
-        if (this.movesTree === null || typeof this.rootStore.chessNotation.node === "undefined") return [];
+        if (this.bookData === null || typeof this.rootStore.chessNotation.node === "undefined") return [];
 
-        let tree = this.movesTree.find(node => node.fen === this.rootStore.chessNotation.node.fen);
-        return !!tree? tree.children.map(child => {
+        let tree = this.bookData.find(node => node.fen === this.rootStore.chessNotation.node.fen);
+        return !!tree ? tree.children.map(child => {
             return {
                 move: child.san,
                 lastPlayed: child.date,
@@ -179,12 +177,10 @@ class AnalysisStore {
         }) : [];
     }
 
-     get gamesByCurrentFen(){
-        if (this.movesTree === null || typeof this.rootStore.chessNotation.node === "undefined") return [];
-
-        let node = this.movesTree.find(node => node.fen === this.rootStore.chessNotation.node.fen);
-
-        return !node? []: this.games.filter(game => node.gameUrls.includes(game.url));
+    get gamesByCurrentFen() {
+        if (this.bookData === null || typeof this.rootStore.chessNotation.node === "undefined") return [];
+        let node = this.bookData.find(node => node.fen === this.rootStore.chessNotation.node.fen);
+        return !node ? [] : this.games.filter(game => node.gameUrls.includes(game.url));
     }
 
     toNext = () => {
@@ -249,18 +245,18 @@ class AnalysisStore {
         this.lastMove = m ? [m.from, m.to] : [null, null];
     };
 
-    gameByUrl=(url)=>{
-        return this.games.find(game => game.url = url)
+    gameByUrl = (url) => {
+        return this.games.find(game => game.url === url);
     }
 }
 
 decorate(AnalysisStore, {
         games: observable,
         bookData: observable,
-       // game: observable,
-       // table_games_cache: observable,
+        // game: observable,
+        // table_games_cache: observable,
         searchData: observable,
-       // chessGame: observable,
+        // chessGame: observable,
 
         getByUrl: action,
         resetStoredGame: action,
@@ -269,16 +265,15 @@ decorate(AnalysisStore, {
         toNext: action,
         toPrev: action,
 
-    gameByUrl: action,
+        gameByUrl: action,
 
         calcMovable: action,
         turnColor: action,
         onMove: action,
+        movesTree: action,
 
         gamesByCurrentFen: computed,
         analysisMovesTree: computed,
-        processGames: computed,
-        movesTree: computed,
     }
 );
 

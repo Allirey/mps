@@ -1,6 +1,6 @@
 import React from 'react';
-import {inject, observer} from "mobx-react";
 import OpeningTree from '../../components/chess/OpeningTree'
+import withStore from "../../hocs/withStore";
 
 class OpeningExplorer extends React.Component {
     render() {
@@ -12,4 +12,4 @@ class OpeningExplorer extends React.Component {
     }
 }
 
-export default inject('stores')(observer(OpeningExplorer));
+export default withStore(OpeningExplorer);
