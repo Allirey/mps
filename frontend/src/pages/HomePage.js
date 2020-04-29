@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const styles = (theme) => ({
     root: {
-        color: "red"
+        color: "blue"
     },
 });
 
