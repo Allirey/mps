@@ -4,7 +4,9 @@ import Container from "@material-ui/core/Container";
 import { Link } from "react-router-dom";
 
 const styles = (theme) => ({
-    root: "",
+    root: {
+        color: "green"
+    },
 });
 
 class Home extends React.Component {
@@ -13,7 +15,7 @@ class Home extends React.Component {
 
         return (
             <Container>
-                <Typography><h1>Welcome! :)</h1></Typography>
+                <Typography className={classes.root}><h1>Welcome! :)</h1></Typography>
                 <br />
                 <Link to={"/chess/analysis"} style={{ textDecoration: "none", color: "blue" }}>analysis</Link>
             </Container>
