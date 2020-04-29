@@ -1,10 +1,16 @@
 import React from "react";
-import { Typography } from "@material-ui/core";
+import { Typography, withStyles } from "@material-ui/core";
 import Container from "@material-ui/core/Container";
 import { Link } from "react-router-dom";
 
-export default class extends React.Component {
+const styles = (theme) => ({
+    root: "",
+});
+
+class Home extends React.Component {
     render() {
+        const {classes} = this.props;
+
         return (
             <Container>
                 <Typography><h1>Welcome! :)</h1></Typography>
@@ -14,3 +20,5 @@ export default class extends React.Component {
         );
     }
 }
+
+export default withStyles(styles)(Home)
