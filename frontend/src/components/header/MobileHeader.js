@@ -66,7 +66,7 @@ export default function SwipeableTemporaryDrawer() {
 
     return (
         <div>
-            <AppBar position="static" style={{background: "#6B5B95", flexGrow: 1}}>
+            <AppBar position="static" style={{background: "#2B3648", flexGrow: 1}}>
                 <Toolbar variant={"dense"}>
                     <IconButton
                         onClick={toggleDrawer('left', true)}
@@ -75,7 +75,7 @@ export default function SwipeableTemporaryDrawer() {
                     ><MenuIcon/></IconButton>
 
                     {/*<Typography variant="h6" style={{flexGrow: 1}}>*/}
-                    {/*    Title*/}
+                    {/*    Glitcher*/}
                     {/*</Typography>*/}
                 </Toolbar>
             </AppBar>

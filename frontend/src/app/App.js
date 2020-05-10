@@ -13,7 +13,7 @@ import GamesSearch from "../pages/chess/GamesSearch";
 import About from "../pages/About";
 import OpeningExplorer from "../pages/chess/OpeningExplorer";
 import ChessAnalysis from "../pages/chess/ChessAnalysis";
-
+import Quizy from "../pages/Quizy";
 
 class App extends React.Component {
     render() {
@@ -23,6 +23,7 @@ class App extends React.Component {
                     <div>
                         <Switch>
                             <Route path="/" exact={true} component={HomePage}/>
+                            <Route path="/quizy" exact={true} component={Quizy}/>
                             <Route path="/chess/games" exact={true} component={GamesSearch}/>
                             <Route path="/chess/games/:url" component={ChessGame}/>
                             <Route path="/chess/explorer" exact={true} component={OpeningExplorer}/>

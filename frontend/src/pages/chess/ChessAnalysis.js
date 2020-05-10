@@ -44,7 +44,7 @@ class ChessAnalysis extends React.Component {
                 </Grid>
 
                 <Grid item container xs={12} sm={12} md={7} lg={8} justify={"center"} >
-                    <Grid item lg={8} container direction={"column"} justify={"center"}>
+                    <Grid item lg={8} container direction={"column"}>
 
                            <Grid item> <div onWheel={e => e.deltaY < 0 ? notation.toPrev() : notation.toNext()}>
                                 <ChessBoard
