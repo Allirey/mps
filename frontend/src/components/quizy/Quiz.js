@@ -24,14 +24,13 @@ export default function (props) {
     const validateUserAnswers = () => {
         let correctAnswers = 0;
 
-        userAnswers.forEach(u_answer=> {
+        userAnswers.forEach(u_answer => {
 
             if (u_answer.value === props.quizData.find(obj => obj.key === u_answer.key).correct) {
 
-                correctAnswers++}
+                correctAnswers++
+            }
         });
-
-
 
 
         setValidatedResults({

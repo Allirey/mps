@@ -35,9 +35,10 @@ class Quizy extends React.Component {
         if (!!this.state.terms.find(el => el.key === this.state.inputKey)) {
             this.setState({errorText: `Term "${this.state.inputKey}" already exist`});
             return;
-        }
-        else if (!this.state.inputKey) {this.setState({errorText: 'field is required'}); return}
-        else {
+        } else if (!this.state.inputKey) {
+            this.setState({errorText: 'field is required'});
+            return
+        } else {
             this.setState({errorText: ''})
         }
 
@@ -90,13 +91,13 @@ class Quizy extends React.Component {
     getQuizData = () => {
         let res = [];
         for (let i = 0; i < 15; i++) {
-            let item =  this.state.terms[Math.floor(Math.random() * this.state.terms.length)];
+            let item = this.state.terms[Math.floor(Math.random() * this.state.terms.length)];
 
             let variants = [];
 
-            while(variants.length < 3){
+            while (variants.length < 3) {
                 let obj = this.state.terms[Math.floor(Math.random() * this.state.terms.length)];
-                if (obj.key !== item.key && obj.value !== item.value){
+                if (obj.key !== item.key && obj.value !== item.value) {
                     variants.push(obj.value)
                 }
             }
@@ -146,9 +147,9 @@ class Quizy extends React.Component {
                     <TextField
                         variant={"outlined"}
                         value={this.state.searchFilter}
-                               onChange={(e) => this.setState({searchFilter: e.target.value})}
-                               label={"Search"}
-                               type={"search"}
+                        onChange={(e) => this.setState({searchFilter: e.target.value})}
+                        label={"Search"}
+                        type={"search"}
                     />
                     <br/>
 

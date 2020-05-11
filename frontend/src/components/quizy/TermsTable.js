@@ -155,15 +155,15 @@ function TermsTable(props) {
                                 <TableRow key={el.key}>
                                     <TableCell style={{whiteSpace: "nowrap"}}>
                                         <Button size={"small"}
-                                             style={{backgroundColor: "lightgreen", color: "white"}}
-                                             onClick={() => {
-                                                 setEditValue(el.value);
-                                                 setEditRow(el.key)
-                                             }}
+                                                style={{backgroundColor: "lightgreen", color: "white"}}
+                                                onClick={() => {
+                                                    setEditValue(el.value);
+                                                    setEditRow(el.key)
+                                                }}
                                         ><Edit/></Button>
                                         <Button color={"secondary"} size={"small"}
-                                             style={{backgroundColor: "tomato", color: "white"}}
-                                             onClick={() => setDeleteRow(el.key)}><Delete/></Button>
+                                                style={{backgroundColor: "tomato", color: "white"}}
+                                                onClick={() => setDeleteRow(el.key)}><Delete/></Button>
                                     </TableCell>
                                     <TableCell>{el.key}</TableCell>
                                     <TableCell>{el.value}</TableCell>
