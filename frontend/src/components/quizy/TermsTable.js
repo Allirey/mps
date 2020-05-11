@@ -144,9 +144,6 @@ function TermsTable(props) {
                         <TableCell>Term</TableCell>
                         <TableCell>Definition</TableCell>
                         <TableCell>Rate</TableCell>
-                        <TableCell>Added</TableCell>
-                        <TableCell>Last Quiz</TableCell>
-                        <TableCell>Quiz times</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -172,9 +169,6 @@ function TermsTable(props) {
                                     <TableCell>{el.value}</TableCell>
                                     <TableCell>{Array(el.rate).fill(<StarBorder
                                         style={{color: "darkgreen"}}/>)}</TableCell>
-                                    <TableCell>{el.added}</TableCell>
-                                    <TableCell>{el.lastQuiz}</TableCell>
-                                    <TableCell>{el.quizTimes}</TableCell>
                                 </TableRow>) :
                             el.key === deleteRow ? (
                                     <TableRow key={el.key} className={'active'}>
@@ -186,7 +180,7 @@ function TermsTable(props) {
                                             <Fab size={"small"} onClick={() => setDeleteRow(null)}
                                                  color={"inherit"}><Clear/></Fab>
                                         </TableCell>
-                                        <TableCell colSpan={5} align={"center"}>
+                                        <TableCell colSpan={1} align={"center"}>
                                             <strong>Are you sure you want to delete this row?</strong>
                                         </TableCell>
                                     </TableRow>
@@ -207,9 +201,6 @@ function TermsTable(props) {
                                                    value={editValue}/>
                                         <TableCell>{Array(el.rate).fill(<StarBorder
                                             style={{color: "darkgreen"}}/>)}</TableCell>
-                                        <TableCell>{el.added}</TableCell>
-                                        <TableCell>{el.lastQuiz}</TableCell>
-                                        <TableCell>{el.quizTimes}</TableCell>
                                     </TableRow>)
                     ))}
                 </TableBody>
@@ -217,7 +208,7 @@ function TermsTable(props) {
                     <TableRow>
                         <TablePagination
                             rowsPerPageOptions={[10, 15, 20, {label: 'All', value: -1}]}
-                            colSpan={7}
+                            colSpan={4}
                             count={terms.length}
                             rowsPerPage={rowsPerPage}
                             page={page}

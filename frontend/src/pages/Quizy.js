@@ -5,6 +5,7 @@ import {
 import withStore from "../hocs/withStore";
 import TermsTable from "../components/quizy/TermsTable";
 import {Add} from "@material-ui/icons";
+import Quiz from "../components/quizy/Quiz"
 
 const styles = theme => ({
     table: {
@@ -27,26 +28,28 @@ class Quizy extends React.Component {
         terms: [],
         isQuiz: false,
         searchFilter: '',
+        errorText: '',
     };
 
     handleAddButton = () => {
         if (!!this.state.terms.find(el => el.key === this.state.inputKey)) {
-            alert(`Term "${this.state.inputKey}" already exist`);
+            this.setState({errorText: `Term "${this.state.inputKey}" already exist`});
             return;
         }
+        else if (!this.state.inputKey) {this.setState({errorText: 'field is required'}); return}
+        else {
+            this.setState({errorText: ''})
+        }
 
-        let old_terms = this.state.terms;
+        let terms = [...this.state.terms];
         let new_term = {
             key: this.state.inputKey,
             value: this.state.inputValue,
             rate: 1,
-            added: Date().split(' ').slice(1, 4).join(' '),
-            lastQuiz: '',
-            quizTimes: 0,
         };
-        let newTerms = old_terms.concat(new_term);
-        this.setState({terms: newTerms, inputKey: '', inputValue: ''});
-        this.props.stores.storage.setItem('terms', JSON.stringify(newTerms))
+        terms.unshift(new_term);
+        this.setState({terms: terms, inputKey: '', inputValue: ''});
+        this.props.stores.storage.setItem('terms', JSON.stringify(terms))
     };
 
     showFile = async (e) => {
@@ -72,16 +75,43 @@ class Quizy extends React.Component {
     handleDelete = (obj) => {
         let newTerms = this.state.terms.filter(o => o !== obj);
         this.props.stores.storage.setItem('terms', JSON.stringify(newTerms));
-        this.setState({terms: newTerms})
+        this.setState({terms: newTerms, errorText: ''})
     };
 
     updateRow = (newObj) => {
-        let newTerms = this.state.terms.map(obj=>{
-            return obj.key !== newObj.key? obj: newObj
+        let newTerms = this.state.terms.map(obj => {
+            return obj.key !== newObj.key ? obj : newObj
         });
 
-        this.setState({terms: newTerms});
+        this.setState({terms: newTerms, errorText: ''});
         this.props.stores.storage.setItem('terms', JSON.stringify(newTerms));
+    };
+
+    getQuizData = () => {
+        let res = [];
+        for (let i = 0; i < 15; i++) {
+            let item =  this.state.terms[Math.floor(Math.random() * this.state.terms.length)];
+
+            let variants = [];
+
+            while(variants.length < 3){
+                let obj = this.state.terms[Math.floor(Math.random() * this.state.terms.length)];
+                if (obj.key !== item.key && obj.value !== item.value){
+                    variants.push(obj.value)
+                }
+            }
+
+            variants.push(item.value);
+            variants.sort(() => Math.random() - 0.5);
+
+            res.push({
+                key: item.key,
+                correct: item.value,
+                variants: variants,
+            })
+
+        }
+        return res
     };
 
     render() {
@@ -89,9 +119,10 @@ class Quizy extends React.Component {
 
         if (this.state.isQuiz) {
             return (
-                <>
-                    <Button onClick={() => this.setState({isQuiz: false})}>End Quiz</Button>
-                </>
+                <Quiz
+                    stopQuiz={() => this.setState({isQuiz: false})}
+                    quizData={this.getQuizData()}
+                />
             )
         } else {
             return (
@@ -110,9 +141,11 @@ class Quizy extends React.Component {
 
                     <br/>
 
-                    <Button onClick={() => this.setState({isQuiz: true})}>Start Quiz</Button>
+                    <Button onClick={() => this.setState({isQuiz: true, errorText: ''})}>Start Quiz</Button>
 
-                    <TextField value={this.state.searchFilter}
+                    <TextField
+                        variant={"outlined"}
+                        value={this.state.searchFilter}
                                onChange={(e) => this.setState({searchFilter: e.target.value})}
                                label={"Search"}
                                type={"search"}
@@ -120,6 +153,9 @@ class Quizy extends React.Component {
                     <br/>
 
                     <TextField
+                        error={!!this.state.errorText}
+                        helperText={this.state.errorText}
+                        variant={"outlined"}
                         label={'Term'}
                         value={this.state.inputKey}
                         onChange={(e) => this.setState({inputKey: e.target.value})}
@@ -128,6 +164,7 @@ class Quizy extends React.Component {
 
 
                     <TextField
+                        variant={"outlined"}
                         label={'Definition'}
                         value={this.state.inputValue}
                         onChange={(e) => this.setState({inputValue: e.target.value})}
