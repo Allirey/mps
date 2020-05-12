@@ -24,9 +24,6 @@ class App extends React.Component {
                         <Switch>
                             <Route path="/" exact={true} component={HomePage}/>
                             <Route path="/quizy" exact={true} component={Quizy}/>
-                            <Route path="/chess/games" exact={true} component={GamesSearch}/>
-                            <Route path="/chess/games/:url" component={ChessGame}/>
-                            <Route path="/chess/explorer" exact={true} component={OpeningExplorer}/>
                             <Route path="/chess/analysis" exact={true} component={ChessAnalysis}/>
                             <Route path="/about" exact={true} component={About}/>
                             <Route path="**" exact={true} component={P404}/>
