@@ -6,7 +6,7 @@ import {
 } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu';
 import {Link} from "react-router-dom";
-import {Search, Home, AccountTree} from '@material-ui/icons';
+import {Search, Home, AccountTree, Subject} from '@material-ui/icons';
 
 const useStyles = makeStyles({
     list: {
@@ -44,18 +44,21 @@ export default function SwipeableTemporaryDrawer() {
                     </ListItemIcon>
                     <ListItemText primary={"Home"}/>
                 </ListItem>
-                <ListItem button component={Link} to={"/chess/games"}>
+
+                <ListItem button component={Link} to={"/chess/analysis"}>
                     <ListItemIcon>
                         <Search/>
                     </ListItemIcon>
-                    <ListItemText primary={"Games search"}/>
+                    <ListItemText primary={"Chess db"}/>
                 </ListItem>
-                <ListItem button component={Link} to={"/chess/explorer"}>
+
+                <ListItem button component={Link} to={"/quizy"}>
                     <ListItemIcon>
-                        <AccountTree/>
+                        <Subject/>
                     </ListItemIcon>
-                    <ListItemText primary="Opening explorer"/>
+                    <ListItemText primary={"Quizy"}/>
                 </ListItem>
+
                 <ListItem button component={Link} to={"/about"}>
                     <ListItemText primary={"About"}/>
                 </ListItem>

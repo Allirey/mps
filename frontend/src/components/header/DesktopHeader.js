@@ -11,15 +11,9 @@ export default class extends React.Component {
                         <Button disableRipple={true} color={"primary"} style={{maxWidth: "110px", backgroundColor: "#FFC000"}} component={Typography}>
                             <Link to="/" style={{textDecoration: 'none', color: "#2B3648"}}>glitcher.org</Link>
                         </Button>
+
                         <Button style={{maxWidth: "200px"}}>
-                            <Link to="/chess/games" style={{textDecoration: 'none', color: "white"}}>games search</Link>
-                        </Button>
-                        <Button style={{maxWidth: "200px"}}>
-                            <Link to="/chess/explorer" style={{textDecoration: 'none', color: "white"}}>Opening
-                                explorer</Link>
-                        </Button>
-                        <Button style={{maxWidth: "200px"}}>
-                            <Link to="/chess/analysis" style={{textDecoration: 'none', color: "white"}}>Analysis</Link>
+                            <Link to="/chess/analysis" style={{textDecoration: 'none', color: "white"}}>Chess db</Link>
                         </Button>
 
                         <Button style={{maxWidth: "200px"}}>
