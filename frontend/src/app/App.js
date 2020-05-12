@@ -7,11 +7,8 @@ import {
 import P404 from "../errors/error404"
 import withStore from '../hocs/withStore'
 import Header from '../components/header'
-import ChessGame from '../pages/chess/ChessGame'
 import HomePage from "../pages/HomePage";
-import GamesSearch from "../pages/chess/GamesSearch";
 import About from "../pages/About";
-import OpeningExplorer from "../pages/chess/OpeningExplorer";
 import ChessAnalysis from "../pages/chess/ChessAnalysis";
 import Quizy from "../pages/Quizy";
 

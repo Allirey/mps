@@ -128,7 +128,7 @@ class Quizy extends React.Component {
         //[
 
 
-        
+
         // let newTerms = this.state.terms.map(obj => (
         //     !!answers.find(o=> o.key === obj.key)? : obj
         // ))
@@ -157,11 +157,13 @@ class Quizy extends React.Component {
                         <Button component={"span"} style={{backgroundColor: "#b2b9ed"}}>upload terms</Button>
                     </label>
 
-                    <Button onClick={this.saveToFile} style={{backgroundColor: "lightgreen"}}>Download terms</Button>
+                    <Button onClick={this.state.terms.length && this.saveToFile} style={{backgroundColor: "lightgreen"}}>Download terms</Button>
 
                     <br/>
 
-                    <Button onClick={() => this.setState({isQuiz: true, errorText: ''})}>Start Quiz</Button>
+                    <Button
+                        onClick={() => this.state.terms.length > 15 && this.setState({isQuiz: true, errorText: ''})}
+                    >Start Quiz</Button>
 
                     <TextField
                         variant={"outlined"}
