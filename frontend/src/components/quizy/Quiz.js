@@ -1,37 +1,32 @@
 import React, {useState} from "react";
 import {Button, Container, Grid, Paper} from "@material-ui/core";
 
-
 export default function (props) {
     const [current, setCurrent] = useState(0);
-    const [userAnswers, setUserAnswers] = useState([]);
     const [showQuizResult, setShowQuizResult] = useState(false);
     const [validatedResults, setValidatedResults] = useState(null);
+    const [quizData, setQuizData] = useState(props.quizData);
 
     const handleUserClick = (userAnswer) => {
-        let answers = userAnswers;
-        answers.push(userAnswer);
-        setUserAnswers(answers);
+        let qData = [...quizData];
+
+        qData[current].userAnswer = userAnswer.value;
+        setQuizData(qData);
+
         if (current + 1 === props.quizData.length) {
             setShowQuizResult(true);
             validateUserAnswers();
         } else {
             setCurrent(Math.min(current + 1, props.quizData.length - 1));
         }
-
     };
 
     const validateUserAnswers = () => {
         let correctAnswers = 0;
 
-        userAnswers.forEach(u_answer => {
-
-            if (u_answer.value === props.quizData.find(obj => obj.key === u_answer.key).correct) {
-
-                correctAnswers++
-            }
+        quizData.forEach(obj => {
+            if (obj.correct === obj.userAnswer) correctAnswers++;
         });
-
 
         setValidatedResults({
             successRate: Math.floor(correctAnswers * 100 / props.quizData.length),

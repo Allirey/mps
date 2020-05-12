@@ -18,9 +18,6 @@ import PropTypes from 'prop-types';
 import {
     IconButton, useTheme
 } from "@material-ui/core";
-import {Link} from "react-router-dom";
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import EditIcon from '@material-ui/icons/Edit';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';

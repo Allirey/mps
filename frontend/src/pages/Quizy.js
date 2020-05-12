@@ -115,6 +115,25 @@ class Quizy extends React.Component {
         return res
     };
 
+    changeRate = (answers) => {
+        // [
+        // {
+        //  key: 'key1',
+        //  correct: true/false
+        // },
+        // {
+        //  key: 'key2',
+        //  correct: true/false
+        // },
+        //[
+
+
+        
+        // let newTerms = this.state.terms.map(obj => (
+        //     !!answers.find(o=> o.key === obj.key)? : obj
+        // ))
+    };
+
     render() {
         const {classes} = this.props;
 
