@@ -50,6 +50,11 @@ export default function (props) {
                             <p>success rate - {validatedResults.successRate}%</p>
                             <p>correct answers - {validatedResults.correctAnswers}</p>
 
+                            {quizData.filter(obj=> obj.correct!==obj.userAnswer).map(obj=>(
+                                <>{obj.key} - <del>{obj.userAnswer}</del> -> {obj.correct}<br/></>
+                            ))
+                                    }
+
                             <Button color={"primary"} variant={"contained"} onClick={props.stopQuiz}>OK</Button>
                         </Grid>
                     ) :

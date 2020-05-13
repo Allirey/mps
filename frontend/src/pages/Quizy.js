@@ -193,7 +193,6 @@ class Quizy extends React.Component {
                         onKeyDown={e => e.keyCode === 13 ? this.handleAddButton() : []}
                     />
 
-
                     <Fab size={"small"} onClick={this.handleAddButton}><Add/></Fab>
 
                     <TermsTable
