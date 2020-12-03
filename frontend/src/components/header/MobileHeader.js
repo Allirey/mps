@@ -2,7 +2,7 @@ import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import {
     SwipeableDrawer, List, Divider, ListItem, ListItemIcon, ListItemText,
-    IconButton, AppBar, Toolbar
+    IconButton, AppBar, Toolbar, Box, Button
 } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu';
 import {Link} from "react-router-dom";
@@ -69,17 +69,21 @@ export default function SwipeableTemporaryDrawer() {
 
     return (
         <div>
-            <AppBar position="static" style={{background: "#2B3648", flexGrow: 1}}>
+            <AppBar position="static" style={{background: "#ffffff", flexGrow: 1}}>
                 <Toolbar variant={"dense"}>
                     <IconButton
                         onClick={toggleDrawer('left', true)}
                         aria-label="menu"
-                        style={{marginRight: 10, color: "white"}}
+                        style={{marginRight: 10, color: "grey"}}
                     ><MenuIcon/></IconButton>
 
                     {/*<Typography variant="h6" style={{flexGrow: 1}}>*/}
                     {/*    Glitcher*/}
                     {/*</Typography>*/}
+                    <Box flexGrow={1}/>
+                    <Button disableRipple={true} style={{maxWidth: "200px", backgroundColor: "#FFffff"}}>
+                            <Link to="/login" style={{textDecoration: 'none', color: "grey"}}>Sign in</Link>
+                        </Button>
                 </Toolbar>
             </AppBar>
 

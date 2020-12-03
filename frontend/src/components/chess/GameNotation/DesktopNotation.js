@@ -8,8 +8,8 @@ export default class extends PureComponent {
             let result = []
             for (let i = 0; i < candid.length; i++)
                 (i % 2 === 0 ? evenOnes : oddOnes).push(candid[i]);
-            for (let i=0; i < oddOnes.length; i++){
-                result.push([evenOnes[i], oddOnes[i]? oddOnes[i]: null])
+            for (let i = 0; i < oddOnes.length; i++) {
+                result.push([evenOnes[i], oddOnes[i] ? oddOnes[i] : null])
             }
             return result;
         }(this.props.game.moves.replace(/\n/g, ' ').replace(/\d+\. |{.+} |\$\d+ /g, '').split(' '))
@@ -32,7 +32,7 @@ export default class extends PureComponent {
                                         {row[0]}
                                     </TableCell>
                                     <TableCell style={{height: "10px", padding: "0px"}}>
-                                        {row[1]?row[1]:''}
+                                        {row[1] ? row[1] : ''}
                                     </TableCell>
                                 </TableRow>
                             ))}

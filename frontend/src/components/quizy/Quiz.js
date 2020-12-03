@@ -53,7 +53,7 @@ export default function (props) {
                             {quizData.filter(obj=> obj.correct!==obj.userAnswer).map(obj=>(
                                 <>{obj.key} - <del>{obj.userAnswer}</del> -> {obj.correct}<br/></>
                             ))
-                                    }
+                                    }ox
 
                             <Button color={"primary"} variant={"contained"} onClick={props.stopQuiz}>OK</Button>
                         </Grid>

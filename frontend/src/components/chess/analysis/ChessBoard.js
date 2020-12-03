@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import NativeChessboard from 'react-chessground'
-import "react-chessground/dist/assets/chessground.css"
+// import "react-chessground/dist/assets/chessground.css"
 import "react-chessground/dist/styles/chessground.css"
-import "react-chessground/dist/assets/theme.css"
+// import "react-chessground/dist/assets/theme.css"
 // import queen from "./images/wQ.svg"
 // import rook from "./images/wR.svg"
 // import bishop from "./images/wB.svg"
@@ -21,6 +21,7 @@ export default function (props) {
             style={{margin: "auto"}}
             lastMove={props.lastMove}
             onMove={(from, to) => props.onMove(from, to)}
+            coordinates={false}
         />
     )
 }

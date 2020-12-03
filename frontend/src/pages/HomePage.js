@@ -15,7 +15,7 @@ class Home extends React.Component {
 
         return (
             <Container>
-                <Typography className={classes.root}><h1>Welcome! :)</h1></Typography>
+                <Typography className={classes.root}><h1>Welcome!! :)</h1></Typography>
                 {/*<br />*/}
                 {/*<Link to={"/chess/analysis"} style={{ textDecoration: "none", color: "blue" }}>analysis</Link>*/}
             </Container>
