@@ -9,6 +9,5 @@ class SearchForm(forms.Form):
                                                                           'class': 'form-control mr-2',
                                                                           'placeholder': 'black\'s player'}))
     ignore_color = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={
-                                                                          'class': 'form-check-input mr-2 ml-2',
-                                                                        }))
-                                                                        
+        'class': 'form-check-input mr-2 ml-2',
+    }))

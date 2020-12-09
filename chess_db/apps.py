@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class ChessConfig(AppConfig):
-    name = 'chess'
+    name = 'chess_db'

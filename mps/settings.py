@@ -19,7 +19,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'chess.apps.ChessConfig',
+    'chess_db.apps.ChessConfig',
     'blog.apps.BlogConfig',
     'rest_framework',
 
