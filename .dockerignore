@@ -1,7 +1,7 @@
 *
 !mps
 !blog
-!chess
+!chess_db
 !nginx
 !manage.py
 !requirements.txt
