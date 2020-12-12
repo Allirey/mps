@@ -1,7 +1,8 @@
 import {observable, computed, action, decorate} from 'mobx';
 import Chess from 'chess.js'
 
-const dev_api = 'http://10.10.86.217:8000';
+const dev_api = '';
+// const dev_api = 'http://10.10.86.217:8000';
 const base_api = dev_api + '/api';
 const api_game = base_api + '/game/';
 const api_explorer = base_api + '/explorer/';
