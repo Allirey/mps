@@ -21,10 +21,19 @@ class NotationStore {
     initMainLineNodes = (url) => {
         this.resetNode();
 
-        let game = this.rootStore.chessAnalysis.gameByUrl(url);
+        this.rootStore.chessOpeningExplorer.getGameByUrl(url);
 
-        let tmp = game.moves.replace(/\n/g, ' ').replace(/\d+\. |{.+} |\$\d+ /g, '').split(' ');
-        tmp = tmp.slice(0, tmp.length - 2);
+        let pgn = this.rootStore.chessOpeningExplorer.currentGame;
+
+        if (pgn === null) return
+
+        this.chessGame.load_pgn(pgn);
+
+        console.log(this.chessGame.history());
+
+        let tmp = this.chessGame.history();
+
+        this.chessGame = new Chess();
 
         this.mainLineNodes = tmp.map((srcMove, i) => {
             let move = this.chessGame.move(srcMove);
@@ -52,6 +61,9 @@ class NotationStore {
         } else {
             this.node = this.mainLineNodes[Math.min(newIndex, this.mainLineNodes.length - 1)]
         }
+        this.rootStore.chessOpeningExplorer.searchData.fen = this.node.fen
+        this.rootStore.chessOpeningExplorer.searchGames();
+
     }
 
     get lastMove() {
@@ -59,7 +71,8 @@ class NotationStore {
     }
 
     get fen() {
-        return typeof this.node === "undefined" ? 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1' : this.node.fen;
+        return typeof this.node === "undefined" ?
+            'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1' : this.node.fen;
     }
 
     jumpToMove = (index) => {
@@ -91,6 +104,8 @@ class NotationStore {
             san: '',
             uci: {from: null, to: null},
         };
+        this.rootStore.chessOpeningExplorer.searchData.fen = this.node.fen
+        this.rootStore.chessOpeningExplorer.searchGames();
     }
 }
 

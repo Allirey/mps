@@ -19,8 +19,8 @@ export default function (props) {
                         value={props.color}
                         onChange={props.onChangeColor}
                     >
-                        <MenuItem value={"white"}>White</MenuItem>
-                        <MenuItem value={"black"}>Black</MenuItem>
+                        <MenuItem value={"w"}>White</MenuItem>
+                        <MenuItem value={"b"}>Black</MenuItem>
                     </Select>
                 </FormControl>
             </Grid>

@@ -33,7 +33,7 @@ function GamesTable(props) {
     const classes = useStyles();
     console.log('table');
     let games = props.games;
-    return games.length !== 0 ? (
+    return typeof (games) == "undefined" || games.length === 0 ? null : (
         <TableContainer className={classes.root} component={Paper}>
             <Table size={"small"} stickyHeader>
                 <TableHead>
@@ -42,7 +42,7 @@ function GamesTable(props) {
                         <TableCell>Black</TableCell>
                         <TableCell>Result</TableCell>
                         <TableCell>Year</TableCell>
-                        <TableCell>Notation</TableCell>
+                        {/*<TableCell>Notation</TableCell>*/}
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -54,12 +54,12 @@ function GamesTable(props) {
                             <TableCell>{game.black.split(', ')[0]}</TableCell>
                             <TableCell>{game.result}</TableCell>
                             <TableCell>{game.date.split('.')[0]}</TableCell>
-                            <TableCell>{game.moves.slice(0, 7)}</TableCell>
+                            {/*<TableCell>{game.moves.slice(0, 7)}</TableCell>*/}
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
-        </TableContainer>) : null
+        </TableContainer>)
 }
 
 export default memo(GamesTable)

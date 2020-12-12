@@ -16,7 +16,7 @@ const StyledTableCell = withStyles((theme) => ({
 
 export default class extends React.PureComponent {
     render() {
-        const treeData = this.props.treeData;
+        const explorerData = this.props.explorerData;
         return (
             <TableContainer style={{overflow: "auto", height: "35vh"}}>
                 <Table size={"small"} stickyHeader>
@@ -29,12 +29,12 @@ export default class extends React.PureComponent {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {treeData.map((row, i) =>
+                        {typeof(explorerData) == "undefined"? null:explorerData.map((row, i) =>
                             <TableRow key={i} hover={true} style={{cursor: "pointer"}}>
                                 <StyledTableCell><strong>{row.move}</strong></StyledTableCell>
-                                <StyledTableCell>{row.gamesCount}</StyledTableCell>
-                                <StyledTableCell>{row.score}</StyledTableCell>
-                                <StyledTableCell>{row.lastPlayed}</StyledTableCell>
+                                <StyledTableCell>{row.games}</StyledTableCell>
+                                <StyledTableCell>{row.score + '%'}</StyledTableCell>
+                                <StyledTableCell>{row.date.split('-')[0]}</StyledTableCell>
                             </TableRow>
                         )}
                     </TableBody>

@@ -13,14 +13,14 @@ export default function (props) {
             width={props.width}
             height={props.height}
             viewOnly={props.viewOnly}
-            turnColor={props.turnColor}
+            // turnColor={props.turnColor}
             check={props.check}
-            movable={props.movable}
+            // movable={props.movable}
             orientation={props.orientation}
             fen={props.fen}
             style={{margin: "auto"}}
             lastMove={props.lastMove}
-            onMove={(from, to) => props.onMove(from, to)}
+            // onMove={(from, to) => props.onMove(from, to)}
             coordinates={false}
         />
     )

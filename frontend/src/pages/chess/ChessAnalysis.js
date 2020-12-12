@@ -23,7 +23,7 @@ class ChessAnalysis extends React.Component {
     }
 
     render() {
-        let chess = this.props.stores.chessAnalysis;
+        let chess = this.props.stores.chessOpeningExplorer;
         let notation = this.props.stores.chessNotation;
 
         return (
@@ -38,7 +38,7 @@ class ChessAnalysis extends React.Component {
                         onKeyPressed={e => e.keyCode === 13 ? chess.searchGames() : []}
                     />
                     <GamesTable
-                        games={chess.gamesByCurrentFen}
+                        games={chess.currentGames}
                         onSelectGame={notation.initMainLineNodes}
                     />
                 </Grid>
@@ -52,11 +52,11 @@ class ChessAnalysis extends React.Component {
                                     height={window.innerWidth > 950 ? "512px" : "90vmin"}
                                     orientation={notation.boardOrientation}
                                     viewOnly={false}
-                                    turnColor={chess.turnColor()}
-                                    movable={chess.calcMovable()}
+                                    // turnColor={chess.turnColor()}
+                                    // movable={chess.calcMovable()}
                                     lastMove={notation.lastMove}
                                     fen={notation.fen}
-                                    onMove={chess.onMove}
+                                    // onMove={chess.onMove}
                                     check={false}
                                     style={{margin: "auto"}}
                                 />
@@ -82,7 +82,7 @@ class ChessAnalysis extends React.Component {
                             jumpTo={notation.jumpToMove}
                         />
                         <br/>
-                        <MovesTree treeData={chess.analysisMovesTree}/>
+                        <MovesTree explorerData={chess.currentMoves}/>
                         <Grid component={Box} container justify={"center"} display={{sm: "none", lg: "block"}}>
                             <NavButtons
                                 toFirst={notation.toFirst}
@@ -106,7 +106,7 @@ class ChessAnalysis extends React.Component {
                                     jumpTo={notation.jumpToMove}
                                 />
                                 <br/>
-                                <MovesTree treeData={chess.analysisMovesTree}/></>
+                                <MovesTree explorerData={chess.currentMoves}/></>
                         }
                         tab2={
                             <>
@@ -119,7 +119,7 @@ class ChessAnalysis extends React.Component {
                                     onKeyPressed={e => e.keyCode === 13 ? chess.searchGames() : []}
                                 />
                                 <GamesTable
-                                    games={chess.gamesByCurrentFen}
+                                    games={chess.currentGames}
                                     onSelectGame={notation.initMainLineNodes}
                                 />
                             </>}

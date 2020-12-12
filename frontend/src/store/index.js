@@ -1,13 +1,11 @@
-import chessStore from './chessStore';
-import analysisStore from './analysisStore';
 import chessNotation from './notationStore';
+import chessOpeningExplorer from './chessOpeningExplorerStore';
 
 class RootStore{
     constructor(){
         this.storage = localStorage;
-        this.chess = new chessStore(this);
-        this.chessAnalysis = new analysisStore(this);
         this.chessNotation = new chessNotation(this);
+        this.chessOpeningExplorer = new chessOpeningExplorer(this);
     }
 }
 
