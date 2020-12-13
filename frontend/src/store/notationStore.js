@@ -18,21 +18,13 @@ class NotationStore {
     mainLineNodes = [];
     boardOrientation = "white";
 
-    initMainLineNodes = (url) => {
+    initMainLineNodes = (pgn) => {
         this.resetNode();
-
-        this.rootStore.chessOpeningExplorer.getGameByUrl(url);
-
-        let pgn = this.rootStore.chessOpeningExplorer.currentGame;
 
         if (pgn === null) return
 
         this.chessGame.load_pgn(pgn);
-
-        console.log(this.chessGame.history());
-
         let tmp = this.chessGame.history();
-
         this.chessGame = new Chess();
 
         this.mainLineNodes = tmp.map((srcMove, i) => {
@@ -63,7 +55,6 @@ class NotationStore {
         }
         this.rootStore.chessOpeningExplorer.searchData.fen = this.node.fen
         this.rootStore.chessOpeningExplorer.searchGames();
-
     }
 
     get lastMove() {
@@ -77,6 +68,8 @@ class NotationStore {
 
     jumpToMove = (index) => {
         this.node = this.mainLineNodes[index]
+        this.rootStore.chessOpeningExplorer.searchData.fen = this.node.fen
+        this.rootStore.chessOpeningExplorer.searchGames();
     };
 
     toNext = () => {

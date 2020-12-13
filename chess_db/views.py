@@ -23,13 +23,16 @@ class ChessOpeningExplorerView(APIView):
         color = 'b' if request.query_params.get('color') == 'b' else 'w'
         fen = request.query_params.get('fen', '')
 
+        if fen:
+            fen = ' '.join(fen.split()[:-3])
+
         if len(name) < 3:
             return Response({'moves': [], 'games': []}, status=status.HTTP_404_NOT_FOUND)
 
         name = ', '.join(name.split()[:2]) if ',' not in name else name
 
-        moves = ChessMove.objects.filter(Q(fen=fen) & {'w': Q(game__white__istartswith=name),
-                                                       'b': Q(game__black__istartswith=name)}[color]) \
+        moves = ChessMove.objects.filter(Q(fen__startswith=fen) & {'w': Q(game__white__istartswith=name),
+                                                                   'b': Q(game__black__istartswith=name)}[color]) \
             .values('move') \
             .annotate(date=Max('game__date')) \
             .annotate(games=Count('move')) \
@@ -39,7 +42,7 @@ class ChessOpeningExplorerView(APIView):
 
         games = ChessGame.objects.filter({'w': Q(white__istartswith=name),
                                           'b': Q(black__istartswith=name)}[color]
-                                         & Q(moves__fen__exact=fen)) \
+                                         & Q(moves__fen__startswith=fen)) \
             .values('white', 'black', 'result', 'date', 'url').order_by('-date')
 
         return Response({'moves': moves, 'games': games})

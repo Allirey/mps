@@ -39,7 +39,7 @@ class ChessAnalysis extends React.Component {
                     />
                     <GamesTable
                         games={chess.currentGames}
-                        onSelectGame={notation.initMainLineNodes}
+                        onSelectGame={chess.getGameByUrl}
                     />
                 </Grid>
 
@@ -120,7 +120,7 @@ class ChessAnalysis extends React.Component {
                                 />
                                 <GamesTable
                                     games={chess.currentGames}
-                                    onSelectGame={notation.initMainLineNodes}
+                                    onSelectGame={chess.getGameByUrl}
                                 />
                             </>}
                     />

@@ -17,7 +17,6 @@ class ChessOpeningExplorerStore {
             'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1' : this.rootStore.chessNotation.fen
     };
     lastSearchQuery = {...this.searchData};
-    game = null;
     table_games_cache = {};
     explorer_moves_cache = {};
     pgn_games_cache = {};
@@ -37,38 +36,34 @@ class ChessOpeningExplorerStore {
         })
     }
 
-    getGameByUrl = (url) => {
+    getGameByUrl=(url)=> {
         if (url in this.pgn_games_cache) {
-            this.game = this.pgn_games_cache[url];
+            this.rootStore.chessNotation.initMainLineNodes(this.pgn_games_cache[url])
         } else {
             this.makeRequest(api_game, {id: url}).then((data) => {
-                this.game = data.game
                 this.pgn_games_cache[url] = data.game;
-            }).catch(() => {
-                this.game = null
+                this.rootStore.chessNotation.initMainLineNodes(this.pgn_games_cache[url])
             });
         }
     }
 
-    searchGames = () => {
+    searchGames() {
         // to prevent search spam on server api
         if (JSON.stringify(this.searchData) === JSON.stringify(this.lastSearchQuery)) return;
         else this.lastSearchQuery = {...this.searchData};
 
-        if (!(JSON.stringify(this.searchData) in this.table_games_cache)) {
+        const check = JSON.stringify(this.searchData);
+
+        if (!(check in this.table_games_cache)) {
             this.makeRequest(api_explorer, this.searchData)
                 .then(data => {
-                    this.table_games_cache[JSON.stringify(this.searchData)] = data.games;
-                    this.explorer_moves_cache[JSON.stringify(this.searchData)] = data.moves;
+                    this.table_games_cache[check] = data.games;
+                    this.explorer_moves_cache[check] = data.moves;
                 }).catch(() => (console.log('privet')))
         }
         // reset current board game when searching another player's game
         // this.rootStore.chessNotation.resetNode();
     };
-
-    get currentGame() {
-        return typeof this.rootStore.chessNotation.node === "undefined" ? null : this.game
-    }
 
     get currentMoves() {
         return JSON.stringify(this.searchData) in this.explorer_moves_cache ?
@@ -82,12 +77,10 @@ class ChessOpeningExplorerStore {
 }
 
 decorate(ChessOpeningExplorerStore, {
-        game: observable,
         searchData: observable,
         explorer_moves_cache: observable,
         table_games_cache: observable,
 
-        currentGame: computed,
         currentMoves: computed,
         currentGames: computed,
     }
