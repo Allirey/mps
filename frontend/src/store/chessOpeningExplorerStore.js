@@ -36,7 +36,7 @@ class ChessOpeningExplorerStore {
         })
     }
 
-    getGameByUrl=(url)=> {
+    getGameByUrl = (url) => {
         if (url in this.pgn_games_cache) {
             this.rootStore.chessNotation.initMainLineNodes(this.pgn_games_cache[url])
         } else {
@@ -47,7 +47,7 @@ class ChessOpeningExplorerStore {
         }
     }
 
-    searchGames() {
+    searchGames = () => {
         // to prevent search spam on server api
         if (JSON.stringify(this.searchData) === JSON.stringify(this.lastSearchQuery)) return;
         else this.lastSearchQuery = {...this.searchData};
