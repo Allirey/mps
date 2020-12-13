@@ -23,7 +23,7 @@ class NotationStore {
 
         if (pgn === null) return
 
-        this.chessGame.load_pgn(pgn);
+        this.chessGame.load_pgn(pgn, { sloppy: true });
         let tmp = this.chessGame.history();
         this.chessGame = new Chess();
 
