@@ -1,5 +1,4 @@
 import {observable, computed, action, decorate} from 'mobx';
-import Chess from 'chess.js'
 
 const dev_api = '';
 // const dev_api = 'http://10.10.86.217:8000';
@@ -59,7 +58,7 @@ class ChessOpeningExplorerStore {
                 .then(data => {
                     this.table_games_cache[check] = data.games;
                     this.explorer_moves_cache[check] = data.moves;
-                }).catch(() => (console.log('privet')))
+                }).catch((e) => (console.log()))
         }
         // reset current board game when searching another player's game
         // this.rootStore.chessNotation.resetNode();

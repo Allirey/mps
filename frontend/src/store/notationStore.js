@@ -28,7 +28,7 @@ class NotationStore {
         this.chessGame = new Chess();
 
         this.mainLineNodes = tmp.map((srcMove, i) => {
-            let move = this.chessGame.move(srcMove);
+            let move = this.chessGame.move(srcMove, { sloppy: true });
             return {
                 fen: this.chessGame.fen(),
                 san: move.san,
