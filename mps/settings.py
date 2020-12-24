@@ -1,5 +1,6 @@
 import os
 import environ
+from datetime import timedelta
 
 environ.Env.read_env()
 env = environ.Env()
@@ -95,6 +96,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 #     "http://localhost:3000",
 #     "http://frontend",
 # ]
+CORS_ALLOW_CREDENTIALS = True
 
 LANGUAGE_CODE = 'en-us'
 
@@ -120,6 +122,12 @@ REST_FRAMEWORK = {
     ),
 }
 AUTH_USER_MODEL = 'users.User'
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
+    'ROTATE_REFRESH_TOKENS': True,
+}
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
