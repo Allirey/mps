@@ -11,6 +11,7 @@ SECRET_KEY = env("SECRET_KEY")
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '10.10.86.217']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -91,19 +92,22 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-CORS_ORIGIN_ALLOW_ALL = True
-# CORS_ORIGIN_WHITELIST = [
-#     "http://localhost:3000",
-#     "http://frontend",
-# ]
 CORS_ALLOW_CREDENTIALS = True
+
+# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'https://glitcher.org',
+    'http://10.10.86.217:3000',
+    'http://10.10.86.217:5000',
+]
 
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
-
 USE_L10N = True
 
 USE_TZ = True
