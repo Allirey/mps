@@ -1,6 +1,7 @@
 from rest_framework import permissions, generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.authentication import AUTH_HEADER_TYPES
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
@@ -55,15 +56,19 @@ class BaseTokenView(generics.GenericAPIView):
 
         try:
             serializer.is_valid(raise_exception=False)
+        except AuthenticationFailed as e:
+            return Response({'access': None,
+                             'authenticated': False,
+                             'message': str(e)},
+                            status=status.HTTP_200_OK)
         except TokenError as e:
-
             raise InvalidToken(e.args[0])
 
         data = serializer.validated_data
 
-        # todo find better solution to hide 4xx errors in browser console on frontend when refreshing tokens
         response = Response({'access': data.get('access', None),
-                             "code": 200 if 'access' in data else 401},
+                             "authenticated": 'access' in data,
+                             "message": "ok"},
                             status=status.HTTP_200_OK)
 
         if 'refresh' in data:
