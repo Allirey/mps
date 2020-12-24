@@ -13,6 +13,8 @@ JWT_REFRESH_COOKIE_NAME = 'rt'
 
 
 class UserCreateView(UserPassesTestMixin, generics.CreateAPIView):
+    # todo account activation via link send by sendgrid/gmail service
+    # todo captcha (google recaptcha or similar)
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     serializer_class = UserCreateSerializer
