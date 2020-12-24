@@ -9,13 +9,13 @@ import SwapVertTwoToneIcon from "@material-ui/icons/SwapVertTwoTone";
 export default function (props) {
     return (
         <>
-            <Button size={"small"} onClick={props.toFirst}><FastRewindTwoToneIcon/></Button>
-            <Button size={"small"} variant={"contained"} style={{backgroundColor: "#00CED1"}}
+            <Button disableRipple size={"small"} onClick={props.toFirst}><FastRewindTwoToneIcon/></Button>
+            <Button disableRipple size={"small"} variant={"contained"} style={{backgroundColor: "#00CED1"}}
                     onClick={props.toPrev}><SkipPreviousTwoToneIcon/></Button>
-            <Button size={"small"} variant={"contained"} style={{backgroundColor: "#00CED1"}}
+            <Button disableRipple size={"small"} variant={"contained"} style={{backgroundColor: "#00CED1"}}
                     onClick={props.toNext}><SkipNextTwoToneIcon/></Button>
-            <Button size={"small"} onClick={props.toLast}><FastForwardTwoToneIcon/></Button>
-            <Button size={"small"} variant={"contained"} color={"primary"}
+            <Button disableRipple size={"small"} onClick={props.toLast}><FastForwardTwoToneIcon/></Button>
+            <Button disableRipple size={"small"} variant={"contained"} color={"primary"}
                     onClick={props.onFlip}><SwapVertTwoToneIcon/></Button>
             {/*<Button variant={"contained"}>reset</Button>*/}
         </>

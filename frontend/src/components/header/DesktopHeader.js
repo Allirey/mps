@@ -1,9 +1,10 @@
 import React from "react";
-import {AppBar, Button, Container, makeStyles, Toolbar, Box} from "@material-ui/core";
+import {AppBar, Button, Container, makeStyles, Toolbar, Box, Typography} from "@material-ui/core";
 import {Link} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
+        color: "black",
         background: "white",
         flexGrow: 1,
         "& div": {
@@ -43,7 +44,8 @@ export default function (props) {
                     <Button disableRipple> <Link to="/quizy">Quizy</Link> </Button>
                     <Button disableRipple> <Link to="/about">About</Link> </Button>
                     <Box style={{flexGrow: 1}}/>
-                    <Button disableRipple> <Link to="/login">Sign in</Link> </Button>
+                    {!props.currentUser ? <Button disableRipple><Link to="/login">Sign in</Link></Button> :
+                        <>Hello {props.currentUser}<Button onClick={props.logout} disableRipple>Logout</Button></>}
                 </Toolbar>
             </AppBar>
         </React.Fragment>

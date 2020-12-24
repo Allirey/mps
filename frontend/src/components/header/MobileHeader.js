@@ -14,7 +14,7 @@ const useStyles = makeStyles({
     },
 });
 
-export default function SwipeableTemporaryDrawer() {
+export default function SwipeableTemporaryDrawer(props) {
     const classes = useStyles();
     const [state, setState] = React.useState({
         left: false,
@@ -69,7 +69,7 @@ export default function SwipeableTemporaryDrawer() {
 
     return (
         <div>
-            <AppBar position="static" style={{background: "#ffffff", flexGrow: 1}}>
+            <AppBar position="static" style={{color: "black", background: "#ffffff", flexGrow: 1}}>
                 <Toolbar variant={"dense"}>
                     <IconButton
                         onClick={toggleDrawer('left', true)}
@@ -81,9 +81,12 @@ export default function SwipeableTemporaryDrawer() {
                     {/*    Glitcher*/}
                     {/*</Typography>*/}
                     <Box flexGrow={1}/>
-                    <Button disableRipple={true} style={{maxWidth: "200px", backgroundColor: "#FFffff"}}>
-                            <Link to="/login" style={{textDecoration: 'none', color: "grey"}}>Sign in</Link>
-                        </Button>
+                    {!props.currentUser ? <Button disableRipple style={{maxWidth: "200px", backgroundColor: "#FFffff"}}><Link to="/login" style={{textDecoration: 'none', color: "grey"}}>Sign in</Link></Button> :
+                        <>Hello {props.currentUser}<Button onClick={props.logout} disableRipple>Logout</Button></>}
+
+                    {/*<Button disableRipple={true} style={{maxWidth: "200px", backgroundColor: "#FFffff"}}>*/}
+                    {/*        <Link to="/login" style={{textDecoration: 'none', color: "grey"}}>Sign in</Link>*/}
+                    {/*    </Button>*/}
                 </Toolbar>
             </AppBar>
 

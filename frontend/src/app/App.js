@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
     BrowserRouter as Router,
     Switch,
@@ -11,28 +11,31 @@ import HomePage from "../pages/HomePage";
 import About from "../pages/About";
 import ChessAnalysis from "../pages/chess/ChessAnalysis";
 import Quizy from "../pages/Quizy";
-import Login from "../pages/authentication/Login";
-import Register from "../pages/authentication/Register";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
 
-class App extends React.Component {
-    render() {
-        return (
-            <Router>
-                <Header />
-                    <div>
-                        <Switch>
-                            <Route path="/" exact={true} component={HomePage}/>
-                            <Route path="/quizy" exact={true} component={Quizy}/>
-                            <Route path="/chess/analysis" exact={true} component={ChessAnalysis}/>
-                            <Route path="/login" exact={true} component={Login}/>
-                            <Route path="/signup" exact={true} component={Register}/>
-                            <Route path="/about" exact={true} component={About}/>
-                            <Route path="**" exact={true} component={P404}/>
-                        </Switch>
-                    </div>
-            </Router>
-        )
-    }
+function App(props) {
+    useEffect(() => {
+        props.stores.authStore.refresh().catch((e)=>{console.log(e)})
+    }, [])
+
+    return (
+        <Router>
+            <Header/>
+            <div>
+                <Switch>
+                    <Route path="/" exact={true} component={HomePage}/>
+                    <Route path="/quizy" exact={true} component={Quizy}/>
+                    <Route path="/chess/analysis" exact={true} component={ChessAnalysis}/>
+                    <Route path="/login" exact={true} component={Login}/>
+                    <Route path="/signup" exact={true} component={Register}/>
+                    <Route path="/about" exact={true} component={About}/>
+                    <Route path="**" exact={true} component={P404}/>
+                </Switch>
+            </div>
+        </Router>
+    )
+
 }
 
 export default withStore(App);
