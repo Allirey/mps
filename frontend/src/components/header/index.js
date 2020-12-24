@@ -3,21 +3,24 @@ import MobileHeader from "./MobileHeader";
 import DesktopHeader from "./DesktopHeader";
 import {Box} from "@material-ui/core";
 import withStore from "../../hocs/withStore";
+import {useHistory} from 'react-router-dom';
 
 function Header(props) {
-
-    // console.log(props.stores.authStore.currentUser)
-
     const store = props.stores.authStore;
-    // console.log(store.currentUser)
+    const history = useHistory()
 
+    const logout = () => {
+        store.logout().then(()=>{
+            history.push("/login")
+        })
+    }
     return (
         <>
             <Box display={{xs: "none", md: "block"}}>
-                <DesktopHeader currentUser={!!store.currentUser?store.currentUser.username:''} logout={store.logout}/>
+                <DesktopHeader currentUser={!!store.currentUser?store.currentUser.username:''} logout={logout}/>
             </Box>
             <Box display={{xs: "block", md: "none"}}>
-                <MobileHeader currentUser={!!store.currentUser?store.currentUser.username:''} logout={store.logout}/>
+                <MobileHeader currentUser={!!store.currentUser?store.currentUser.username:''} logout={logout}/>
             </Box>
         </>
     )

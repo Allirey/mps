@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     BrowserRouter as Router,
     Switch,
@@ -13,11 +13,17 @@ import ChessAnalysis from "../pages/chess/ChessAnalysis";
 import Quizy from "../pages/Quizy";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import PrivateRoute from "../components/PrivateRoute";
+import Spinner from "../components/spinner";
 
 function App(props) {
+    const [appLoading, setAppLoading] = useState(true)
+
     useEffect(() => {
-        props.stores.authStore.refresh().catch((e)=>{console.log(e)})
+        props.stores.authStore.refresh().then(()=>setAppLoading(false)).catch((e)=>{})
     }, [])
+
+    if (appLoading) return <Spinner/>
 
     return (
         <Router>
@@ -25,7 +31,7 @@ function App(props) {
             <div>
                 <Switch>
                     <Route path="/" exact={true} component={HomePage}/>
-                    <Route path="/quizy" exact={true} component={Quizy}/>
+                    <PrivateRoute path="/quizy" exact={true} component={Quizy}/>
                     <Route path="/chess/analysis" exact={true} component={ChessAnalysis}/>
                     <Route path="/login" exact={true} component={Login}/>
                     <Route path="/signup" exact={true} component={Register}/>

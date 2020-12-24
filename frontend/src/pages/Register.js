@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {Button, CssBaseline, Avatar, TextField, Grid, Box, Typography, makeStyles, Container} from '@material-ui/core';
 import withStore from '../hocs/withStore';
@@ -54,6 +54,7 @@ function SignUp(props) {
         users.register().then(() => props.history.replace("/"));
     }
 
+    if (props.stores.authStore.isAuthenticated) return <Redirect to={"/"}/>
 
     return (
         <Container component="main" maxWidth="xs">
@@ -82,7 +83,7 @@ function SignUp(props) {
                                 id="username"
                                 label="Username"
                                 // onKeyDown={e => e.keyCode === 13 ? handleSubmit() : []}
-                                // autoFocus
+                                autoFocus
                             />
                         </Grid>
                         <Grid item xs={12}>

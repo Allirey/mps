@@ -2,12 +2,10 @@ import React from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import withStore from '../hocs/withStore';
 
-class PrivateRoute extends React.Component {
-    render() {
-        const {userStore, ...restProps} = this.props;
-        if (userStore.currentUser) return <Route {...restProps} />;
-        return <Redirect to="/login"/>;
-    }
+function PrivateRoute(props) {
+    const {stores, ...restProps} = props;
+    if (stores.authStore.isAuthenticated) return <Route {...restProps} />;
+    return <Redirect to={{pathname: '/login', state: {from: props.location}}}/>;
 }
 
 export default withStore(PrivateRoute);

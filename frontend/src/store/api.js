@@ -1,7 +1,7 @@
 import {observable, computed, action, decorate} from 'mobx';
 
-const dev_api = '';
-// const dev_api = 'http://10.10.86.217:8000';
+// const dev_api = '';
+const dev_api = 'http://10.10.86.217:8000';
 const apiBase = dev_api + '/api';
 
 const apiLogin = apiBase + '/token/obtain/';
@@ -13,6 +13,7 @@ const apiGame = apiBase + '/game/';
 const apiExplorer = apiBase + '/explorer/';
 const apiSearchAutocomplete = apiBase + '/autocomplete/';
 
+const apiQuizyWords = apiBase + '/quizy/words/'
 
 class api {
     constructor(rootStore) {
@@ -30,45 +31,33 @@ class api {
         login: (username, password) => {
             return this.makeRequest(apiLogin, {
                 body: JSON.stringify({username, password})
-            }).then((data) => {
-                if (data.code === 401) {
-                    throw new Error('unregistered user')
-                }
-                if (data.code !== 200) {
-                    throw new Error('unknown error')
-                }
-
-                this.token = data.access
-                return JSON.parse(atob(data.access.split('.')[1]));
             })
         },
         logout: () => (
             this.makeRequest(apiLogout).then(data => (this.token = undefined))
         ),
         refresh: () => {
-            return this.makeRequest(apiRefresh).then((data) => {
-                if (data.code === 401) {
-                    throw new Error('unregistered user')
-                }
-                if (data.code !== 200) {
-                    throw new Error('unknown error')
-                }
-
-                this.token = data.access
-                return JSON.parse(atob(data.access.split('.')[1]));
-            })
+            return this.makeRequest(apiRefresh)
         },
     }
 
     ChessExplorer = {
         getGameByUrl: (id) => {
-
         },
         getGamesAndMoves: (name, color, fen) => {
-
         },
         playerSearchAutocomplete: () => {
+        }
+    }
 
+    Quizy = {
+        add: (word, translate) => {
+        },
+        update: (word, translate) => {
+        },
+        getWordList: () => {
+        },
+        remove: (word) => {
         }
     }
 
@@ -81,9 +70,8 @@ class api {
             ...Params
         }).then(response => {
             if (response.ok) return response.json();
-
             return response.json().then(data => {
-                throw {status: response.status, message: data};
+                throw data;
             });
         })
     }
@@ -99,6 +87,7 @@ class api {
 
 decorate(api, {
         token: observable,
+        appLoaded: observable,
     }
 );
 

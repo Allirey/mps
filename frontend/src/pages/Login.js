@@ -1,8 +1,9 @@
 import React, {useEffect} from 'react';
-import {Link} from "react-router-dom";
+import {Link, Redirect, useLocation} from "react-router-dom";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {Button, CssBaseline, Avatar, TextField, Grid, Box, Typography, makeStyles, Container} from '@material-ui/core';
 import withStore from '../hocs/withStore';
+
 
 function Copyright() {
     return (
@@ -47,10 +48,15 @@ function SignIn(props) {
         return () => users.reset()
     }, [])
 
+    let location = useLocation();
+
     const handleSubmit = (e) => {
         e.preventDefault()
-        users.login().then(() => props.history.replace("/")).catch(e => console.log('wrong credentials'));
+        users.login()
+            .then(() => props.history.replace(!!location.state ? location.state.from : "/"))
+            .catch(e => console.log(e));
     }
+    if (props.stores.authStore.isAuthenticated) return <Redirect to={"/"}/>
 
     return (
         <Container component="main" maxWidth="xs">
@@ -68,7 +74,7 @@ function SignIn(props) {
                     onSubmit={handleSubmit}>
                     <TextField
                         value={users.values.username}
-                        onChange={(e)=>users.setUsername(e.target.value)}
+                        onChange={(e) => users.setUsername(e.target.value)}
                         variant="outlined"
                         margin="normal"
                         required
@@ -78,11 +84,11 @@ function SignIn(props) {
                         name="email"
                         autoComplete="off"
                         // onKeyDown={e => e.keyCode === 13 ? handleSubmit() : []}
-                        // autoFocus
+                        autoFocus
                     />
                     <TextField
                         value={users.values.password}
-                        onChange={(e)=>users.setPassword(e.target.value)}
+                        onChange={(e) => users.setPassword(e.target.value)}
                         variant="outlined"
                         margin="normal"
                         required

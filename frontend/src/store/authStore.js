@@ -8,6 +8,7 @@ class AuthStore {
     inProgress = false;
     errors = undefined;
     currentUser = undefined;
+    isAuthenticated = false;
 
     values = {username: '', password: '', email: ''}
     reset = () => this.values = {username: '', password: '', email: ''}
@@ -20,7 +21,14 @@ class AuthStore {
         this.inProgress = true;
         this.errors = undefined;
         try {
-            this.currentUser = await this.rootStore.api.Auth.login(this.values.username, this.values.password)
+            let data = await this.rootStore.api.Auth.login(this.values.username, this.values.password)
+            if (!data.authenticated) {
+                this.isAuthenticated = false;
+                return data
+            }
+            this.rootStore.api.token = data.access
+            this.currentUser = JSON.parse(atob(data.access.split('.')[1]));
+            this.isAuthenticated = true;
             return Promise.resolve()
         } catch (e) {
             // console.log(e)
@@ -35,25 +43,41 @@ class AuthStore {
         this.errors = undefined;
         try {
             await this.rootStore.api.Auth.register(...this.values)
-            this.currentUser = await this.rootStore.api.Auth.login(this.values.username, this.values.password)
+
+            //todo call login separately
+            let data = await this.rootStore.api.Auth.login(this.values.username, this.values.password)
+            if (!data.authenticated) {
+                this.isAuthenticated = false;
+                throw data
+            }
+            this.rootStore.api.token = data.access
+            this.currentUser = JSON.parse(atob(data.access.split('.')[1]));
+            this.isAuthenticated = true;
             return Promise.resolve()
-        } catch (e) {
-            return Promise.reject(e)
-        } finally {
+        }
+        finally {
             this.inProgress = false;
         }
     }
 
     refresh = () => {
-        return this.rootStore.api.Auth.refresh().then(data => {
-            this.currentUser = data;
+        return this.rootStore.api.Auth.refresh().then((data) => {
+            if (!data.authenticated) {
+                this.isAuthenticated = false;
+                throw data
+            }
+            this.rootStore.api.token = data.access
+            this.currentUser = JSON.parse(atob(data.access.split('.')[1]));
+            this.isAuthenticated = true;
         }).catch(console.log)
     }
 
     logout = () => {
-        this.rootStore.api.Auth.logout().then(data => this.currentUser = undefined).catch(console.log)
+        return this.rootStore.api.Auth.logout().then(data => {
+            this.currentUser = undefined
+            this.isAuthenticated = false;
+        }).catch(console.log)
     }
-
 }
 
 decorate(AuthStore, {
@@ -61,6 +85,7 @@ decorate(AuthStore, {
         errors: observable,
         values: observable,
         currentUser: observable,
+        isAuthenticated: observable,
 
         setUsername: action,
         setEmail: action,
