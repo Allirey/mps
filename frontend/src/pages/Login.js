@@ -1,8 +1,9 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link, Redirect, useLocation} from "react-router-dom";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {Button, CssBaseline, Avatar, TextField, Grid, Box, Typography, makeStyles, Container} from '@material-ui/core';
 import withStore from '../hocs/withStore';
+import {set} from "mobx";
 
 
 function Copyright() {
@@ -42,7 +43,9 @@ const useStyles = makeStyles((theme) => ({
 
 function SignIn(props) {
     const classes = useStyles();
+    const [errors, setErrors] = useState('');
     const users = props.stores.authStore;
+    const {inProgress} = props.stores.authStore;
 
     useEffect(() => {
         return () => users.reset()
@@ -53,8 +56,9 @@ function SignIn(props) {
     const handleSubmit = (e) => {
         e.preventDefault()
         users.login()
-            .then(() => props.history.replace(!!location.state ? location.state.from : "/"))
-            .catch(e => console.log(e));
+            .then(() => (props.history.replace(!!location.state ? location.state.from : "/")))
+            .catch((e)=>(setErrors(e.message)));
+
     }
     if (props.stores.authStore.isAuthenticated) return <Redirect to={"/"}/>
 
@@ -79,12 +83,14 @@ function SignIn(props) {
                         margin="normal"
                         required
                         fullWidth
-                        id="email"
+                        id="username"
                         label="Username or E-mail"
-                        name="email"
+                        name="username"
                         autoComplete="off"
                         // onKeyDown={e => e.keyCode === 13 ? handleSubmit() : []}
                         autoFocus
+                        error={!!errors}
+
                     />
                     <TextField
                         value={users.values.password}
@@ -98,6 +104,8 @@ function SignIn(props) {
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        error={!!errors}
+                        helperText={errors}
                         // onKeyDown={e => e.keyCode === 13 ? handleSubmit() : []}
                     />
                     <Button
@@ -107,6 +115,7 @@ function SignIn(props) {
                         color="primary"
                         className={classes.submit}
                         onSubmit={handleSubmit}
+                        disabled={inProgress}
                     >
                         Sign In
                     </Button>

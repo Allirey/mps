@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link, Redirect} from "react-router-dom";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {Button, CssBaseline, Avatar, TextField, Grid, Box, Typography, makeStyles, Container} from '@material-ui/core';
@@ -41,17 +41,26 @@ const useStyles = makeStyles((theme) => ({
 
 function SignUp(props) {
     const classes = useStyles();
-    const users = props.stores.authStore;
+    const [userNameErrorText, setUserNameErrTxt] = useState('');
+    const [emailErrorText, setEmailErrTxt] = useState('');
+    const [passwordErrorText, setPasswordErrTxt] = useState('');
 
-    // console.log(users.inProgress);
+    const users = props.stores.authStore;
+    const {inProgress} = props.stores.authStore;
+
 
     useEffect(() => {
         return () => users.reset()
     }, [])
 
+    const setError = (errors) => {
+        const errorsMap = {email: setEmailErrTxt, password: setPasswordErrTxt, username: setUserNameErrTxt}
+        Object.entries(errors).forEach(([key, value]) => errorsMap[[key]](value))
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault()
-        users.register().then(() => props.history.replace("/"));
+        users.register().then(() => props.history.replace("/")).catch(setError);
     }
 
     if (props.stores.authStore.isAuthenticated) return <Redirect to={"/"}/>
@@ -84,6 +93,8 @@ function SignUp(props) {
                                 label="Username"
                                 // onKeyDown={e => e.keyCode === 13 ? handleSubmit() : []}
                                 autoFocus
+                                error={!!userNameErrorText}
+                                helperText={userNameErrorText}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -99,6 +110,8 @@ function SignUp(props) {
                                 id="password"
                                 autoComplete="current-password"
                                 // onKeyDown={e => e.keyCode === 13 ? handleSubmit() : []}
+                                error={!!passwordErrorText}
+                                helperText={passwordErrorText}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -113,6 +126,8 @@ function SignUp(props) {
                                 name="email"
                                 autoComplete="off"
                                 // onKeyDown={e => e.keyCode === 13 ? handleSubmit() : []}
+                                error={!!emailErrorText}
+                                helperText={emailErrorText}
                             />
                         </Grid>
                     </Grid>
@@ -123,6 +138,7 @@ function SignUp(props) {
                         color="primary"
                         className={classes.submit}
                         onSubmit={handleSubmit}
+                        disabled={inProgress}
                     >
                         Sign Up
                     </Button>
