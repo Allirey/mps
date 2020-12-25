@@ -22,17 +22,11 @@ class AuthStore {
         this.errors = undefined;
         try {
             let data = await this.rootStore.api.Auth.login(this.values.username, this.values.password)
-            if (!data.authenticated) {
-                this.isAuthenticated = false;
-                return data
-            }
-            this.rootStore.api.token = data.access
-            this.currentUser = JSON.parse(atob(data.access.split('.')[1]));
-            this.isAuthenticated = true;
+            this._processAuthData(data)
+
             return Promise.resolve()
         } catch (e) {
-            // console.log(e)
-            return Promise.reject(e)
+            throw e
         } finally {
             this.inProgress = false;
         }
@@ -42,33 +36,21 @@ class AuthStore {
         this.inProgress = true;
         this.errors = undefined;
         try {
-            await this.rootStore.api.Auth.register(...this.values)
+            await this.rootStore.api.Auth.register(this.values.username, this.values.email, this.values.password)
 
             //todo call login separately
             let data = await this.rootStore.api.Auth.login(this.values.username, this.values.password)
-            if (!data.authenticated) {
-                this.isAuthenticated = false;
-                throw data
-            }
-            this.rootStore.api.token = data.access
-            this.currentUser = JSON.parse(atob(data.access.split('.')[1]));
-            this.isAuthenticated = true;
+            this._processAuthData(data)
+
             return Promise.resolve()
-        }
-        finally {
+        } finally {
             this.inProgress = false;
         }
     }
 
     refresh = () => {
         return this.rootStore.api.Auth.refresh().then((data) => {
-            if (!data.authenticated) {
-                this.isAuthenticated = false;
-                throw data
-            }
-            this.rootStore.api.token = data.access
-            this.currentUser = JSON.parse(atob(data.access.split('.')[1]));
-            this.isAuthenticated = true;
+            this._processAuthData(data)
         }).catch(console.log)
     }
 
@@ -77,6 +59,16 @@ class AuthStore {
             this.currentUser = undefined
             this.isAuthenticated = false;
         }).catch(console.log)
+    }
+
+    _processAuthData(data) {
+        if (!data.authenticated) {
+            this.isAuthenticated = false;
+            throw data
+        }
+        this.isAuthenticated = true;
+        this.rootStore.api.token = data.access
+        this.currentUser = JSON.parse(atob(data.access.split('.')[1]));
     }
 }
 

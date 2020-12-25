@@ -1,7 +1,7 @@
 import {observable, computed, action, decorate} from 'mobx';
 
-// const dev_api = '';
-const dev_api = 'http://10.10.86.217:8000';
+const dev_api = '';
+// const dev_api = 'http://10.10.86.217:8000';
 const apiBase = dev_api + '/api';
 
 const apiLogin = apiBase + '/token/obtain/';
@@ -23,51 +23,53 @@ class api {
     token = null;
 
     Auth = {
-        register: (username, email, password) => {
-            return this.makeRequest(apiRegister, {
-                body: JSON.stringify({username, password, email})
-            })
-        },
-        login: (username, password) => {
-            return this.makeRequest(apiLogin, {
-                body: JSON.stringify({username, password})
-            })
-        },
-        logout: () => (
-            this.makeRequest(apiLogout).then(data => (this.token = undefined))
+        register: (username, email, password) => (
+            this.requests.post(apiRegister, {body: JSON.stringify({username, password, email})})
         ),
-        refresh: () => {
-            return this.makeRequest(apiRefresh)
-        },
+        login: (username, password) => (
+            this.requests.post(apiLogin, {body: JSON.stringify({username, password})})
+        ),
+        logout: () => (this.requests.post(apiLogout).then(data => (this.token = undefined))),
+        refresh: () => (this.requests.post(apiRefresh)),
     }
 
     ChessExplorer = {
-        getGameByUrl: (id) => {
-        },
-        getGamesAndMoves: (name, color, fen) => {
-        },
+        getGameByUrl: (url) => (this.requests.get(apiGame + '?' + new URLSearchParams({id: url}))),
+        getGamesAndMoves: (name, color, fen) => (
+            this.requests.get(apiExplorer + '?' + new URLSearchParams({name, color, fen}))
+        ),
         playerSearchAutocomplete: () => {
         }
     }
 
     Quizy = {
-        add: (word, translate) => {
-        },
-        update: (word, translate) => {
-        },
-        getWordList: () => {
-        },
-        remove: (word) => {
-        }
+        add: (word, translate) => (
+            this.requests.post(apiQuizyWords, {body: JSON.stringify({word, translate})})
+        ),
+        update: (id, word, translate) => (
+            this.requests.put(apiQuizyWords + `${id}/`, {body: JSON.stringify({word, translate})})
+        ),
+        getWordList: () => (this.requests.get(apiQuizyWords)),
+        remove: (id) => (this.requests.delete(apiQuizyWords + `${id}/`))
     }
 
-    makeRequest(url, Params = {}, withCreds = false) {
+
+    // wrap on fetch: requests.METHOD_NAME(URL, OPTIONS, WITH_AUTH)
+    requests = Object.assign(...Object.entries(
+        {get: "GET", post: "POST", put: "PUT", delete: "DELETE", patch: "PATCH"}).map(([key, method]) => ({
+            [key]: (url, options = {}, withAuth = false) => this.request(url, method, options, withAuth)
+        })));
+
+    request(url, method, options = {}, withAuth = false) {
+        /* todo check if 401 - make refresh, then repeat request,
+        if 401 again - throw 401 error + data, else return data. */
+
         return fetch(url, {
-            method: "POST",
             headers: {'Content-Type': 'application/json', 'Accept': 'application/json',},
             credentials: 'include',
-            ...this.authHeader(withCreds),
-            ...Params
+            ...this.authHeader(withAuth),
+            ...options,
+            method: method,
         }).then(response => {
             if (response.ok) return response.json();
             return response.json().then(data => {
@@ -76,8 +78,8 @@ class api {
         })
     }
 
-    authHeader = (withCreds = false) => {
-        if (this.rootStore.authStore.currentUser && this.token && withCreds) {
+    authHeader = (withAuth = false) => {
+        if (this.rootStore.authStore.currentUser && this.token && withAuth) {
             return {Authorization: `Bearer ${this.token}`};
         } else {
             return {};
@@ -87,7 +89,6 @@ class api {
 
 decorate(api, {
         token: observable,
-        appLoaded: observable,
     }
 );
 

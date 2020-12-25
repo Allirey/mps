@@ -1,11 +1,5 @@
 import {observable, computed, action, decorate} from 'mobx';
 
-// const dev_api = '';
-const dev_api = 'http://10.10.86.217:8000';
-const base_api = dev_api + '/api';
-const api_game = base_api + '/game/';
-const api_explorer = base_api + '/explorer/';
-
 class ChessOpeningExplorerStore {
     constructor(rootStore) {
         this.rootStore = rootStore;
@@ -23,23 +17,11 @@ class ChessOpeningExplorerStore {
     setName = (name) => this.searchData.name = name;
     setColor = (color) => this.searchData.color = color;
 
-    makeRequest(url, queryParams) {
-        return fetch(url + '?' + new URLSearchParams(queryParams), {
-            method: "GET",
-            headers: {'Content-Type': 'application/json'}
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error('Something went wrong ...');
-            }
-            return response.json();
-        })
-    }
-
     getGameByUrl = (url) => {
         if (url in this.pgn_games_cache) {
             this.rootStore.chessNotation.initMainLineNodes(this.pgn_games_cache[url])
         } else {
-            this.makeRequest(api_game, {id: url}).then((data) => {
+            this.rootStore.api.ChessExplorer.getGameByUrl(url).then((data) => {
                 this.pgn_games_cache[url] = data.game;
                 this.rootStore.chessNotation.initMainLineNodes(this.pgn_games_cache[url])
             });
@@ -54,11 +36,11 @@ class ChessOpeningExplorerStore {
         const check = JSON.stringify(this.searchData);
 
         if (!(check in this.table_games_cache)) {
-            this.makeRequest(api_explorer, this.searchData)
-                .then(data => {
-                    this.table_games_cache[check] = data.games;
-                    this.explorer_moves_cache[check] = data.moves;
-                }).catch((e) => (console.log()))
+            const {name, color, fen} = this.searchData
+            this.rootStore.api.ChessExplorer.getGamesAndMoves(name, color, fen).then(data => {
+                this.table_games_cache[check] = data.games;
+                this.explorer_moves_cache[check] = data.moves;
+            }).catch(console.log)
         }
         // reset current board game when searching another player's game
         // this.rootStore.chessNotation.resetNode();
