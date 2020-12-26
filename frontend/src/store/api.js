@@ -15,6 +15,9 @@ const apiSearchAutocomplete = apiBase + '/autocomplete/';
 
 const apiQuizyWords = apiBase + '/quizy/words/'
 
+const apiArticles = apiBase + '/blog/articles/'
+const apiComments = apiBase + '/blog/comments/'
+
 class api {
     constructor(rootStore) {
         this.rootStore = rootStore;
@@ -29,7 +32,7 @@ class api {
         login: (username, password) => (
             this.requests.post(apiLogin, {body: JSON.stringify({username, password})})
         ),
-        logout: () => (this.requests.post(apiLogout).then(data => (this.token = undefined))),
+        logout: () => (this.requests.post(apiLogout).then(data => this.token = undefined)),
         refresh: () => (this.requests.post(apiRefresh)),
     }
 
@@ -38,8 +41,9 @@ class api {
         getGamesAndMoves: (name, color, fen) => (
             this.requests.get(apiExplorer + '?' + new URLSearchParams({name, color, fen}))
         ),
-        playerSearchAutocomplete: () => {
-        }
+        playerSearchAutocomplete: (name) =>
+            (this.requests.get(apiSearchAutocomplete + '?' + new URLSearchParams({name}))
+        )
     }
 
     Quizy = {
@@ -49,16 +53,38 @@ class api {
         update: (id, word, translate) => (
             this.requests.put(apiQuizyWords + `${id}/`, {body: JSON.stringify({word, translate})})
         ),
-        getWordList: () => (this.requests.get(apiQuizyWords)),
+        getAll: () => (this.requests.get(apiQuizyWords)),
         remove: (id) => (this.requests.delete(apiQuizyWords + `${id}/`))
+    }
+
+    Articles = {
+        add: (title, content) => (
+            this.requests.post(apiArticles, {body: JSON.stringify({title, content})})
+        ),
+        update: (id, title, content) => (
+            this.requests.put(apiArticles + `${id}/`, {body: JSON.stringify({title, content})})
+        ),
+        getAll: () => (this.requests.get(apiArticles)),
+        remove: (id) => (this.requests.delete(apiArticles + `${id}/`))
+    }
+
+    Comments = {
+        add: (word, translate) => (
+            this.requests.post(apiComments, {body: JSON.stringify({word, translate})})
+        ),
+        update: (id, word, translate) => (
+            this.requests.put(apiComments + `${id}/`, {body: JSON.stringify({word, translate})})
+        ),
+        getAll: () => (this.requests.get(apiComments)),
+        remove: (id) => (this.requests.delete(apiComments + `${id}/`))
     }
 
 
     // wrap on fetch: requests.METHOD_NAME(URL, OPTIONS, WITH_AUTH)
     requests = Object.assign(...Object.entries(
         {get: "GET", post: "POST", put: "PUT", delete: "DELETE", patch: "PATCH"}).map(([key, method]) => ({
-            [key]: (url, options = {}, withAuth = false) => this.request(url, method, options, withAuth)
-        })));
+        [key]: (url, options = {}, withAuth = false) => this.request(url, method, options, withAuth)
+    })));
 
     request(url, method, options = {}, withAuth = false) {
         /* todo check if 401 - make refresh, then repeat request,
