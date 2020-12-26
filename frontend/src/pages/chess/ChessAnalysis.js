@@ -57,7 +57,7 @@ class ChessAnalysis extends React.Component {
                                     lastMove={notation.lastMove}
                                     fen={notation.fen}
                                     // onMove={chess.onMove}
-                                    check={false}
+                                    check={"false"}
                                     style={{margin: "auto"}}
                                 />
                             </div></Grid>
