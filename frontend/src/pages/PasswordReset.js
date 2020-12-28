@@ -104,7 +104,6 @@ function ResetPassword(props) {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 variant="outlined"
-                                // required
                                 fullWidth
                                 id="email"
                                 label="E-mail address"
