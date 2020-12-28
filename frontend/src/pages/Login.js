@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Link, Redirect, useLocation} from "react-router-dom";
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import {Button, CssBaseline, Avatar, TextField, Grid, Box, Typography, makeStyles, Container} from '@material-ui/core';
+import {Button, CssBaseline, TextField, Grid, Box, Typography, makeStyles, Container} from '@material-ui/core';
 import withStore from '../hocs/withStore';
-import {set} from "mobx";
-
+import authImg from "./imgs/auth.png";
 
 function Copyright() {
     return (
@@ -21,14 +19,10 @@ function Copyright() {
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-        marginTop: theme.spacing(8),
+        marginTop: theme.spacing(2),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -39,13 +33,21 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: "#3b535f",  //   #b0bec5
         "&:hover": {backgroundColor: "#b0bec5",}
     },
+    logo: {
+        width: "21em",
+        "& img": {width: "100%", height: "100%"}
+    },
 }));
 
 function SignIn(props) {
     const classes = useStyles();
     const [errors, setErrors] = useState('');
+    const [userNameErrTxt, setUserNameErrTxt] = useState('');
+    const [passwordErrTxt, setPasswordErrTxt] = useState('');
+
     const users = props.stores.authStore;
     const {inProgress} = props.stores.authStore;
+    const {username, password} = users.values
 
     useEffect(() => {
         return () => users.reset()
@@ -53,12 +55,33 @@ function SignIn(props) {
 
     let location = useLocation();
 
+    const setError = (errors) => {
+        const errorsMap = {password: setPasswordErrTxt, username: setUserNameErrTxt}
+        Object.entries(errors).forEach(([key, value]) => errorsMap[[key]](value))
+    }
+
+    const isUNameValid = () => {
+        let isValid = username.length > 0;
+        setUserNameErrTxt(isValid ? '' : 'This field is required');
+
+        return isValid;
+    };
+
+    const isPasswordValid = () => {
+        let isValid = password.length > 0;
+        setPasswordErrTxt(isValid ? '' : 'This field is required');
+
+        return isValid;
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault()
+        if (!isUNameValid() | !isPasswordValid()) return
+
         users.login()
             .then(() => (props.history.replace(!!location.state ? location.state.from : "/")))
-            .catch((e)=>(setErrors(e.message)));
-
+            .catch((e) => (setErrors(e.message)));
+        // todo returns "OK" in error if empty form submitted
     }
     if (props.stores.authStore.isAuthenticated) return <Redirect to={"/"}/>
 
@@ -66,30 +89,29 @@ function SignIn(props) {
         <Container component="main" maxWidth="xs">
             <CssBaseline/>
             <div className={classes.paper}>
-                <Avatar className={classes.avatar} style={{backgroundColor: "purple"}}>
-                    <LockOutlinedIcon/>
-                </Avatar>
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
+                <div className={classes.logo} >
+                    <img src={authImg} alt={''}/>
+                </div>
                 <form
                     className={classes.form}
-                    // noValidate
+                    noValidate
                     onSubmit={handleSubmit}>
                     <TextField
                         value={users.values.username}
                         onChange={(e) => users.setUsername(e.target.value)}
                         variant="outlined"
                         margin="normal"
-                        required
                         fullWidth
                         id="username"
                         label="Username or E-mail"
                         name="username"
                         autoComplete="off"
-                        // onKeyDown={e => e.keyCode === 13 ? handleSubmit() : []}
-                        autoFocus
-                        error={!!errors}
+                        // autoFocus
+                        error={!!userNameErrTxt || !!errors}
+                        helperText={userNameErrTxt}
 
                     />
                     <TextField
@@ -97,16 +119,14 @@ function SignIn(props) {
                         onChange={(e) => users.setPassword(e.target.value)}
                         variant="outlined"
                         margin="normal"
-                        required
                         fullWidth
                         name="password"
                         label="Password"
                         type="password"
                         id="password"
                         autoComplete="current-password"
-                        error={!!errors}
-                        helperText={errors}
-                        // onKeyDown={e => e.keyCode === 13 ? handleSubmit() : []}
+                        error={!!passwordErrTxt || !!errors}
+                        helperText={passwordErrTxt || errors}
                     />
                     <Button
                         type="submit"
@@ -121,7 +141,7 @@ function SignIn(props) {
                     </Button>
                     <Grid container>
                         <Grid item xs>
-                            <Link to="#" variant="body2">
+                            <Link to="/forgot-password" variant="body2">
                                 Forgot password?
                             </Link>
                         </Grid>
