@@ -4,8 +4,10 @@ const dev_api = '';
 // const dev_api = 'http://10.10.86.217:8000';
 const apiBase = dev_api + '/api';
 
-const apiLogin = apiBase + '/token/obtain/';
 const apiRegister = apiBase + '/users/create/';
+const apiActivation = apiBase + '/users/activate/';
+
+const apiLogin = apiBase + '/token/obtain/';
 const apiRefresh = apiBase + '/token/refresh/';
 const apiLogout = apiBase + '/token/refresh/remove/';
 
@@ -32,8 +34,12 @@ class api {
         login: (username, password) => (
             this.requests.post(apiLogin, {body: JSON.stringify({username, password})})
         ),
-        logout: () => (this.requests.post(apiLogout).then(data => this.token = undefined)),
+        logout: () => (this.requests.post(apiLogout).then(data => {
+            this.token = undefined;
+            return data;
+        })),
         refresh: () => (this.requests.post(apiRefresh)),
+        activate: (id, token) => (this.requests.get(`${apiActivation}${id}/${token}/`)),
     }
 
     ChessExplorer = {
@@ -43,7 +49,7 @@ class api {
         ),
         playerSearchAutocomplete: (name) =>
             (this.requests.get(apiSearchAutocomplete + '?' + new URLSearchParams({name}))
-        )
+            )
     }
 
     Quizy = {
@@ -69,16 +75,15 @@ class api {
     }
 
     Comments = {
-        add: (word, translate) => (
-            this.requests.post(apiComments, {body: JSON.stringify({word, translate})})
+        add: (articleID, content) => (
+            this.requests.post(apiComments, {body: JSON.stringify({articleID, content})})
         ),
-        update: (id, word, translate) => (
-            this.requests.put(apiComments + `${id}/`, {body: JSON.stringify({word, translate})})
+        update: (id, content) => (
+            this.requests.put(apiComments + `${id}/`, {body: JSON.stringify({id, content})})
         ),
-        getAll: () => (this.requests.get(apiComments)),
+        getAll: (articleID) => (this.requests.get(apiComments)), // todo ???
         remove: (id) => (this.requests.delete(apiComments + `${id}/`))
     }
-
 
     // wrap on fetch: requests.METHOD_NAME(URL, OPTIONS, WITH_AUTH)
     requests = Object.assign(...Object.entries(
