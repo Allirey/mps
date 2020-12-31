@@ -18,13 +18,13 @@ def send_verification_email(user_id, scheme, domain, email_template=None):
             'token': account_activation_token.make_token(user)
         }
         # todo find smart solution to store url in settings or .env file to frontend activate page
-        activation_link = f'{scheme}://{domain.split(":")[0]}{":3000" if settings.DEBUG else ""}/accounts/confirm-email/{kwargs["uidb64"]}' \
-                          f'/{kwargs["token"]}/'
+        activation_link = f'{scheme}://{domain.split(":")[0]}{":3000" if settings.DEBUG else ""}/' \
+                          f'accounts/confirm-email/{kwargs["uidb64"]}/{kwargs["token"]}/'
         subject = 'Activate account'
 
         if email_template:
             text = render_to_string(email_template,
-                                    {'scheme': scheme, 'domain': domain, 'activation_url': url, 'user': user})
+                                    {'scheme': scheme, 'domain': domain, 'activation_url': 'url', 'user': user})
         else:
             text = f"""
             Welcome {user.username}!
