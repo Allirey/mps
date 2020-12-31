@@ -1,8 +1,10 @@
+import re
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer as TokenObtainSerializerNative
 from django.utils.translation import ugettext_lazy as _
-
+from django.conf import settings
 from .models import User
+from .utils import normalize_email
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -30,22 +32,23 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     def validate_username(self, username):
         if User.objects.filter(username__iexact=username).exists():
-            raise serializers.ValidationError(_(u'Username already in use'))
-
-        elif len(username) < 3:
-            raise serializers.ValidationError(_(u'Username too short'))
+            raise serializers.ValidationError(_(u'Username already in use.'))
 
         return username
 
     def validate_email(self, email):
-        email = email.lower()
-        if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError(_(u'Email already in use'))
+        email = normalize_email(email)
+        name, domain = email.split('@')
 
-        # todo supported email should be in settings
-        if not (email.split('@')[1] in ['gmail.com', 'mail.ru', 'protonmail.com', 'yahoo.com', 'googlemail.com',
-                                        'zoho.com', 'hotmail.com', 'live.com', 'msn.com', 'aol.com', 'yandex.ru', ]):
-            raise serializers.ValidationError(_(u'{} not supported'.format(email.split('@')[1])))
+        if not bool(re.compile(r'^[\w.]+$').match(name)):
+            raise serializers.ValidationError(_(u'Enter valid email address.'
+                                                u' Allowed latin letters, numbers and _ .'))
+
+        if domain not in settings.ALLOWED_EMAIL_DOMAINS:
+            raise serializers.ValidationError(_(u'{} not supported'.format(domain)))
+
+        if User.objects.filter(email=email).exists():
+            raise serializers.ValidationError(_(u'Email already in use.'))
 
         return email
 
