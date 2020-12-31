@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
 from celery import shared_task
 from .tokens import account_activation_token
+from django.conf import settings
 
 
 @shared_task
@@ -17,7 +18,7 @@ def send_verification_email(user_id, scheme, domain, email_template=None):
             'token': account_activation_token.make_token(user)
         }
         # todo find smart solution to store url in settings or .env file to frontend activate page
-        activation_link = f'{scheme}://{domain.split(":")[0]}:3000/accounts/confirm-email/{kwargs["uidb64"]}' \
+        activation_link = f'{scheme}://{domain.split(":")[0]}{":3000" if settings.DEBUG else ""}/accounts/confirm-email/{kwargs["uidb64"]}' \
                           f'/{kwargs["token"]}/'
         subject = 'Activate account'
 
