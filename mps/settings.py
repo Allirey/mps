@@ -131,7 +131,6 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
     'ROTATE_REFRESH_TOKENS': True,
-    # 'UPDATE_LAST_LOGIN': True,
 }
 
 AUTHENTICATION_BACKENDS = [
@@ -148,12 +147,11 @@ EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-# CELERY_BROKER_URL = 'pyamqp://localhost:5672'
 CELERY_BROKER_URL = 'pyamqp://rabbitmq:5672'
 
 
 ALLOWED_EMAIL_DOMAINS = [
-    "fide.com",  # // https://check-mail.org/domain/fide.com/ says DISPOSABLE / TEMPORARY DOMAIN
+    "fide.com",  # https://check-mail.org/domain/fide.com/ says DISPOSABLE / TEMPORARY DOMAIN
     # Default domains included
     "aol.com", "att.net", "facebook.com", "gmail.com", "gmx.com", "googlemail.com", "google.com", "hotmail.com",
     "hotmail.co.uk", "mac.com", "me.com", "mail.com", "msn.com", "live.com", "sbcglobal.net", "verizon.net",
