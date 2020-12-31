@@ -38,14 +38,14 @@ class AuthStore {
         try {
             await this.rootStore.api.Auth.register(this.values.username, this.values.email, this.values.password)
 
-            //todo call login separately
-            let data = await this.rootStore.api.Auth.login(this.values.username, this.values.password)
-            this._processAuthData(data)
-
             return Promise.resolve()
         } finally {
             this.inProgress = false;
         }
+    }
+
+    activate =(id, token)=>{
+        return this.rootStore.api.Auth.activate(id, token).then(true).catch(false)
     }
 
     refresh = () => {
@@ -63,7 +63,10 @@ class AuthStore {
 
     _processAuthData(data) {
         if (!data.authenticated) {
+            this.currentUser = undefined
             this.isAuthenticated = false;
+            this.rootStore.api.token = null
+
             throw data
         }
         this.isAuthenticated = true;
