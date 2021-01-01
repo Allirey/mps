@@ -27,7 +27,7 @@ def send_verification_email(user_id, scheme, domain, email_template=None):
                                     {'scheme': scheme, 'domain': domain, 'activation_url': 'url', 'user': user})
         else:
             text = f"""
-            Welcome {user.username}!
+Welcome {user.username}!
 
 Thanks for signing up with glitcher.org!
 You must follow this link to activate your account:
