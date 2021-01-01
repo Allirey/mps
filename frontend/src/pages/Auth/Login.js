@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {Link, Redirect, useLocation} from "react-router-dom";
 import {Button, CssBaseline, TextField, Grid, Box, Typography, makeStyles, Container} from '@material-ui/core';
-import withStore from '../hocs/withStore';
+import withStore from '../../hocs/withStore';
 import authImg from "./imgs/auth.png";
+import SnackBar from "../../components/snackbar";
 
 function Copyright() {
     return (
@@ -49,8 +50,20 @@ function SignIn(props) {
     const {inProgress} = props.stores.authStore;
     const {username, password} = users.values
 
+    const [open, setOpen] = React.useState(props.stores.authStore.showSuccessActivated);
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    }
+
     useEffect(() => {
-        return () => users.reset()
+        return () => {
+            users.reset()
+            props.stores.authStore.setShowSuccessActivated(false);
+        }
     }, [])
 
     let location = useLocation();
@@ -92,9 +105,14 @@ function SignIn(props) {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <div className={classes.logo} >
+                <div className={classes.logo}>
                     <img src={authImg} alt={''}/>
                 </div>
+
+                <SnackBar open={open}
+                          onClose={handleClose}
+                          text={"Successfully activated! You can now login into your account."}/>
+
                 <form
                     className={classes.form}
                     noValidate
@@ -141,7 +159,7 @@ function SignIn(props) {
                     </Button>
                     <Grid container>
                         <Grid item xs>
-                            <Link to="/forgot-password" variant="body2">
+                            <Link to="/accounts/password/reset" variant="body2">
                                 Forgot password?
                             </Link>
                         </Grid>

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Link, Redirect} from "react-router-dom";
 import {Button, CssBaseline, TextField, Grid, Box, Typography, makeStyles, Container} from '@material-ui/core';
-import withStore from '../hocs/withStore';
+import withStore from '../../hocs/withStore';
 import forgotImg from "./imgs/auth.png";
 
 function Copyright() {
@@ -55,22 +55,9 @@ function ResetPassword(props) {
     }
 
     const isEmailValid = () => {
-        const supportedEmailList = [
-            'gmail.com', 'mail.ru', 'protonmail.com',
-            'yahoo.com', 'googlemail.com', 'zoho.com',
-            'hotmail.com', 'live.com', 'msn.com', 'aol.com', 'yandex.ru',
-        ]
-
-        let isValid = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email);
+        let isValid = /^.+@.+\.[A-Za-z]{2,3}$/.test(email);
         setEmailErrTxt(isValid ? 'reset password functionality under development, sorry for inconveniences' :
             email.length ? 'Please enter a valid email address.' : 'This field is required');
-
-        if (!isValid) return isValid;
-
-        if (!supportedEmailList.includes(email.split('@')[1])) {
-            setEmailErrTxt(`Sorry, ${email.split('@')[1]} not supported`)
-            return false
-        }
 
         return isValid;
     };

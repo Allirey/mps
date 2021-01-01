@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Link, Redirect} from "react-router-dom";
 import {Button, CssBaseline, TextField, Grid, Box, Typography, makeStyles, Container} from '@material-ui/core';
-import withStore from '../hocs/withStore';
+import withStore from '../../hocs/withStore';
 import authImg from "./imgs/auth.png";
 
 function Copyright() {
@@ -49,7 +49,6 @@ function SignUp(props) {
     const {inProgress} = props.stores.authStore;
     const {username, password, email} = users.values
 
-
     useEffect(() => {
         return () => users.reset()
     }, [])
@@ -60,36 +59,24 @@ function SignUp(props) {
     }
 
     const isUNameValid = () => {
-        let isValid = /^[a-zA-Z0-9]{4,16}$/.test(username);
+        let isValid = /^[\w]{2,32}$/.test(username);
 
         setUserNameErrTxt(isValid ? '' : username.length ?
-            'username too short. enter at least 4 characters' : 'This field is required');
+            'Enter valid username. Allowed latin letters, numbers, and _ . 2-32 characters' : 'This field is required');
 
         return isValid;
     };
 
     const isEmailValid = () => {
-        const supportedEmailList = [
-            'gmail.com', 'mail.ru', 'protonmail.com',
-            'yahoo.com', 'googlemail.com', 'zoho.com',
-            'hotmail.com', 'live.com', 'msn.com', 'aol.com', 'yandex.ru',
-        ]
-
-        let isValid = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email);
-        setEmailErrTxt(isValid ? '' : email.length ? 'Please enter a valid email address.' : 'This field is required');
-
-        if (!isValid) return isValid;
-
-        if (!supportedEmailList.includes(email.split('@')[1])) {
-            setEmailErrTxt(`Sorry, ${email.split('@')[1]} not supported`)
-            return false
-        }
+        let isValid = /^.+@.+\.[A-Za-z]{2,3}$/.test(email);
+        setEmailErrTxt(isValid ? '' : email.length ?
+            'Please enter a valid email address. We will send you activation link' : 'This field is required');
 
         return isValid;
     };
 
     const isPasswordValid = () => {
-        let isValid = /^[a-zA-Z0-9]{4,15}$/.test(password);
+        let isValid = /^.{6,}$/.test(password);
 
         setPasswordErrTxt(isValid ? '' : password.length ?
             'password too short, enter at least 6 characters' : 'This field is required');
@@ -101,7 +88,10 @@ function SignUp(props) {
         e.preventDefault()
         if (!isUNameValid() | !isPasswordValid() | !isEmailValid()) return
 
-        users.register().then(() => props.history.replace("/")).catch(setError);
+        users.register().then(() => {
+            props.stores.authStore.setShowSuccessRegister(true);
+            props.history.replace("/")
+        }).catch(setError);
     }
 
     if (props.stores.authStore.isAuthenticated) return <Redirect to={"/"}/>
@@ -113,7 +103,7 @@ function SignUp(props) {
                 <Typography component="h1" variant="h5">
                     Sign up
                 </Typography>
-                <div className={classes.logo} >
+                <div className={classes.logo}>
                     <img src={authImg} alt={''}/>
                 </div>
                 <form
@@ -196,5 +186,6 @@ function SignUp(props) {
         </Container>
     );
 }
+
 
 export default withStore(SignUp);
