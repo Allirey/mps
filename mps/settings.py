@@ -147,9 +147,9 @@ EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-CELERY_BROKER_URL = 'pyamqp://rabbitmq:5672'
+CELERY_BROKER_URL = f'pyamqp://{"localhost" if DEBUG else "rabbitmq"}:5672'
 
-
+# https://github.com/mailcheck/mailcheck/wiki/List-of-Popular-Domains
 ALLOWED_EMAIL_DOMAINS = [
     "fide.com",  # https://check-mail.org/domain/fide.com/ says DISPOSABLE / TEMPORARY DOMAIN
     # Default domains included
