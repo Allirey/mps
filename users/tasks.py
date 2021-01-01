@@ -22,7 +22,7 @@ def send_verification_email(user_id, scheme, domain, email_template=None):
             activation_link = f'{scheme}://{domain.split(":")[0]}{":3000"}/' \
                           f'accounts/confirm-email/{kwargs["uidb64"]}/{kwargs["token"]}/'
         else:
-            activation_link = f'https://glithcer.org/accounts/confirm-email/{kwargs["uidb64"]}/{kwargs["token"]}/'
+            activation_link = f'https://glitcher.org/accounts/confirm-email/{kwargs["uidb64"]}/{kwargs["token"]}/'
 
         subject = 'Activate account'
 
