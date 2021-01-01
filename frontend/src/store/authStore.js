@@ -10,12 +10,23 @@ class AuthStore {
     currentUser = undefined;
     isAuthenticated = false;
 
+    showSuccessRegister = false;
+    showSuccessActivated = false;
+
     values = {username: '', password: '', email: ''}
     reset = () => this.values = {username: '', password: '', email: ''}
 
     setUsername = (value) => this.values.username = value;
     setEmail = (value) => this.values.email = value;
     setPassword = (value) => this.values.password = value;
+
+    setShowSuccessRegister(value) {
+        this.showSuccessRegister = value;
+    }
+
+    setShowSuccessActivated(value) {
+        this.showSuccessActivated = value;
+    }
 
     async login() {
         this.inProgress = true;
@@ -44,7 +55,7 @@ class AuthStore {
         }
     }
 
-    activate =(id, token)=>{
+    activate = (id, token) => {
         return this.rootStore.api.Auth.activate(id, token).then(true).catch(false)
     }
 
@@ -81,6 +92,11 @@ decorate(AuthStore, {
         values: observable,
         currentUser: observable,
         isAuthenticated: observable,
+        showSuccessActivated: observable,
+        showSuccessRegister: observable,
+
+        setShowSuccessActivated: action,
+        setShowSuccessRegister: action,
 
         setUsername: action,
         setEmail: action,
