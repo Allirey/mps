@@ -9,7 +9,7 @@ services:
   celery_worker:
     build: .
     restart: on-failure
-    command: celery -A test_task worker -l info
+    command: celery -A mps worker -l info
     ports: [ ]
     depends_on:
       - rabbitmq
