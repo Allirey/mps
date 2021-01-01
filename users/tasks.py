@@ -18,8 +18,12 @@ def send_verification_email(user_id, scheme, domain, email_template=None):
             'token': account_activation_token.make_token(user)
         }
         # todo find smart solution to store url in settings or .env file to frontend activate page
-        activation_link = f'{scheme}://{domain.split(":")[0]}{":3000" if settings.DEBUG else ""}/' \
+        if settings.DEBUG:
+            activation_link = f'{scheme}://{domain.split(":")[0]}{":3000"}/' \
                           f'accounts/confirm-email/{kwargs["uidb64"]}/{kwargs["token"]}/'
+        else:
+            activation_link = f'https://glithcer.org/accounts/confirm-email/{kwargs["uidb64"]}/{kwargs["token"]}/'
+
         subject = 'Activate account'
 
         if email_template:
