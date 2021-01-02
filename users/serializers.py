@@ -31,7 +31,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return password
 
     def validate_username(self, username):
-        if User.objects.filter(username__iexact=username).exists():
+        if User.objects.filter(username__iexact=username).exists() or username.lower() in settings.RESERVED_USERNAMES:
             raise serializers.ValidationError(_(u'Username already in use.'))
 
         return username
