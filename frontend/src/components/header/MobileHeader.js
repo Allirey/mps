@@ -7,6 +7,7 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import {Link} from "react-router-dom";
 import {Search, Home, AccountTree, Subject} from '@material-ui/icons';
+import Menu from '../Menu';
 
 const useStyles = makeStyles({
     list: {
@@ -81,12 +82,16 @@ export default function SwipeableTemporaryDrawer(props) {
                     {/*    Glitcher*/}
                     {/*</Typography>*/}
                     <Box flexGrow={1}/>
-                    {!props.currentUser ? <Button disableRipple style={{maxWidth: "200px", backgroundColor: "#FFffff"}}><Link to="/login" style={{textDecoration: 'none', color: "grey"}}>Sign in</Link></Button> :
-                        <>Hello {props.currentUser}<Button onClick={props.logout} disableRipple>Logout</Button></>}
 
-                    {/*<Button disableRipple={true} style={{maxWidth: "200px", backgroundColor: "#FFffff"}}>*/}
-                    {/*        <Link to="/login" style={{textDecoration: 'none', color: "grey"}}>Sign in</Link>*/}
-                    {/*    </Button>*/}
+                    {!props.currentUser ?
+                        <Button disableRipple style={{maxWidth: "200px", backgroundColor: "#FFffff"}}>
+                            <Link to="/login"
+                                  style={{
+                                      textDecoration: 'none',
+                                      color: "grey"
+                                  }}>Sign
+                                in</Link></Button> :
+                        <Menu logout={props.logout} username={props.currentUser}/>}
                 </Toolbar>
             </AppBar>
 
