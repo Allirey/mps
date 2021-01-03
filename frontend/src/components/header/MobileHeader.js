@@ -53,13 +53,6 @@ export default function SwipeableTemporaryDrawer(props) {
                     <ListItemText primary={"Chess db"}/>
                 </ListItem>
 
-                <ListItem button component={Link} to={"/quizy"}>
-                    <ListItemIcon>
-                        <Subject/>
-                    </ListItemIcon>
-                    <ListItemText primary={"Quizy"}/>
-                </ListItem>
-
                 <ListItem button component={Link} to={"/about"}>
                     <ListItemText primary={"About"}/>
                 </ListItem>
