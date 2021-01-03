@@ -4,19 +4,6 @@ import {Button, CssBaseline, TextField, Grid, Box, Typography, makeStyles, Conta
 import withStore from '../../hocs/withStore';
 import authImg from "./imgs/auth.png";
 
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" to="/">
-                glitcher.org
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
-
 const useStyles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(2),
@@ -27,6 +14,10 @@ const useStyles = makeStyles((theme) => ({
     form: {
         width: '100%', // Fix IE 11 issue.
         marginTop: theme.spacing(3),
+        "& a": {
+            textDecoration: "none",
+            color: "blue"
+        }
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
@@ -180,9 +171,6 @@ function SignUp(props) {
                     </Grid>
                 </form>
             </div>
-            <Box mt={5}>
-                <Copyright/>
-            </Box>
         </Container>
     );
 }
