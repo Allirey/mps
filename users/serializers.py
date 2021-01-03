@@ -31,7 +31,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return password
 
     def validate_username(self, username):
-        if User.objects.filter(username__iexact=username).exists() or username.lower() in settings.RESERVED_USERNAMES:
+        if User.objects.filter(username__iexact=username).exists():
             raise serializers.ValidationError(_(u'Username already in use.'))
 
         return username
@@ -45,7 +45,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
                                                 u' Allowed latin letters, numbers and _ .'))
 
         if domain not in settings.ALLOWED_EMAIL_DOMAINS:
-            raise serializers.ValidationError(_(u'{} not supported'.format(domain)))
+            raise serializers.ValidationError(_(u'{} not supported. Try gmail.com, or similar'.format(domain)))
 
         if User.objects.filter(email=email).exists():
             raise serializers.ValidationError(_(u'Email already in use.'))

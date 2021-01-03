@@ -149,11 +149,6 @@ EMAIL_USE_TLS = True
 
 CELERY_BROKER_URL = f'pyamqp://{"localhost" if DEBUG else "rabbitmq"}:5672'
 
-RESERVED_USERNAMES = [
-    'admin', 'about', 'accounts', 'quizy', 'chess', 'stanislav', 'stas', 'st4s', 'blog', 'profile',
-    'login', 'password', 'signup', 'signin', 'signout', 'hireme', 'dashboard', 'settings', 'email',
-]
-
 # https://github.com/mailcheck/mailcheck/wiki/List-of-Popular-Domains
 ALLOWED_EMAIL_DOMAINS = [
     "fide.com",  # https://check-mail.org/domain/fide.com/ says DISPOSABLE / TEMPORARY DOMAIN
