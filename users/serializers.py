@@ -64,7 +64,6 @@ class TokenObtainPairSerializer(TokenObtainSerializerNative):
         token['first_name'] = user.first_name
         token['last_name'] = user.last_name
         token['date_joined'] = user.date_joined.isoformat()
-        token['last_visit'] = user.last_visit.isoformat()
         # ...
 
         return token
