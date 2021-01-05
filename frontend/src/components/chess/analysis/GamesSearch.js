@@ -6,6 +6,7 @@ export default function (props) {
         <Grid container justify={"space-evenly"}>
             <Grid item>
                 <TextField
+                    size={"small"}
                     label={"Player name"}
                     value={props.name}
                     onChange={props.onChangeName}
@@ -25,9 +26,9 @@ export default function (props) {
                 </FormControl>
             </Grid>
             <Grid item>
-                <Button variant={"contained"}
+                <Button disableRipple variant={"contained"}
                         style={{backgroundColor: "#92A8D1"}}
-                        onClick={props.onSubmit ? props.onSubmit : null}
+                        onClick={props.onSubmit}
                 >search</Button>
             </Grid>
         </Grid>
