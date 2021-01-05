@@ -1,14 +1,23 @@
 import React from 'react';
 import {Button, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList, makeStyles} from "@material-ui/core";
 import AccountCircleRoundedIcon from '@material-ui/icons/AccountCircleRounded';
+import {Link} from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+        "& a": {
+            textDecoration: "none",
+            color: "black"
+        }
     },
     paper: {
         marginRight: theme.spacing(2),
     },
+    icon: {
+        color: "grey",
+        "&:hover": {color: "black"}
+    }
 }));
 
 export default function MenuListComposition(props) {
@@ -54,7 +63,7 @@ export default function MenuListComposition(props) {
                     aria-haspopup="true"
                     onClick={handleToggle}
                 >
-                    <AccountCircleRoundedIcon/>
+                    <AccountCircleRoundedIcon className={classes.icon}/>
                 </Button>
                 <Popper
                     open={open}
@@ -69,11 +78,16 @@ export default function MenuListComposition(props) {
                             {...TransitionProps}
                             style={{transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}
                         >
-                            <Paper                 >
+                            <Paper>
                                 <ClickAwayListener onClickAway={handleClose}>
                                     <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                                        <MenuItem disableRipple onClick={handleClose}>{props.username}</MenuItem>
-                                        <MenuItem disableRipple onClick={props.logout}>Logout</MenuItem>
+                                        <Link to={`/users/${props.username}`}><MenuItem disableRipple
+                                                                                        onClick={handleClose}>{props.username}</MenuItem></Link>
+                                        <Link to={"/quizy"}><MenuItem disableRipple
+                                                                      onClick={handleClose}>quizy</MenuItem></Link>
+                                        <Link to={"/settings"}><MenuItem disableRipple
+                                                                         onClick={handleClose}>Settings</MenuItem></Link>
+                                        <MenuItem disableRipple onClick={props.logout}>Sign out</MenuItem>
                                     </MenuList>
                                 </ClickAwayListener>
                             </Paper>
