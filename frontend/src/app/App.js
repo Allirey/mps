@@ -13,7 +13,10 @@ import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 import PasswordReset from "../pages/Auth/PasswordReset";
 import AccountActivation from "../pages/Auth/AccountActivation";
-// import ChangePassword from "../pages/Auth/ChangePassword";
+import ChangePassword from "../pages/Auth/ChangePassword";
+import UserProfile from "../pages/UserProfile";
+import EditProfile from "../pages/EditProfile";
+
 
 function App(props) {
     const [appLoading, setAppLoading] = useState(true)
@@ -36,11 +39,11 @@ function App(props) {
                     <Route path="/login" exact={true} component={Login}/>
                     <Route path="/signup" exact={true} component={Register}/>
                     <Route path="/accounts/confirm-email/:id/:token" exact={true} component={AccountActivation}/>
-                    {/*<PrivateRoute path="/accounts/password/change" exact={true} component={ChangePassword}/>*/}
+                    <PrivateRoute path="/accounts/password/change" exact={true} component={ChangePassword}/>
                     <Route path="/accounts/password/reset" exact={true} component={PasswordReset}/>
                     <Route path="/about" exact={true} component={About}/>
-                    {/*<Route path="/accounts/edit" exact={true} component={}/>*/}
-                    {/*<Route path="/:username" exact={true} component={}/>*/}
+                    <PrivateRoute path="/settings" exact={true} component={EditProfile}/>
+                    <Route path="/users/:username" exact={true} component={UserProfile}/>
                     <Route path="**" exact={true} component={P404}/>
                 </Switch>
             </div>
