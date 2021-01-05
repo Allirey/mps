@@ -7,9 +7,8 @@ import Notation from "../../components/chess/analysis/Notation";
 import NavButtons from "../../components/chess/analysis/NavButtons";
 
 import {Grid, Box, makeStyles} from "@material-ui/core";
-
-import TabPanel from "../../components/chess/analysis/mobile/TabPanel";
 import withStore from "../../hocs/withStore";
+import StyledTabs from "../../components/StyledTabs";
 
 class ChessAnalysis extends React.Component {
     componentDidMount() {
@@ -97,19 +96,19 @@ class ChessAnalysis extends React.Component {
                 </Grid>
 
                 <Grid item component={Box} display={{xs: "block", lg: "none"}} xs sm md={5}>
-                    <TabPanel
-                        tab1={
+                    <StyledTabs variant={"fullWidth"}
+                        tabs={{
+                            "Notation":
                             <>
                                 <Notation
                                     notation={notation.mainLineNodes}
                                     currentNode={notation.node}
                                     jumpTo={notation.jumpToMove}
                                 />
-                                <br/>
-                                <MovesTree explorerData={chess.currentMoves}/></>
-                        }
-                        tab2={
-                            <>
+                                </>
+                            ,
+                            "Games":
+                                <>
                                 <GamesSearch
                                     name={chess.searchData.name}
                                     color={chess.searchData.color}
@@ -122,7 +121,12 @@ class ChessAnalysis extends React.Component {
                                     games={chess.currentGames}
                                     onSelectGame={chess.getGameByUrl}
                                 />
-                            </>}
+                            </>,
+                            "Book":
+                            <>
+                            <MovesTree explorerData={chess.currentMoves}/>
+                            </>
+                        }}
                     />
                 </Grid>
             </Grid>
