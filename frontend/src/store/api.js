@@ -11,6 +11,8 @@ const apiLogin = apiBase + '/token/obtain/';
 const apiRefresh = apiBase + '/token/refresh/';
 const apiLogout = apiBase + '/token/refresh/remove/';
 
+const apiChangePassword = apiBase + '/users/change-password/';
+
 const apiGame = apiBase + '/game/';
 const apiExplorer = apiBase + '/explorer/';
 const apiSearchAutocomplete = apiBase + '/autocomplete/';
@@ -34,18 +36,21 @@ class api {
         login: (username, password) => (
             this.requests.post(apiLogin, {body: JSON.stringify({username, password})})
         ),
-        logout: () => (this.requests.post(apiLogout).then(data => {
+        logout: () => this.baseReq(apiLogout, 'POST', {}, false).then(data => {
             this.token = undefined;
             return data;
-        })),
-        refresh: () => (this.requests.post(apiRefresh)),
-        activate: (id, token) => (this.requests.get(`${apiActivation}${id}/${token}/`)),
+        }),
+        refresh: () => this.baseReq(apiRefresh, 'POST', {}, false),
+        activate: (id, token) => this.requests.get(`${apiActivation}${id}/${token}/`),
+        changePassword: (old_password, password, password2) => (this.requests.put(apiChangePassword, {
+            body: JSON.stringify({old_password, password, password2})
+        }, true)),
     }
 
     ChessExplorer = {
-        getGameByUrl: (url) => (this.requests.get(apiGame + '?' + new URLSearchParams({id: url}))),
+        getGameByUrl: (url) => this.requests.get(apiGame + '?' + new URLSearchParams({id: url})),
         getGamesAndMoves: (name, color, fen) => (
-            this.requests.get(apiExplorer + '?' + new URLSearchParams({name, color, fen}))
+            this.requests.get(apiExplorer + '?' + new URLSearchParams({name, color, fen}), {}, true)
         ),
         playerSearchAutocomplete: (name) =>
             (this.requests.get(apiSearchAutocomplete + '?' + new URLSearchParams({name}))
@@ -59,8 +64,8 @@ class api {
         update: (id, word, translate) => (
             this.requests.put(apiQuizyWords + `${id}/`, {body: JSON.stringify({word, translate})})
         ),
-        getAll: () => (this.requests.get(apiQuizyWords)),
-        remove: (id) => (this.requests.delete(apiQuizyWords + `${id}/`))
+        getAll: () => this.requests.get(apiQuizyWords),
+        remove: (id) => this.requests.delete(apiQuizyWords + `${id}/`)
     }
 
     Articles = {
@@ -70,7 +75,7 @@ class api {
         update: (id, title, content) => (
             this.requests.put(apiArticles + `${id}/`, {body: JSON.stringify({title, content})})
         ),
-        getAll: () => (this.requests.get(apiArticles)),
+        getAll: () => this.requests.get(apiArticles),
         remove: (id) => (this.requests.delete(apiArticles + `${id}/`))
     }
 
@@ -91,22 +96,67 @@ class api {
         [key]: (url, options = {}, withAuth = false) => this.request(url, method, options, withAuth)
     })));
 
-    request(url, method, options = {}, withAuth = false) {
-        /* todo check if 401 - make refresh, then repeat request,
-        if 401 again - throw 401 error + data, else return data. */
-
+    baseReq(url, method, options, withAuth) {
         return fetch(url, {
-            headers: {'Content-Type': 'application/json', 'Accept': 'application/json',},
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                ...this.authHeader(withAuth)
+            },
             credentials: 'include',
-            ...this.authHeader(withAuth),
             ...options,
             method: method,
         }).then(response => {
-            if (response.ok) return response.json();
-            return response.json().then(data => {
-                throw data;
+            if (response.status === 200) {
+                return response.json();
+            }
+
+            return response.json().then(json => {
+                throw {status: response.status, message: json};
             });
-        })
+        });
+    }
+
+    refreshPromise = null;
+
+    async request(url, method, options = {}, withAuth = false, recLevel = 0) {
+        //  todo  sync backend and frontend response.status , not response code, and data
+        if (recLevel > 1) {
+            throw {status: 403, message: 'RT storage error in refreshing process'};
+        }
+        try {
+            return await this.baseReq(url, method, options, withAuth)
+        } catch (e) {
+            if (e.status !== 401 || !this.rootStore.authStore.isAuthenticated) {
+                throw e;
+            }
+
+            if (this.refreshPromise === null) {
+                this.refreshPromise = this.Auth.refresh();
+            }
+
+            let refreshResponse = await this.refreshPromise
+
+            setTimeout(() => {
+                this.refreshPromise = null
+            }, 10000);
+
+            if (refreshResponse.authenticated) {
+                this.token = refreshResponse.access
+                this.rootStore.authStore.isAuthenticated = true;
+                this.rootStore.authStore.currentUser = JSON.parse(atob(refreshResponse.access.split('.')[1]));
+
+                return this.request(url, method, options, withAuth, recLevel + 1)
+
+            } else {
+                this.rootStore.authStore.currentUser = undefined
+                this.rootStore.authStore.isAuthenticated = false;
+                this.token = null
+                this.Auth.logout()
+
+                throw refreshResponse
+            }
+        }
     }
 
     authHeader = (withAuth = false) => {
@@ -120,6 +170,8 @@ class api {
 
 decorate(api, {
         token: observable,
+        refreshPromise: observable,
+        request: action,
     }
 );
 
