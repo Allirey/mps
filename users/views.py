@@ -11,9 +11,11 @@ from django.utils.http import urlsafe_base64_decode
 # from django.utils.timezone import now
 # from django.db.models import Q
 
-from .serializers import UserCreateSerializer, TokenObtainPairSerializer
+from .serializers import UserCreateSerializer, TokenObtainPairSerializer, ChangePasswordSerializer
 from .tokens import account_activation_token
 from .tasks import send_verification_email
+
+User = get_user_model()
 
 # todo 'JWT_REFRESH_COOKIE_NAME' should be setting constant
 JWT_REFRESH_COOKIE_NAME = 'rt'
@@ -36,6 +38,37 @@ class UserCreateView(UserPassesTestMixin, generics.CreateAPIView):
 
     def test_func(self):
         return str(self.request.user) == 'AnonymousUser'
+
+
+class ChangePasswordView(generics.UpdateAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = ChangePasswordSerializer
+
+    def update(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+
+        refresh = TokenObtainPairSerializer.get_token(user)
+
+        response = Response({'access': str(refresh.access_token),
+                             "authenticated": True,
+                             "message": "ok",
+                             'status': 200},
+                            status=status.HTTP_200_OK)
+
+        response.delete_cookie(JWT_REFRESH_COOKIE_NAME,
+                               path='/api/token/refresh/',
+                               domain=request.get_host().split(':')[0])
+
+        response.set_cookie(JWT_REFRESH_COOKIE_NAME, str(refresh),
+                            max_age=settings.api_settings.REFRESH_TOKEN_LIFETIME.total_seconds(),
+                            path='/api/token/refresh/',
+                            httponly=True,
+                            domain=request.get_host().split(':')[0],
+                            )
+
+        return response
 
 
 class BaseTokenView(generics.GenericAPIView):
@@ -114,8 +147,6 @@ class TokenRemoveView(APIView):
 
 class ActivateView(APIView):
     def get(self, request, uidb64, token):
-        User = get_user_model()
-
         try:
             uid = force_text(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)

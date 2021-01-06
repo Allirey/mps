@@ -8,7 +8,7 @@ urlpatterns = [
     path('users/create/', views.UserCreateView.as_view(), name='sign-up'),
     path('users/activate/<uidb64>/<token>/', views.ActivateView.as_view(), name='activate'),
     # path('users/forgot-password/<uidb64>/<token>/', '', name='forgot-password'),  #not exist yet
-    # path('users/change-password/', '', name='change-password'),  #not exist yet
+    path('users/change-password/', views.ChangePasswordView.as_view(), name='change-password'),
 
     path('token/obtain/', views.TokenObtainPairView.as_view(), name='token-create'),
     path('token/refresh/', views.TokenRefreshView.as_view(), name='token-refresh'),
