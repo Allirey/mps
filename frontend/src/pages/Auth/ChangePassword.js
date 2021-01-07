@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button, CssBaseline, TextField, Grid, Box, Typography, makeStyles, Container} from '@material-ui/core';
 import withStore from '../../hocs/withStore';
-import SnackBar from "../../components/snackbar";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -33,14 +32,6 @@ function ChangePassword(props) {
     const [newP, setNewP] = useState('');
     const [newP2, setNewP2] = useState('');
 
-    const [open, setOpen] = React.useState(false);
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpen(false);
-    }
-
     const {authStore} = props.stores;
     const {inProgress} = authStore;
 
@@ -61,7 +52,6 @@ function ChangePassword(props) {
         }
         Object.entries(errors).forEach(([key, value]) => errorsMap[[key]](value))
     }
-
 
     const isFieldsValid = () => {
         [setOldPErr, setNewPErr, setNewP2Err, setErr].forEach(func => func(""))
@@ -86,10 +76,8 @@ function ChangePassword(props) {
 
         authStore.changePassword(oldP, newP, newP2).then(data => {
                 resetFields();
-                setOpen(true);
-
-                // todo somehow force browser prompt to update saved password in browser
-                // currently update password prompt appear only when user change page
+                props.stores.authStore.setShowSuccessPasswordChanged(true);
+                props.history.replace('/settings')
             }
         ).catch(e => {
                 console.log(e);
@@ -105,11 +93,6 @@ function ChangePassword(props) {
                 <Typography component="h1" variant="h5">
                     Change Password
                 </Typography>
-                <SnackBar
-                    open={open}
-                    onClose={handleClose}
-                    text={"Password successfully changed!"}
-                />
                 <form
                     className={classes.form}
                     noValidate
@@ -126,7 +109,6 @@ function ChangePassword(props) {
                         label="Current Password"
                         type="password"
                         id="oldpassword"
-                        autoComplete="off"
                         error={!!oldPErr}
                         helperText={oldPErr}
                     />
@@ -142,7 +124,6 @@ function ChangePassword(props) {
                         label="New Password"
                         type="password"
                         id="password"
-                        autoComplete="password"
                         error={!!newPErr}
                         helperText={newPErr}
                     />
@@ -158,7 +139,6 @@ function ChangePassword(props) {
                         label="New Password (again)"
                         type="password"
                         id="n_password2"
-                        autoComplete="current-password"
                         error={!!newP2Err || !!err}
                         helperText={err || newP2Err}
                     />

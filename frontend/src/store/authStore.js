@@ -10,8 +10,10 @@ class AuthStore {
     currentUser = undefined;
     isAuthenticated = false;
 
+    //todo looks weird...
     showSuccessRegister = false;
     showSuccessActivated = false;
+    showSuccessPasswordChanged = false;
 
     values = {username: '', password: '', email: ''}
     reset = () => this.values = {username: '', password: '', email: ''}
@@ -26,6 +28,10 @@ class AuthStore {
 
     setShowSuccessActivated(value) {
         this.showSuccessActivated = value;
+    }
+
+    setShowSuccessPasswordChanged(value) {
+        this.showSuccessPasswordChanged = value;
     }
 
     async login() {
@@ -70,7 +76,7 @@ class AuthStore {
         }).catch(console.warn)
     }
 
-    async changePassword (oldP, newP, newP2){
+    async changePassword(oldP, newP, newP2) {
         this.inProgress = true;
         try {
             let response = await this.rootStore.api.Auth.changePassword(oldP, newP, newP2)
@@ -80,7 +86,6 @@ class AuthStore {
         } finally {
             this.inProgress = false;
         }
-
 
 
     }
@@ -107,9 +112,11 @@ decorate(AuthStore, {
         isAuthenticated: observable,
         showSuccessActivated: observable,
         showSuccessRegister: observable,
+        showSuccessPasswordChanged: observable,
 
         setShowSuccessActivated: action,
         setShowSuccessRegister: action,
+        setShowSuccessPasswordChanged: action,
 
         setUsername: action,
         setEmail: action,

@@ -12,6 +12,7 @@ import {
 import withStore from '../hocs/withStore';
 import {useParams, Link, Redirect} from "react-router-dom";
 import StyledTabs from "../components/StyledTabs";
+import SnackBar from "../components/snackbar";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -113,9 +114,18 @@ const basicInfo = (currentUser) => {
 function EditProfile(props) {
     const classes = useStyles();
 
+    const [open, setOpen] = React.useState(props.stores.authStore.showSuccessPasswordChanged);
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    }
+
     useEffect(() => {
 
         return () => {
+            props.stores.authStore.setShowSuccessPasswordChanged(false)
         };
     }, [])
 
@@ -126,6 +136,11 @@ function EditProfile(props) {
         <Container className={classes.root} maxWidth={'sm'}>
             {!currentUser ? null :
                 <>
+                    <SnackBar
+                    open={open}
+                    onClose={handleClose}
+                    text={"Password successfully changed!"}
+                />
                     <StyledTabs tabs={{
                         'Basic Info':
                             basicInfo(currentUser),
