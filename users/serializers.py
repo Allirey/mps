@@ -64,15 +64,21 @@ class ChangePasswordSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
+            raise serializers.ValidationError(_(u"Password fields didn't match."))
 
         return attrs
 
     def validate_old_password(self, value):
         user = self.context['request'].user
         if not user.check_password(value):
-            raise serializers.ValidationError({"old_password": "Old password is not correct"})
+            raise serializers.ValidationError(_(u'Old password is not correct.'))
         return value
+
+    def validate_password(self, password):
+        if len(password) < 6:
+            raise serializers.ValidationError(_(u'Password should be at least 6 characters'))
+
+        return password
 
     def save(self, **kwargs):
         password = self.validated_data['password']
