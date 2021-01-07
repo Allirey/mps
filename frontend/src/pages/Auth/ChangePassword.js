@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {Link, Redirect, useLocation} from "react-router-dom";
 import {Button, CssBaseline, TextField, Grid, Box, Typography, makeStyles, Container} from '@material-ui/core';
 import withStore from '../../hocs/withStore';
+import SnackBar from "../../components/snackbar";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -21,44 +21,81 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function SignIn(props) {
+function ChangePassword(props) {
     const classes = useStyles();
-    const [errors, setErrors] = useState('');
-    const [passwordErrTxt, setPasswordErrTxt] = useState('');
 
-    const users = props.stores.authStore;
-    const {inProgress} = props.stores.authStore;
-    const {password} = users.values
+    const [oldPErr, setOldPErr] = useState('');
+    const [newPErr, setNewPErr] = useState('');
+    const [newP2Err, setNewP2Err] = useState('');
+    const [err, setErr] = useState('');
+
+    const [oldP, setOldP] = useState('');
+    const [newP, setNewP] = useState('');
+    const [newP2, setNewP2] = useState('');
+
+    const [open, setOpen] = React.useState(false);
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    }
+
+    const {authStore} = props.stores;
+    const {inProgress} = authStore;
+
+    const resetFields = () => [setOldP, setNewP, setNewP2].forEach(func => func(""))
 
     useEffect(() => {
         return () => {
-            users.reset()
+            resetFields()
         }
     }, [])
 
-    let location = useLocation();
-
-    const setError = (errors) => {
-        const errorsMap = {password: setPasswordErrTxt}
+    const setErrors = (errors) => {
+        const errorsMap = {
+            old_password: setOldPErr,
+            password: setNewPErr,
+            password2: setNewP2Err,
+            non_field_errors: setErr,
+        }
         Object.entries(errors).forEach(([key, value]) => errorsMap[[key]](value))
     }
 
 
-    const isPasswordValid = () => {
-        let isValid = password.length > 0;
-        setPasswordErrTxt(isValid ? '' : 'This field is required');
+    const isFieldsValid = () => {
+        [setOldPErr, setNewPErr, setNewP2Err, setErr].forEach(func => func(""))
 
-        return isValid;
+        let oldErrs = oldP.length ? "" : 'This field is required';
+        let newErrs = newP.length ? (newP.length < 6 ? "New password should be at least 6 characters" : "") : 'This field is required';
+        let new2Errs = newP2.length ? "" : 'This field is required';
+        let errs = newP.length && newP2.length && newP !== newP2 ? "Password fields didn't match." : "";
+
+        !!oldErrs && setOldPErr(oldErrs)
+        !!newErrs && setNewPErr(newErrs)
+        !!new2Errs && setNewP2Err(new2Errs)
+        !!errs && setErr(errs)
+
+        return !oldErrs && !newErrs && !new2Errs && !errs;
     };
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        if (!isPasswordValid()) return
 
-        // users.login()
-        //     .then(() => (props.history.replace(!!location.state ? location.state.from : "/")))
-        //     .catch((e) => (setErrors(e.message)));
-        // todo returns "OK" in error if empty form submitted
+        if (!isFieldsValid()) return
+
+        authStore.changePassword(oldP, newP, newP2).then(data => {
+                resetFields();
+                setOpen(true);
+
+                // todo somehow force browser prompt to update saved password in browser
+                // currently update password prompt appear only when user change page
+            }
+        ).catch(e => {
+                console.log(e);
+                setErrors(e.message)
+            }
+        )
     }
 
     return (
@@ -68,7 +105,11 @@ function SignIn(props) {
                 <Typography component="h1" variant="h5">
                     Change Password
                 </Typography>
-
+                <SnackBar
+                    open={open}
+                    onClose={handleClose}
+                    text={"Password successfully changed!"}
+                />
                 <form
                     className={classes.form}
                     noValidate
@@ -76,40 +117,40 @@ function SignIn(props) {
 
                     <TextField
                         size={"small"}
-                        value={users.values.password}
-                        onChange={(e) => users.setPassword(e.target.value)}
+                        value={oldP}
+                        onChange={(e) => setOldP(e.target.value)}
                         variant="outlined"
                         margin="normal"
                         fullWidth
-                        name="c_password"
+                        name="oldpassword"
                         label="Current Password"
                         type="password"
-                        id="c_password"
-                        autoComplete="current-password"
-                        error={!!passwordErrTxt || !!errors}
-                        helperText={passwordErrTxt || errors}
+                        id="oldpassword"
+                        autoComplete="off"
+                        error={!!oldPErr}
+                        helperText={oldPErr}
                     />
 
                     <TextField
                         size={"small"}
-                        value={users.values.password}
-                        onChange={(e) => users.setPassword(e.target.value)}
+                        value={newP}
+                        onChange={(e) => setNewP(e.target.value)}
                         variant="outlined"
                         margin="normal"
                         fullWidth
-                        name="n_password"
+                        name="password"
                         label="New Password"
                         type="password"
-                        id="n_password"
-                        autoComplete="current-password"
-                        error={!!passwordErrTxt || !!errors}
-                        helperText={passwordErrTxt || errors}
+                        id="password"
+                        autoComplete="password"
+                        error={!!newPErr}
+                        helperText={newPErr}
                     />
 
                     <TextField
                         size={"small"}
-                        value={users.values.password}
-                        onChange={(e) => users.setPassword(e.target.value)}
+                        value={newP2}
+                        onChange={(e) => setNewP2(e.target.value)}
                         variant="outlined"
                         margin="normal"
                         fullWidth
@@ -118,10 +159,9 @@ function SignIn(props) {
                         type="password"
                         id="n_password2"
                         autoComplete="current-password"
-                        error={!!passwordErrTxt || !!errors}
-                        helperText={passwordErrTxt || errors}
+                        error={!!newP2Err || !!err}
+                        helperText={err || newP2Err}
                     />
-
 
                     <Button
                         type="submit"
@@ -140,4 +180,4 @@ function SignIn(props) {
     );
 }
 
-export default withStore(SignIn);
+export default withStore(ChangePassword);
