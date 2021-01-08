@@ -1,7 +1,7 @@
 import {observable, computed, action, decorate} from 'mobx';
 
-const dev_api = '';
-// const dev_api = 'http://10.10.86.217:8000';
+// const dev_api = '';
+const dev_api = 'http://10.10.86.217:8000';
 const apiBase = dev_api + '/api';
 
 const apiRegister = apiBase + '/users/create/';
@@ -108,7 +108,7 @@ class api {
             ...options,
             method: method,
         }).then(response => {
-            if (response.status === 200) {
+            if (response.status >= 200 && response.status < 300) {
                 return response.json();
             }
 
