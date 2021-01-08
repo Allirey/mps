@@ -86,9 +86,32 @@ class AuthStore {
         } finally {
             this.inProgress = false;
         }
-
-
     }
+
+    async passwordResetRequest(email) {
+        this.inProgress = true;
+        try {
+            let response =  await this.rootStore.api.Auth.passwordResetRequest(email)
+
+            if (response.status !== 200)throw response
+
+        } finally {
+            this.inProgress = false;
+        }
+    }
+
+    async passwordResetChange(id, token, password, password2) {
+        this.inProgress = true;
+        try {
+            let response = await this.rootStore.api.Auth.passwordResetChange(id, token, password, password2)
+
+             if (response.status !== 200)throw response
+
+        } finally {
+            this.inProgress = false;
+        }
+    }
+
 
     _processAuthData(data) {
         if (!data.authenticated) {

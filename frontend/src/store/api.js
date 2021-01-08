@@ -6,6 +6,7 @@ const apiBase = dev_api + '/api';
 
 const apiRegister = apiBase + '/users/create/';
 const apiActivation = apiBase + '/users/activate/';
+const apiForgotPassword = apiBase + '/users/forgot-password/';
 
 const apiLogin = apiBase + '/token/obtain/';
 const apiRefresh = apiBase + '/token/refresh/';
@@ -30,12 +31,9 @@ class api {
     token = null;
 
     Auth = {
-        register: (username, email, password) => (
-            this.requests.post(apiRegister, {body: JSON.stringify({username, password, email})})
-        ),
-        login: (username, password) => (
-            this.requests.post(apiLogin, {body: JSON.stringify({username, password})})
-        ),
+        register: (username, email, password) =>
+            this.requests.post(apiRegister, {body: JSON.stringify({username, password, email})}),
+        login: (username, password) => this.requests.post(apiLogin, {body: JSON.stringify({username, password})}),
         logout: () => this.baseReq(apiLogout, 'POST', {}, false).then(data => {
             this.token = undefined;
             return data;
@@ -45,6 +43,9 @@ class api {
         changePassword: (old_password, password, password2) => (this.requests.put(apiChangePassword, {
             body: JSON.stringify({old_password, password, password2})
         }, true)),
+        passwordResetRequest: email => this.requests.post(apiForgotPassword, {body: JSON.stringify({email})}),
+        passwordResetChange: (id, token, password, password2) => this.requests
+            .post(`${apiForgotPassword}${id}/${token}/`, {body: JSON.stringify({id, token, password, password2})}),
     }
 
     ChessExplorer = {

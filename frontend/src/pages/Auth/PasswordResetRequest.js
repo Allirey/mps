@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function ResetPassword(props) {
+function ResetPasswordRequest(props) {
     const classes = useStyles();
 
     const [emailErrTxt, setEmailErrTxt] = useState('');
@@ -46,8 +46,9 @@ function ResetPassword(props) {
     }
 
     const isEmailValid = () => {
+        setEmailErrTxt('')
         let isValid = /^.+@.+\.[A-Za-z]{2,3}$/.test(email);
-        setEmailErrTxt(isValid ? 'reset password functionality under development, sorry for inconveniences' :
+        setEmailErrTxt(isValid ? '' :
             email.length ? 'Please enter a valid email address.' : 'This field is required');
 
         return isValid;
@@ -57,7 +58,10 @@ function ResetPassword(props) {
         e.preventDefault()
         if (!isEmailValid()) return
 
-        // users.register().then(() => props.history.replace("/")).catch(setError);
+        props.stores.authStore.passwordResetRequest(email).then(() => console.log('send forgot password - success'))
+            .catch(e=>{
+                setEmailErrTxt(e.message)
+            });
     }
 
     if (props.stores.authStore.isAuthenticated) return <Redirect to={"/"}/>
@@ -116,4 +120,4 @@ function ResetPassword(props) {
     );
 }
 
-export default withStore(ResetPassword);
+export default withStore(ResetPasswordRequest);
