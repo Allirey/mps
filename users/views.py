@@ -92,7 +92,8 @@ class BaseTokenView(generics.GenericAPIView):
         except AuthenticationFailed as e:
             return Response({'access': None,
                              'authenticated': False,
-                             'message': str(e)},
+                             'message': str(e),
+                             'status': 400},
                             status=status.HTTP_200_OK)
         except jwt_exc.TokenError as e:
             raise jwt_exc.InvalidToken(e.args[0])
@@ -150,9 +151,9 @@ class ActivateView(APIView):
             user.is_active = True
             user.save()
 
-            return Response({"message": "success"})
+            return Response({"status": 200, "message": "success"}, status.HTTP_200_OK)
         else:
-            return Response({"message": "failure"})
+            return Response({"status": 400, "message": "failure"}, status.HTTP_200_OK)
 
 
 class SendPasswordResetLinkView(APIView):
