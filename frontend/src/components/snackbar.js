@@ -18,19 +18,6 @@ function Alert(props) {
 const SnackBar = props => {
     const classes = useStyles();
 
-    // const [open, setOpen] = React.useState(false);
-    //
-    // const handleClick = () => {
-    //     setOpen(true);
-    // };
-    //
-    // const handleClose = (event, reason) => {
-    //     if (reason === 'clickaway') {
-    //         return;
-    //     }
-    //     setOpen(false);
-    // }
-
     return (
         <div className={classes.snackbar}>
             <Snackbar
@@ -39,12 +26,16 @@ const SnackBar = props => {
                 autoHideDuration={6000}
                 onClose={props.onClose}
             >
-                <Alert onClose={props.onClose} severity="success">
+                <Alert onClose={props.onClose} severity={props.severity}>
                     {props.text}
                 </Alert>
             </Snackbar>
         </div>
     )
+}
+
+SnackBar.defaultProps = {
+    severity: "success"
 }
 
 export default SnackBar
