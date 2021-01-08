@@ -94,6 +94,13 @@ class ChangePasswordSerializer(PasswordResetChangeSerializer):
             raise serializers.ValidationError(_(u'Old password is not correct.'))
         return value
 
+    def save(self, **kwargs):
+        password = self.validated_data['password']
+        user = self.context['request'].user
+        user.set_password(password)
+        user.save()
+        return user
+
 
 class TokenObtainPairSerializer(TokenObtainSerializerNative):
     @classmethod
