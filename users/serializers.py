@@ -53,26 +53,19 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return email
 
 
-class ChangePasswordSerializer(serializers.Serializer):
+class PasswordResetChangeSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True, required=True)
     password2 = serializers.CharField(write_only=True, required=True)
-    old_password = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
-        fields = ('old_password', 'password', 'password2')
+        fields = ('password', 'password2')
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError(_(u"Password fields didn't match."))
 
         return attrs
-
-    def validate_old_password(self, value):
-        user = self.context['request'].user
-        if not user.check_password(value):
-            raise serializers.ValidationError(_(u'Old password is not correct.'))
-        return value
 
     def validate_password(self, password):
         if len(password) < 6:
@@ -82,10 +75,24 @@ class ChangePasswordSerializer(serializers.Serializer):
 
     def save(self, **kwargs):
         password = self.validated_data['password']
-        user = self.context['request'].user
+        user = User.objects.get(pk=self.initial_data['id'])
         user.set_password(password)
         user.save()
         return user
+
+
+class ChangePasswordSerializer(PasswordResetChangeSerializer):
+    old_password = serializers.CharField(write_only=True, required=True)
+
+    class Meta:
+        model = User
+        fields = ('old_password', 'password', 'password2')
+
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError(_(u'Old password is not correct.'))
+        return value
 
 
 class TokenObtainPairSerializer(TokenObtainSerializerNative):
