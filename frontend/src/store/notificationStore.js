@@ -7,7 +7,6 @@ class NotificationStore {
 
     isOpen = false;
     text = '';
-    variant = null;
 
     severityList = {1: 'success', 2: 'info', 3: 'warning', 4: 'error'}
     severity = this.severityList[1]
