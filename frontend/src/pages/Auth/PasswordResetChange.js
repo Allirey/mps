@@ -53,7 +53,7 @@ function ResetPassword(props) {
         Object.entries(errors).forEach(([key, value]) => errorsMap[[key]](value))
     }
 
-    const isFieldsValid = () => {
+    const isFormValid = () => {
         [setNewPErr, setNewP2Err, setErr].forEach(func => func(""))
 
         let newErrs = newP.length ? (newP.length < 6 ? "New password should be at least 6 characters" : "") : 'This field is required';
@@ -70,16 +70,17 @@ function ResetPassword(props) {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        if (!isFieldsValid()) return
+        if (!isFormValid()) return
 
         authStore.passwordResetChange(id, token, newP, newP2).then(data => {
                 resetFields();
-                console.log('password changed!!')
-
-                // props.history.replace('/settings')
+                props.stores.notifications.notify('Password successfully changed!')
+                props.history.replace('/login')
             }
         ).catch(e => {
                 console.warn(e);
+                //todo check error if token incorrect
+
                 // setErrors(e.message)
             }
         )

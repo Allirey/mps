@@ -76,11 +76,10 @@ function ChangePassword(props) {
 
         authStore.changePassword(oldP, newP, newP2).then(data => {
                 resetFields();
-                props.stores.authStore.setShowSuccessPasswordChanged(true);
+                props.stores.notifications.notify("Password successfully changed!");
                 props.history.replace('/settings')
             }
         ).catch(e => {
-                console.log(e);
                 setErrors(e.message)
             }
         )

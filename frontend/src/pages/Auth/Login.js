@@ -3,7 +3,6 @@ import {Link, Redirect, useLocation} from "react-router-dom";
 import {Button, CssBaseline, TextField, Grid, Box, Typography, makeStyles, Container} from '@material-ui/core';
 import withStore from '../../hocs/withStore';
 import authImg from "./imgs/auth.png";
-import SnackBar from "../../components/snackbar";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -41,19 +40,9 @@ function SignIn(props) {
     const {inProgress} = props.stores.authStore;
     const {username, password} = users.values
 
-    const [open, setOpen] = React.useState(props.stores.authStore.showSuccessActivated);
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpen(false);
-    }
-
     useEffect(() => {
         return () => {
             users.reset()
-            props.stores.authStore.setShowSuccessActivated(false);
         }
     }, [])
 
@@ -84,7 +73,7 @@ function SignIn(props) {
 
         users.login()
             .then(() => (props.history.replace(!!location.state ? location.state.from : "/")))
-            .catch((e) => (setErrors(e.message)));
+            .catch(e => setErrors(e.message));
         // todo returns "OK" in error if empty form submitted
     }
     if (props.stores.authStore.isAuthenticated) return <Redirect to={"/"}/>
@@ -99,10 +88,6 @@ function SignIn(props) {
                 <div className={classes.logo}>
                     <img src={authImg} alt={''}/>
                 </div>
-
-                <SnackBar open={open}
-                          onClose={handleClose}
-                          text={"Successfully activated! You can now login into your account."}/>
 
                 <form
                     className={classes.form}

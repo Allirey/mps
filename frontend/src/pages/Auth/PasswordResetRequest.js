@@ -58,7 +58,10 @@ function ResetPasswordRequest(props) {
         e.preventDefault()
         if (!isEmailValid()) return
 
-        props.stores.authStore.passwordResetRequest(email).then(() => console.log('send forgot password - success'))
+        props.stores.authStore.passwordResetRequest(email).then(() => {
+            props.stores.notifications.notify('Please, check your email for reset password link')
+
+        })
             .catch(e=>{
                 setEmailErrTxt(e.message)
             });

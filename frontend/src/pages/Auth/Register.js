@@ -32,9 +32,9 @@ const useStyles = makeStyles((theme) => ({
 
 function SignUp(props) {
     const classes = useStyles();
-    const [userNameErrTxt, setUserNameErrTxt] = useState('');
-    const [emailErrTxt, setEmailErrTxt] = useState('');
-    const [passwordErrTxt, setPasswordErrTxt] = useState('');
+    const [userNameErr, setUserNameErr] = useState('');
+    const [emailErr, setEmailErr] = useState('');
+    const [passwordErr, setPasswordErr] = useState('');
 
     const users = props.stores.authStore;
     const {inProgress} = props.stores.authStore;
@@ -44,45 +44,38 @@ function SignUp(props) {
         return () => users.reset()
     }, [])
 
-    const setError = (errors) => {
-        const errorsMap = {email: setEmailErrTxt, password: setPasswordErrTxt, username: setUserNameErrTxt}
+    const setErrors = (errors) => {
+        const errorsMap = {email: setEmailErr, password: setPasswordErr, username: setUserNameErr}
         Object.entries(errors).forEach(([key, value]) => errorsMap[[key]](value))
     }
 
-    const isUNameValid = () => {
-        let isValid = /^[\w]{2,32}$/.test(username);
+    const isFormValid = () => {
+        [setEmailErr, setPasswordErr, setUserNameErr].forEach(func => func(''))
 
-        setUserNameErrTxt(isValid ? '' : username.length ?
-            'Enter valid username. Allowed latin letters, numbers, and _ . 2-32 characters' : 'This field is required');
+        let nameErr = /^[\w]{2,32}$/.test(username) ? '' : username.length ?
+            'Enter valid username. Allowed latin letters, numbers, and _ . 2-32 characters' : 'This field is required';
+        let passwordErr = password.length < 6 ? password.length ? 'password too short, enter at least 6 characters' :
+            'This field is required' : "";
+        let emailErr = /^.+@.+\.[A-Za-z]{2,3}$/.test(email) ? '' : email.length ?
+            'Please enter a valid email address. We will send you activation link' : 'This field is required';
 
-        return isValid;
-    };
+        !!nameErr && setUserNameErr(nameErr)
+        !!passwordErr && setPasswordErr(passwordErr)
+        !!emailErr && setEmailErr(emailErr)
 
-    const isEmailValid = () => {
-        let isValid = /^.+@.+\.[A-Za-z]{2,3}$/.test(email);
-        setEmailErrTxt(isValid ? '' : email.length ?
-            'Please enter a valid email address. We will send you activation link' : 'This field is required');
-
-        return isValid;
-    };
-
-    const isPasswordValid = () => {
-        let isValid = /^.{6,}$/.test(password);
-
-        setPasswordErrTxt(isValid ? '' : password.length ?
-            'password too short, enter at least 6 characters' : 'This field is required');
-
-        return isValid;
-    };
+        return !(nameErr || passwordErr || emailErr);
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        if (!isUNameValid() | !isPasswordValid() | !isEmailValid()) return
+        if (!isFormValid()) return
 
         users.register().then(() => {
-            props.stores.authStore.setShowSuccessRegister(true);
+            props.stores.notifications.notify('Activation link has been sent to your email. Please check your mailbox.');
             props.history.replace("/")
-        }).catch(setError);
+        }).catch((e) => {
+            setErrors(e.message)
+        });
     }
 
     if (props.stores.authStore.isAuthenticated) return <Redirect to={"/"}/>
@@ -114,8 +107,8 @@ function SignUp(props) {
                                 id="username"
                                 label="Username"
                                 // autoFocus
-                                error={!!userNameErrTxt}
-                                helperText={userNameErrTxt}
+                                error={!!userNameErr}
+                                helperText={userNameErr}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -130,8 +123,8 @@ function SignUp(props) {
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
-                                error={!!passwordErrTxt}
-                                helperText={passwordErrTxt}
+                                error={!!passwordErr}
+                                helperText={passwordErr}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -145,8 +138,8 @@ function SignUp(props) {
                                 label="E-mail address"
                                 name="email"
                                 autoComplete="off"
-                                error={!!emailErrTxt}
-                                helperText={emailErrTxt}
+                                error={!!emailErr}
+                                helperText={emailErr}
                             />
                         </Grid>
                     </Grid>

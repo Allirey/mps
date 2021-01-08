@@ -6,14 +6,8 @@ class AuthStore {
     }
 
     inProgress = false;
-    errors = undefined;
     currentUser = undefined;
     isAuthenticated = false;
-
-    //todo looks weird...
-    showSuccessRegister = false;
-    showSuccessActivated = false;
-    showSuccessPasswordChanged = false;
 
     values = {username: '', password: '', email: ''}
     reset = () => this.values = {username: '', password: '', email: ''}
@@ -21,18 +15,6 @@ class AuthStore {
     setUsername = (value) => this.values.username = value;
     setEmail = (value) => this.values.email = value;
     setPassword = (value) => this.values.password = value;
-
-    setShowSuccessRegister(value) {
-        this.showSuccessRegister = value;
-    }
-
-    setShowSuccessActivated(value) {
-        this.showSuccessActivated = value;
-    }
-
-    setShowSuccessPasswordChanged(value) {
-        this.showSuccessPasswordChanged = value;
-    }
 
     async login() {
         this.inProgress = true;
@@ -59,8 +41,15 @@ class AuthStore {
         }
     }
 
-    activate = (id, token) => {
-        return this.rootStore.api.Auth.activate(id, token).then(true).catch(false)
+    async activate(id, token) {
+        this.inProgress = true;
+        try {
+            let response = await this.rootStore.api.Auth.activate(id, token)
+            if (response.status !== 200) throw response
+        } finally {
+            this.inProgress = false;
+        }
+
     }
 
     refresh = () => {
@@ -91,9 +80,9 @@ class AuthStore {
     async passwordResetRequest(email) {
         this.inProgress = true;
         try {
-            let response =  await this.rootStore.api.Auth.passwordResetRequest(email)
+            let response = await this.rootStore.api.Auth.passwordResetRequest(email)
 
-            if (response.status !== 200)throw response
+            if (response.status !== 200) throw response
 
         } finally {
             this.inProgress = false;
@@ -105,7 +94,7 @@ class AuthStore {
         try {
             let response = await this.rootStore.api.Auth.passwordResetChange(id, token, password, password2)
 
-             if (response.status !== 200)throw response
+            if (response.status !== 200) throw response
 
         } finally {
             this.inProgress = false;
@@ -129,17 +118,9 @@ class AuthStore {
 
 decorate(AuthStore, {
         inProgress: observable,
-        errors: observable,
         values: observable,
         currentUser: observable,
         isAuthenticated: observable,
-        showSuccessActivated: observable,
-        showSuccessRegister: observable,
-        showSuccessPasswordChanged: observable,
-
-        setShowSuccessActivated: action,
-        setShowSuccessRegister: action,
-        setShowSuccessPasswordChanged: action,
 
         setUsername: action,
         setEmail: action,
@@ -148,6 +129,7 @@ decorate(AuthStore, {
         register: action,
         logout: action,
         refresh: action,
+        changePassword: action,
     }
 );
 

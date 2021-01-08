@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {useParams} from "react-router-dom";
-import { makeStyles, Container} from '@material-ui/core';
+import {makeStyles, Container} from '@material-ui/core';
 import withStore from '../../hocs/withStore';
 import Spinner from '../../components/spinner';
 
@@ -32,12 +32,11 @@ function AccountActivation(props) {
 
     useEffect(() => {
         props.stores.authStore.activate(id, token).then(() => {
-                props.stores.authStore.setShowSuccessActivated(true);
+                props.stores.notifications.notify("Successfully activated! You can now login into your account.")
                 props.history.replace("/login")
             }
-        ).catch((e)=>{
-            console.log(e)
-            //todo show snackbar with error
+        ).catch((e) => {
+            props.stores.notifications.notify("Activation failed. Link corrupted or expired.", 4)
             props.history.replace("/")
         })
     }, [])
