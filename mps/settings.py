@@ -132,6 +132,8 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
     'ROTATE_REFRESH_TOKENS': True,
 }
+JWT_REFRESH_COOKIE_NAME = 'rt'
+JWT_REFRESH_COOKIE_PATH = '/api/token/refresh/'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
