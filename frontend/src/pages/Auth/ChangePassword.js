@@ -123,6 +123,7 @@ function ChangePassword(props) {
                         label="New Password"
                         type="password"
                         id="password"
+                        autoComplete="new-password"
                         error={!!newPErr}
                         helperText={newPErr}
                     />
@@ -138,6 +139,7 @@ function ChangePassword(props) {
                         label="New Password (again)"
                         type="password"
                         id="n_password2"
+                        autoComplete="new-password"
                         error={!!newP2Err || !!err}
                         helperText={err || newP2Err}
                     />

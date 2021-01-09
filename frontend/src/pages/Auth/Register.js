@@ -122,7 +122,7 @@ function SignUp(props) {
                                 label="Password"
                                 type="password"
                                 id="password"
-                                autoComplete="current-password"
+                                autoComplete="new-password"
                                 error={!!passwordErr}
                                 helperText={passwordErr}
                             />
