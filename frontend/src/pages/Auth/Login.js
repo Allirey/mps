@@ -72,7 +72,10 @@ function SignIn(props) {
         if (!isUNameValid() | !isPasswordValid()) return
 
         users.login()
-            .then(() => (props.history.replace(!!location.state ? location.state.from : "/")))
+            .then(() => {
+                props.stores.notifications.isOpen = false;
+                props.history.replace(!!location.state ? location.state.from : "/")
+            })
             .catch(e => setErrors(e.message));
         // todo returns "OK" in error if empty form submitted
     }
