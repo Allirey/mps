@@ -22,6 +22,9 @@ class User(AbstractUser):
     is_active = models.BooleanField(_('active'), default=False, help_text=_(
         'Designates whether this user should be treated as active. Unselect this instead of deleting accounts.'
     ), )
+
+    web_site = models.URLField(max_length=64, blank=True)
+    biography = models.TextField(max_length=512, blank=True)
     last_visit = models.DateTimeField(auto_now_add=True)
 
     objects = CaseInsensitiveUserManager()
