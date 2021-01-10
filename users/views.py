@@ -1,4 +1,4 @@
-from rest_framework import permissions, generics, status
+from rest_framework import permissions, generics, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.exceptions import AuthenticationFailed
@@ -14,10 +14,11 @@ from django.conf import settings
 # from django.db.models import Q
 
 from .serializers import (UserCreateSerializer, TokenObtainPairSerializer, ChangePasswordSerializer,
-                          PasswordResetChangeSerializer)
+                          PasswordResetChangeSerializer, UserPublicInfoSerializer, UserAllInfoSerializer)
 from .tokens import token_generator
 from .tasks import send_verification_email, send_password_reset_link
 from .utils import normalize_email
+from .permissions import IsOwnerOrReadOnly
 
 User = get_user_model()
 
@@ -39,6 +40,19 @@ class UserCreateView(UserPassesTestMixin, generics.CreateAPIView):
 
     def test_func(self):
         return str(self.request.user) == 'AnonymousUser'
+
+
+class UserUpdateView(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    lookup_field = 'username'
+    permission_classes = (IsOwnerOrReadOnly,)
+    serializer_class = UserPublicInfoSerializer
+
+
+class UserAllInfoView(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAdminUser,)
+    queryset = User.objects.all()
+    serializer_class = UserAllInfoSerializer
 
 
 class ChangePasswordView(generics.UpdateAPIView):

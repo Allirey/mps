@@ -53,6 +53,18 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return email
 
 
+class UserPublicInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'first_name', 'biography', 'web_site')
+
+
+class UserAllInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        exclude = ('password', 'last_login',)
+
+
 class PasswordResetChangeSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True, required=True)
     password2 = serializers.CharField(write_only=True, required=True)
@@ -112,6 +124,8 @@ class TokenObtainPairSerializer(TokenObtainSerializerNative):
         token['email'] = user.email
         token['first_name'] = user.first_name
         token['last_name'] = user.last_name
+        token['biography'] = user.biography
+        token['web_site'] = user.web_site
         token['date_joined'] = user.date_joined.isoformat()
         # ...
 
