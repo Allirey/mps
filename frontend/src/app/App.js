@@ -54,6 +54,7 @@ function App(props) {
                     <Route path="/accounts/password/reset/:id/:token" exact={true} component={PasswordResetChange}/>
                     <Route path="/about" exact={true} component={About}/>
                     <PrivateRoute path="/settings" exact={true} component={EditProfile}/>
+                    <Route path="/users" exact={true} component={HomePage}/>
                     <Route path="/users/:username" exact={true} component={UserProfile}/>
                     <Route path="**" exact={true} component={P404}/>
                 </Switch>
