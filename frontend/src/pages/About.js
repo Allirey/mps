@@ -1,19 +1,45 @@
 import React from "react";
-import Container from "@material-ui/core/Container";
+import {Container, Link, ListItem, makeStyles, List, Typography} from "@material-ui/core";
 
-export default class extends React.Component{
+const useStyles = makeStyles(theme => ({
+    root: {
+        marginTop: theme.spacing(2),
+        "& $a": {
+            color: "blue",
+            '&:hover':{
+                textDecoration: "none",
+                backgroundColor:"cyan",
+            },
+        }
+    },
+}))
 
-    render() {
-        return (
-            <Container maxWidth={"sm"}>
-            <h1>Hello, wanderer!</h1>
-                <p>I'm python/js developer, and it's my home-project, sandbox for testing things, and implementing some little useful services for myself.
-                If u have an idea or wishes for some services to implement - feel free to contact
-                    me via <a href={"https://t.me/inf13"} style={{textDecoration:"none", color: "blue"}}>telegram</a>.
-                </p>
-
-                </Container>
-        )
-    }
-
+const About = (props) => {
+    const classes = useStyles();
+    return (
+        <Container maxWidth={"md"} className={classes.root}>
+            <Typography gutterBottom variant={"h5"}>Hi. I'm Python/JavaScript developer.</Typography>
+                <Typography gutterBottom>This website is my home-project, portfolio and
+                set of useful services primarily for myself, chess players, and people who is interested in chess and
+                programming.</Typography>
+            <Typography gutterBottom>
+                Technologies used in project:
+                <List >
+                    <ListItem dense>Backend: Django/DRF</ListItem>
+                    <ListItem dense>Frontend: React/Material ui/Mobx</ListItem>
+                    <ListItem dense>Tasks: Celery/RabbitMQ</ListItem>
+                    <ListItem dense>Deploy: Docker/Docker-compose in AWS EC2 instance / nginx webserver</ListItem>
+                    <ListItem dense>Database: AWS RDS PostgreSQL</ListItem>
+                    <ListItem dense>Other: JWT token Auth</ListItem>
+                </List>
+            </Typography>
+                <Typography gutterBottom>Feel free to contact
+                me via <Link rel="noreferrer" target="_blank" href={"//t.me/inf13"}>telegram</Link> with your feedback,
+                    ideas or questions.
+            </Typography>
+        </Container>
+    )
 }
+
+export default About
+
