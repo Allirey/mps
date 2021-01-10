@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-const Error404 = (props) => {
+const UserNotFound = (props) => {
     const classes = useStyles();
 //todo simplify return iframe size for mobile and desktop
     return (
@@ -25,10 +25,11 @@ const Error404 = (props) => {
             >
                 <Grid item>
                     <Typography gutterBottom variant={"h3"} align={"center"}>404</Typography>
-                    <Typography> The requested URL <b>{`${props.location.pathname}`}</b> was not found on this
+                    <Typography> User: <b>{`${props.username}`}</b> was not found on this
                         server.
                     </Typography>
                     <Typography>Can you solve this one?</Typography>
+
                     <br/>
                 </Grid>
                 <Box display={{xs: "none", md: "block"}}>
@@ -49,6 +50,4 @@ const Error404 = (props) => {
     );
 }
 
-export default Error404
-
-
+export default UserNotFound
