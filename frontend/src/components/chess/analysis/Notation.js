@@ -1,5 +1,5 @@
 import React from "react";
-import {makeStyles} from "@material-ui/core";
+import {makeStyles, Typography} from "@material-ui/core";
 
 const useStyles = makeStyles({
     root: {
@@ -27,7 +27,7 @@ export default function (props) {
     return (
         <>
             {/*<Typography><h3>{game.white} - {game.black} {game.result}</h3></Typography>*/}
-            <div className={classes.root}>
+            <Typography className={classes.root}>
                 {notation.map((move, i) => (
                     <React.Fragment key={i}>
                         <span
@@ -39,7 +39,7 @@ export default function (props) {
                         {' '}
                     </React.Fragment>
                 ))}
-            </div>
+            </Typography>
         </>
     )
 }
