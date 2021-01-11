@@ -29,14 +29,12 @@ function HomePage(props) {
             </div>
             <Typography variant={"h4"} className={classes.todos}>Current todos:</Typography>
             <List>
-                <ListItem>edit user info in settings</ListItem>
-                <ListItem>quizy rewrite using db</ListItem>
-                <ListItem>redesign chess db</ListItem>
-                <ListItem>blog</ListItem>
-                <ListItem>admin/moderator page</ListItem>
-                <ListItem>live chat</ListItem>
-                <ListItem>chess tactics</ListItem>
-                <ListItem>chess theory</ListItem>
+                <ListItem dense>redesign chess db</ListItem>
+                <ListItem dense>blog</ListItem>
+                <ListItem dense>admin/moderator page</ListItem>
+                <ListItem dense>live chat</ListItem>
+                <ListItem dense>chess tactics</ListItem>
+                <ListItem dense>chess theory</ListItem>
             </List>
         </Container>
     )
