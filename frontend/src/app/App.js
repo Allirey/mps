@@ -44,7 +44,6 @@ function App(props) {
             <div>
                 <Switch>
                     <Route path="/" exact={true} component={HomePage}/>
-                    <PrivateRoute path="/quizy" exact={true} component={Quizy}/>
                     <Route path="/chess/analysis" exact={true} component={ChessAnalysis}/>
                     <Route path="/login" exact={true} component={Login}/>
                     <Route path="/signup" exact={true} component={Register}/>

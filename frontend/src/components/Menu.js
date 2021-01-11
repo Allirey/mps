@@ -83,8 +83,6 @@ export default function MenuListComposition(props) {
                                     <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
                                         <Link to={`/users/${props.username}`}><MenuItem disableRipple
                                                                                         onClick={handleClose}>{props.username}</MenuItem></Link>
-                                        <Link to={"/quizy"}><MenuItem disableRipple
-                                                                      onClick={handleClose}>quizy</MenuItem></Link>
                                         <Link to={"/settings"}><MenuItem disableRipple
                                                                          onClick={handleClose}>Settings</MenuItem></Link>
                                         <MenuItem disableRipple onClick={props.logout}>Sign out</MenuItem>
