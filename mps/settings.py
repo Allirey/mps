@@ -22,7 +22,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'users.apps.UsersConfig',
-    'quizy.apps.QuizyConfig',
     'chess_db.apps.ChessConfig',
     'blog.apps.BlogConfig',
     'rest_framework',
