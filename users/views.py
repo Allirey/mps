@@ -24,9 +24,7 @@ User = get_user_model()
 
 
 class UserCreateView(UserPassesTestMixin, generics.CreateAPIView):
-    # todo account activation via link send by sendgrid/gmail service
     # todo captcha (google recaptcha or similar)
-    # todo custom create, 4xx errors
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     serializer_class = UserCreateSerializer
@@ -43,10 +41,27 @@ class UserCreateView(UserPassesTestMixin, generics.CreateAPIView):
 
 
 class UserUpdateView(viewsets.ModelViewSet):
+    #  todo check username case insensitivity
     queryset = User.objects.all()
-    lookup_field = 'username'
+    lookup_url_kwarg = 'username'
+    lookup_field = 'username__iexact'
     permission_classes = (IsOwnerOrReadOnly,)
     serializer_class = UserPublicInfoSerializer
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        user = User.objects.get(id=response.data['id'])
+        refresh = TokenObtainPairSerializer.get_token(user)
+
+        response.data['access'] = str(refresh.access_token)
+        response.set_cookie(settings.JWT_REFRESH_COOKIE_NAME, str(refresh),
+                            max_age=jwt_settings.api_settings.REFRESH_TOKEN_LIFETIME.total_seconds(),
+                            path=settings.JWT_REFRESH_COOKIE_PATH,
+                            httponly=True,
+                            domain=request.get_host().split(':')[0],
+                            )
+
+        return response
 
 
 class UserAllInfoView(viewsets.ModelViewSet):
