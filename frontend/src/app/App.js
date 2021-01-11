@@ -8,7 +8,6 @@ import Spinner from "../components/spinner";
 import HomePage from "../pages/HomePage";
 import About from "../pages/About";
 import ChessAnalysis from "../pages/chess/ChessAnalysis";
-import Quizy from "../pages/Quizy";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 import PasswordResetRequest from "../pages/Auth/PasswordResetRequest";
