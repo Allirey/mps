@@ -1,134 +1,137 @@
-import React from "react";
+import React, {useState} from "react";
 import {
-    Container,
-    makeStyles,
-    Table,
-    TableCell,
-    TableRow,
-    TableBody,
-    TableHead
+   Container,
+   makeStyles,
+   Table,
+   TableCell,
+   TableRow,
+   TableBody,
+   Button,
+   TextField,
+   Typography,
+   useMediaQuery, useTheme
 } from "@material-ui/core";
 import withStore from '../hocs/withStore';
 import {Link, Redirect} from "react-router-dom";
 import StyledTabs from "../components/StyledTabs";
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        marginTop: theme.spacing(2),
-        "& $a": {
-            textDecoration: "none",
-            color: "blue"
-        }
-    },
-    logo: {
-        width: "21em",
-        "& img": {width: "100%", height: "100%"}
-    },
+   root: {
+      marginTop: theme.spacing(2),
+      "& $a": {
+         textDecoration: "none", color: "blue"
+      }
+   },
+   logo: {
+      width: "21em", "& img": {width: "100%", height: "100%"}
+   },
+   saveButton: {
+      color: "white", backgroundColor: "#4caef9", textTransform: "none", marginRight: "7px", marginTop: "7px"
+   },
+   cancelButton: {
+      backgroundColor: "#ebf1ef", textTransform: "none", marginTop: "7px"
+   },
 }))
 
+const AccountInfo = (props) => {
+   const {currentUser} = props;
 
-const accountInfo = (currentUser) => {
-    return (
-        <Table>
-            <TableHead>
-                <TableRow>
-                    <TableCell colSpan={3}>Account Information</TableCell>
-                </TableRow>
-            </TableHead>
-
-            <TableBody>
-                <TableRow>
-                    <TableCell>ID</TableCell>
-                    <TableCell> {currentUser.username}</TableCell>
-                    <TableCell><Link to={"#"}>Edit</Link></TableCell>
-                </TableRow>
-
-                <TableRow>
-                    <TableCell>email</TableCell>
-                    <TableCell> {currentUser.email}</TableCell>
-                    <TableCell><Link to={"#"}>Edit</Link></TableCell>
-                </TableRow>
-
-                <TableRow>
-                    <TableCell>password</TableCell>
-                    <TableCell> <Link to={"/accounts/password/change"}>change
-                        password</Link></TableCell>
-                    <TableCell>{""}</TableCell>
-                </TableRow>
-            </TableBody>
-        </Table>
-    )
+   return (
+     <Table>
+        <TableBody>
+           <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell> {currentUser.username}</TableCell>
+           </TableRow>
+           <TableRow>
+              <TableCell>Email</TableCell>
+              <TableCell> {currentUser.email}</TableCell>
+           </TableRow>
+           <TableRow>
+              <TableCell>Password</TableCell>
+              <TableCell> <Link to={"/accounts/password/change"}>change
+                 password</Link></TableCell>
+           </TableRow>
+        </TableBody>
+     </Table>
+   )
 }
 
-const basicInfo = (currentUser) => {
-    return (
-        <Table>
-            <TableHead>
-                <TableRow>
-                    <TableCell colSpan={3}>Basic Information</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell> {currentUser.first_name}</TableCell>
-                    <TableCell><Link to={"#"}>Edit</Link></TableCell>
-                </TableRow>
-
-                <TableRow>
-                    <TableCell>Gender</TableCell>
-                    <TableCell> {currentUser.first_name}</TableCell>
-                    <TableCell><Link to={"#"}>Edit</Link></TableCell>
-                </TableRow>
-
-                <TableRow>
-                    <TableCell>Location</TableCell>
-                    <TableCell> {currentUser.first_name}</TableCell>
-                    <TableCell><Link to={"#"}>Edit</Link></TableCell>
-                </TableRow>
-
-                <TableRow>
-                    <TableCell>Birthday</TableCell>
-                    <TableCell> {currentUser.first_name}</TableCell>
-                    <TableCell><Link to={"#"}>Edit</Link></TableCell>
-                </TableRow>
-
-                <TableRow>
-                    <TableCell>Biography</TableCell>
-                    <TableCell> {currentUser.first_name}</TableCell>
-                    <TableCell><Link to={"#"}>Edit</Link></TableCell>
-                </TableRow>
-
-                <TableRow>
-                    <TableCell>Website</TableCell>
-                    <TableCell> {currentUser.first_name}</TableCell>
-                    <TableCell><Link to={"#"}>Edit</Link></TableCell>
-                </TableRow>
-            </TableBody>
-        </Table>
-    )
+const StyledTextField = (props) => {
+   return (<TextField size={"small"} variant={"outlined"} {...props}/>)
 }
 
 function EditProfile(props) {
-    const classes = useStyles();
+   const classes = useStyles();
+   const theme = useTheme();
+   const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
-    const {currentUser} = props.stores.authStore
+   const [editRowIndex, setEditRowIndex] = useState(null);
+   const [editValue, setEditValue] = useState('');
 
-    if (!props.stores.authStore.isAuthenticated) return <Redirect to={"/"}/>
-    return (
-        <Container className={classes.root} maxWidth={'sm'}>
-            {!currentUser ? null :
-                <>
-                    <StyledTabs tabs={{
-                        'Basic Info':
-                            basicInfo(currentUser),
-                        'Account Info':
-                            accountInfo(currentUser),
-                    }}/>
-                </>
-            }
-        </Container>
-    )
+   const {currentUser, isAuthenticated} = props.stores.authStore;
+
+   if (!props.stores.authStore.currentUser) return <Redirect to={"/"}/>
+
+   const fieldMapping = {
+      0: "first_name", 1: "biography", 2: "web_site",
+   }
+
+   const handleSave = (key) => {
+      props.stores.authStore.editUserData({[fieldMapping[[key]]]: editValue})
+        .then((data) => {
+           setEditRowIndex(null);
+           setEditValue('')
+           const {access, ...rest} = data
+           props.stores.api.token = access
+           props.stores.authStore.currentUser = {...props.stores.authStore.currentUser, ...rest}
+        }).catch((e) => {
+         props.stores.notifications.notify(Object.values(e.message)[0], 4);
+      })
+   }
+
+   const userInfo = {
+      'Name': currentUser.first_name, 'Biography': currentUser.biography, 'Website': currentUser.web_site,
+   }
+
+   return (
+     <Container disableGutters={!matches} className={classes.root} maxWidth={'sm'}>{!currentUser ? null :
+       <StyledTabs variant={matches && "fullWidth" || "scrollable"} tabs={{
+          'Basic Info':
+            <Table>
+               <TableBody>
+                  {Object.entries(userInfo).map(([key, value], i) => {
+                     return (editRowIndex === i ?
+                       <TableRow key={i}>
+                          <TableCell width={"20%"}>{key}</TableCell>
+                          <TableCell align={"left"}><StyledTextField value={editValue}
+                                                                     onChange={(e) => setEditValue(e.target.value)}/>
+                             <br/>
+                             <Button className={classes.saveButton} disableRipple size={"small"}
+                                     onClick={() => handleSave(i)}>Save</Button>
+                             <Button className={classes.cancelButton} disableRipple size={"small"}
+                                     onClick={() => setEditRowIndex(null)}>Cancel</Button></TableCell>
+                       </TableRow> :
+                       <TableRow key={i}>
+                          <TableCell width={"20%"}>{key}</TableCell>
+                          <TableCell align={"left"}>{value}</TableCell>
+                          <TableCell width={"15%"}><Link to={"#"} onClick={(e) => {
+                             e.preventDefault();
+                             setEditRowIndex(i);
+                             setEditValue(value)
+                          }} key={i}>Edit</Link></TableCell>
+                       </TableRow>)
+                  })}
+               </TableBody>
+            </Table>,
+          'Account Info': <AccountInfo currentUser={currentUser}/>,
+          'Notifications': <Typography variant={"h5"} align={"center"}>Coming soon...</Typography>,
+          'Security': <Typography variant={"h5"} align={"center"}>Coming soon...</Typography>,
+       }}/>
+     }
+
+     </Container>
+   )
 }
 
 export default withStore(EditProfile)

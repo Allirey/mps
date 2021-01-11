@@ -1,45 +1,57 @@
-import React, {useEffect} from "react";
-import {Container, makeStyles} from "@material-ui/core";
+import React, {useEffect, useState} from "react";
+import {Container, makeStyles, Link, Typography} from "@material-ui/core";
 import withStore from '../hocs/withStore';
-import {useParams, Link} from "react-router-dom";
+import {useParams} from "react-router-dom";
+import Spinner from '../components/spinner';
+import UserNotFound from '../errors/UserNotFound';
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        marginTop: theme.spacing(10),
-    },
-    logo: {
-        width: "21em",
-        "& img": {width: "100%", height: "100%"}
-    },
+   root: {
+      marginTop: theme.spacing(10),
+      "& $a": {
+         color: "blue",
+         '&:hover': {
+            textDecoration: "none",
+            backgroundColor: "cyan",
+         },
+      }
+   },
+   logo: {
+      width: "21em",
+      "& img": {width: "100%", height: "100%"}
+   },
 }))
 
 function UserProfile(props) {
-    const classes = useStyles();
+   const classes = useStyles();
+   const [currentUser, setCurrentUser] = useState(null);
+   const {username} = useParams();
+   const {inProgress} = props.stores.authStore
 
-    const {username} = useParams();
-    console.log(username)
+   useEffect(() => {
+      props.stores.authStore.getUser(username).then(data => setCurrentUser(data)).catch(e => {
+         console.warn(e)
+      })
+      return () => {
+      };
+   }, [username])
 
-
-    useEffect(() => {
-
-        return () => {
-        };
-    }, [])
-
-    return (
+   if (inProgress) return <Spinner/>
+   else if (!currentUser) return <UserNotFound username={username}/>
+   else return (
         <Container className={classes.root}>
            User's public info:
-               <ul>
-                   <li>name</li>
-                   <li>social links</li>
-                   <li>biography</li>
-                   <li>posts</li>
-                   <li>comments</li>
-                   <li>stats</li>
-                   <li>bookmarks</li>
-               </ul>
+           <ul>
+              <li><Typography>name: {currentUser.first_name}</Typography></li>
+              <li><Typography>bio: {currentUser.biography}</Typography></li>
+              <li><Typography>website: <Link rel="noreferrer" target="_blank"
+                                             href={`//${currentUser.web_site.split("//").reverse()[0]}`}>
+                 {currentUser.web_site.split("//").reverse()[0]}</Link></Typography>
+              </li>
+           </ul>
+           More coming soon...
         </Container>
-    )
+      )
 }
 
 export default withStore(UserProfile)
