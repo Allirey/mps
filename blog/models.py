@@ -12,8 +12,8 @@ class Article(models.Model):
     class Meta:
         ordering = ('-publish',)
 
-    title = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255, unique=True)
+    title = models.CharField(max_length=64)
+    slug = models.SlugField(max_length=96, unique=True)
     body = models.TextField()
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='articles')
     publish = models.DateTimeField(default=timezone.now)
