@@ -123,10 +123,10 @@ class TokenObtainPairSerializer(TokenObtainSerializerNative):
         token['username'] = user.username
         token['email'] = user.email
         token['first_name'] = user.first_name
-        token['last_name'] = user.last_name
         token['biography'] = user.biography
         token['web_site'] = user.web_site
         token['date_joined'] = user.date_joined.isoformat()
+        token['is_staff'] = user.is_staff
         # ...
 
         return token
