@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.text import slugify
 from django.utils import timezone
+from lxml.html.clean import Cleaner
 
 
 class Article(models.Model):
@@ -24,4 +25,8 @@ class Article(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title).lower()
+        if self.body:
+            cleaner = Cleaner(style=True)
+            self.body = cleaner.clean_html(self.body)
+
         super().save(*args, **kwargs)
