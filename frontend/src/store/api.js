@@ -20,10 +20,7 @@ const apiGame = apiBase + '/game/';
 const apiExplorer = apiBase + '/explorer/';
 const apiSearchAutocomplete = apiBase + '/autocomplete/';
 
-const apiQuizyWords = apiBase + '/quizy/words/'
-
-const apiArticles = apiBase + '/blog/articles/'
-const apiComments = apiBase + '/blog/comments/'
+const apiArticles = apiBase + '/blog/'
 
 class api {
    constructor(rootStore) {
@@ -59,7 +56,7 @@ class api {
       deleteUser: (id) => this.requests.delete(`${apiUsers}${id}`, {}, true),
       getUser: (id) => this.requests.get(`${apiUsers}${id}`, {}, true),
       getUsers: () => this.requests.get(apiUsers, {}, true),
-      patchUsers: (id, data) => this.requests.patch(`${apiUsers}${id}`, {body: JSON.stringify(data)}, true),
+      patchUser: (id, data) => this.requests.patch(`${apiUsers}${id}`, {body: JSON.stringify(data)}, true),
    }
 
    ChessExplorer = {
@@ -72,37 +69,13 @@ class api {
         )
    }
 
-   Quizy = {
-      add: (word, translate) => (
-        this.requests.post(apiQuizyWords, {body: JSON.stringify({word, translate})})
-      ),
-      update: (id, word, translate) => (
-        this.requests.put(apiQuizyWords + `${id}/`, {body: JSON.stringify({word, translate})})
-      ),
-      getAll: () => this.requests.get(apiQuizyWords),
-      remove: (id) => this.requests.delete(apiQuizyWords + `${id}/`)
-   }
-
-   Articles = {
-      add: (title, content) => (
-        this.requests.post(apiArticles, {body: JSON.stringify({title, content})})
-      ),
-      update: (id, title, content) => (
-        this.requests.put(apiArticles + `${id}/`, {body: JSON.stringify({title, content})})
-      ),
-      getAll: () => this.requests.get(apiArticles),
-      remove: (id) => (this.requests.delete(apiArticles + `${id}/`))
-   }
-
-   Comments = {
-      add: (articleID, content) => (
-        this.requests.post(apiComments, {body: JSON.stringify({articleID, content})})
-      ),
-      update: (id, content) => (
-        this.requests.put(apiComments + `${id}/`, {body: JSON.stringify({id, content})})
-      ),
-      getAll: (articleID) => (this.requests.get(apiComments)), // todo ???
-      remove: (id) => (this.requests.delete(apiComments + `${id}/`))
+   Posts = {
+      create: (slug, title, body) => this.requests.post(apiArticles, {body: JSON.stringify({slug, title, body})}, true),
+      retrieve: (id) => this.requests.get(`${apiArticles}${id}/`),
+      update: (id, data) => this.requests.put(`${apiArticles}${id}/`, {body: JSON.stringify({...data})}, true),
+      patch: (id, data) => this.requests.patch(`${apiArticles}${id}/`, {body: JSON.stringify({...data})}, true),
+      delete: (id) => this.requests.post(`${apiArticles}${id}/`, {}, true),
+      list: () => this.requests.get(apiArticles),
    }
 
    // wrap on fetch: requests.METHOD_NAME(URL, OPTIONS, WITH_AUTH)
