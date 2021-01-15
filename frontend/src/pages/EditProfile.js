@@ -26,7 +26,14 @@ const useStyles = makeStyles(theme => ({
       width: "21em", "& img": {width: "100%", height: "100%"}
    },
    saveButton: {
-      color: "white", backgroundColor: "#4caef9", textTransform: "none", marginRight: "7px", marginTop: "7px"
+      color: "white",
+      backgroundColor: "#4caef9",
+      textTransform: "none",
+      marginRight: "7px",
+      marginTop: "7px",
+      "&:hover":{
+         backgroundColor: "#4caef9",
+      }
    },
    cancelButton: {
       backgroundColor: "#ebf1ef", textTransform: "none", marginTop: "7px"
