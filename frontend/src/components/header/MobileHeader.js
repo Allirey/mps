@@ -39,21 +39,28 @@ export default function SwipeableTemporaryDrawer(props) {
             onKeyDown={toggleDrawer('left', false)}
         >
             <List>
-                <ListItem button component={Link} to={"/"}>
+                <ListItem disableRipple button component={Link} to={"/"}>
                     <ListItemIcon>
                         <Home/>
                     </ListItemIcon>
                     <ListItemText primary={"Home"}/>
                 </ListItem>
 
-                <ListItem button component={Link} to={"/chess/analysis"}>
+                <ListItem disableRipple button component={Link} to={"/blog"}>
+                    <ListItemIcon>
+                        <Search/>
+                    </ListItemIcon>
+                    <ListItemText primary={"Blog"}/>
+                </ListItem>
+
+                <ListItem disableRipple button component={Link} to={"/chess/analysis"}>
                     <ListItemIcon>
                         <Search/>
                     </ListItemIcon>
                     <ListItemText primary={"Chess db"}/>
                 </ListItem>
 
-                <ListItem button component={Link} to={"/about"}>
+                <ListItem disableRipple button component={Link} to={"/about"}>
                     <ListItemText primary={"About"}/>
                 </ListItem>
             </List>

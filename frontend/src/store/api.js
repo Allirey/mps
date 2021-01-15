@@ -74,7 +74,7 @@ class api {
       retrieve: (id) => this.requests.get(`${apiArticles}${id}/`),
       update: (id, data) => this.requests.put(`${apiArticles}${id}/`, {body: JSON.stringify({...data})}, true),
       patch: (id, data) => this.requests.patch(`${apiArticles}${id}/`, {body: JSON.stringify({...data})}, true),
-      delete: (id) => this.requests.post(`${apiArticles}${id}/`, {}, true),
+      delete: (id) => this.requests.delete(`${apiArticles}${id}/`, {}, true),
       list: () => this.requests.get(apiArticles),
    }
 
@@ -95,8 +95,11 @@ class api {
          ...options,
          method: method,
       }).then(response => {
-         if (response.status >= 200 && response.status < 300) {
+
+          if (response.status >= 200 && response.status < 300 && response.status !== 204) {
             return response.json();
+         }else if (response.status === 204){
+            return {"message": "No Content"}
          }
 
          return response.json().then(json => {

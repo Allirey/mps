@@ -39,6 +39,7 @@ export default function (props) {
                 <Toolbar component={Container} variant={"dense"}>
                     <Button disableRipple> <Link to="/">glitcher.org</Link> </Button>
                     <Button disableRipple> <Link to="/chess/analysis">Chess db</Link> </Button>
+                    <Button disableRipple> <Link to="/blog">Blog</Link> </Button>
                     <Button disableRipple> <Link to="/about">About</Link> </Button>
                     <Box style={{flexGrow: 1}}/>
                     {!props.currentUser ? <Button disableRipple><Link to="/login">Sign in</Link></Button>
