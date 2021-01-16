@@ -25,8 +25,11 @@ class Article(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title).lower()
+
         if self.body:
-            cleaner = Cleaner(style=True)
-            self.body = cleaner.clean_html(self.body)
+            cleaner = Cleaner(style=True, page_structure=False)
+
+            self.body = cleaner.clean_html(self.body).replace('<p><br></p>', '')
+            # frontend editor creates unnecessary empty lines
 
         super().save(*args, **kwargs)
