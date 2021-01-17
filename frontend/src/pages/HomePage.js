@@ -1,5 +1,5 @@
 import React from "react";
-import {Container, makeStyles, List, ListItem, Typography} from "@material-ui/core";
+import {Container, makeStyles, Typography} from "@material-ui/core";
 import withStore from '../hocs/withStore';
 import logo from "./undraw_development_ouy3.svg";
 
@@ -27,15 +27,6 @@ function HomePage(props) {
             <div className={classes.logo}>
                 <img src={logo} alt={''}/>
             </div>
-            <Typography variant={"h4"} className={classes.todos}>Current todos:</Typography>
-            <List>
-                <ListItem dense>redesign chess db</ListItem>
-                <ListItem dense>blog</ListItem>
-                <ListItem dense>admin/moderator page</ListItem>
-                <ListItem dense>live chat</ListItem>
-                <ListItem dense>chess tactics</ListItem>
-                <ListItem dense>chess theory</ListItem>
-            </List>
         </Container>
     )
 }
