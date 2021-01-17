@@ -25,7 +25,7 @@ const Error404 = (props) => {
             >
                 <Grid item>
                     <Typography gutterBottom variant={"h3"} align={"center"}>404</Typography>
-                    <Typography> The requested URL <b>{`${props.location.pathname}`}</b> was not found on this
+                    <Typography> The requested URL was not found on this
                         server.
                     </Typography>
                     <Typography>Can you solve this one?</Typography>
