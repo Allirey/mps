@@ -37,7 +37,8 @@ const useStyles = makeStyles(theme => ({
    paginationBtn: {
       borderRadius: "13px",
       padding: 0,
-      maxWidth: 40, minWidth: 40,
+      maxWidth: 42, minWidth: 42,
+      maxHeight: 26, minHeight: 26,
       margin: "25px 4px",
    },
 }))
@@ -55,7 +56,8 @@ const navigationButton = props => {
 function Articles(props) {
    const classes = useStyles();
    const theme = useTheme();
-   const matches = useMediaQuery(theme.breakpoints.up('md'));
+   const matchesMD = useMediaQuery(theme.breakpoints.up('md'));
+   const matchesSM = useMediaQuery(theme.breakpoints.up('sm'));
    const {currentPage} = useParams();
 
    const [articles, setArticles] = useState(null)
@@ -73,40 +75,25 @@ function Articles(props) {
 
    const pagination = (pages, current) => {
       current = +current
-      let res = [navigationButton({
-         page: 1, disabled: current === 1,
-         clsName: classes.paginationBtn,
-      })]
-      if (pages === 1) return res;
-      if (current >= 5) {
-         res = res.concat(['  .  .  .  ', navigationButton({
-            page: current - 2,
-            clsName: classes.paginationBtn
-         }),
-            navigationButton({page: current - 1, clsName: classes.paginationBtn}),
-            navigationButton({page: current, disabled: true, clsName: classes.paginationBtn})])
-      } else {
-         let c = 1
-         while (c !== current) {
-            res = res.concat([navigationButton({
-               page: c + 1, disabled: (c + 1) === current,
-               clsName: classes.paginationBtn
-            })])
-            c++
-         }
+
+      let INIT_SIZE = matchesSM ? 5 : 3  // 1 2 [3] 4 5 for desktop; and 2 [3] 4  for mobile
+      let res = [current]
+
+      while (res.length < INIT_SIZE) {
+         res = [res[0] - 1, ...res, res[res.length - 1] + 1]
       }
-      if (current + 4 <= pages) {
-         res = res.concat([navigationButton({page: current + 1, clsName: classes.paginationBtn}),
-            navigationButton({page: current + 2, clsName: classes.paginationBtn}), '  .  .  .  ',
-            navigationButton({page: pages, clsName: classes.paginationBtn})])
-      } else {
-         let c = current
-         while (c !== pages) {
-            res = res.concat([navigationButton({page: c + 1, clsName: classes.paginationBtn})])
-            c++
-         }
-      }
-      return res;
+      res = res.filter(x => x > 0 && x <= pages)
+
+      if (res[0] > 1) res = res[0] > 2 ? [1, ' . . . ', ...res] : [1, ...res]
+      if (res[res.length - 1] < pages) res = (res[res.length - 1]) + 1 < pages ? [...res, ' . . . ', pages] : [...res, pages]
+
+
+      res = res.map(x => {
+         if (typeof x === "string") return x
+         return navigationButton({page: x, disabled: x === current, clsName: classes.paginationBtn})
+      })
+
+      return res
    }
 
    if (isLoading) return <Spinner/>
@@ -120,7 +107,7 @@ function Articles(props) {
               <Button className={classes.newPostBtn} onClick={() => props.history.push('/blog/new')}>new</Button>}
            </Box>
            <div className={classes.root}>
-              <Grid container component={matches ? Container : "div"} maxWidth={"md"} justify={"center"}>
+              <Grid container component={matchesMD ? Container : "div"} maxWidth={"md"} justify={"center"}>
                  <Grid item>
                     {pagination(pages, currentPage || 1).map((x, i) => {
                        return <React.Fragment key={i}>{x}</React.Fragment>
