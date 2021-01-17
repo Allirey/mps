@@ -132,7 +132,7 @@ function Articles(props) {
                    </Grid>
                  )}
                  <Grid item>
-                    {(articles.length > 5) && pagination(pages, currentPage || 1).map((x, i) => {
+                    {(articles.length > 1) && pagination(pages, currentPage || 1).map((x, i) => {
                        return <React.Fragment key={i}>{x}</React.Fragment>
                     })}
                  </Grid>
