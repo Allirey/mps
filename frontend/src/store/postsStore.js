@@ -5,8 +5,8 @@ class PostsStore {
       this.rootStore = rootStore;
    }
 
-   async all() {
-      return await this.rootStore.api.Posts.list()
+   async all(page=1) {
+      return await this.rootStore.api.Posts.listPage(page)
    }
 
    async create(slug,title,body) {
@@ -26,7 +26,8 @@ class PostsStore {
    }
 }
 
-decorate(PostsStore, {}
+decorate(PostsStore, {
+  }
 );
 
 export default PostsStore;

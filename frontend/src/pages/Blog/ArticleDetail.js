@@ -7,13 +7,31 @@ import {
    Button,
    useTheme,
    useMediaQuery,
-   Grid,
+   Grid, TextField,
 } from "@material-ui/core";
 import withStore from '../../hocs/withStore';
 import {useParams} from 'react-router-dom'
 import Spinner from '../../components/spinner';
-import ReactQuill from "react-quill";
 import Dialog from "../../components/Dialog";
+import ReactQuill, {Quill} from "react-quill";
+
+const LinkQuill = Quill.import('formats/link');
+
+class MyLink extends LinkQuill {
+   static create(value) {
+      let node = super.create(value);
+      value = this.sanitize(value);
+      if (!value.startsWith("http")) {
+         value = "http://" + value;
+      }
+      node.setAttribute('href', value);
+      node.setAttribute('rel', 'noopener noreferrer');
+      node.setAttribute('target', '_blank');
+      return node;
+   }
+}
+
+Quill.register(MyLink);
 
 const useStyles = makeStyles(theme => ({
    root: {
@@ -21,16 +39,14 @@ const useStyles = makeStyles(theme => ({
       // marginBottom: theme.spacing(10),
       paddingBottom: theme.spacing(2),
       "& $p": {
-         margin: 0,
-         padding: 0,
          paddingBottom: "17px",
          marginBottom: theme.spacing(0),
+         fontFamily: "'Pt Sans', Arial, sans-serif",
       },
       "& $img": {
          maxWidth: "100%",
          height: "auto",
       },
-
       "& $a": {
          textDecoration: "none",
          color: "blue",
@@ -39,17 +55,18 @@ const useStyles = makeStyles(theme => ({
          borderLeft: "4px solid #ccc",
          paddingLeft: "16px",
       },
+      '& .ql-container': {
+         fontSize: "17px",
+         wordBreak: "break-word",
+      },
    },
    editor: {
       '& .ql-bubble .ql-editor a':
         {
            textDecoration: "none",
            color: "blue",
+           whiteSpace: "normal",
         },
-      '& $p': {
-         fontSize: "15px",
-         wordBreak: "break-word",
-      },
       '& .ql-editor': {padding: 0,},
       '& .ql-bubble .ql-editor pre.ql-syntax': {
          margin: "14px, 0",
@@ -58,6 +75,16 @@ const useStyles = makeStyles(theme => ({
          color: 'black',
          fontWeight: 400,
          fontFamily: "Menlo,'Courier New',Courier,monospace",
+      },
+   },
+   title: {
+      wordBreak: "break-word",
+      margin: 0,
+      '& $input': {
+         fontSize: "32px",
+         '&::-webkit-input-placeholder': {
+            fontStyle: "italic",
+         }
       },
    },
    submit: {
@@ -75,15 +102,12 @@ const useStyles = makeStyles(theme => ({
          padding: "4px 12px",
          margin: "0 0 15px",
          fontWeight: "600",
-
-
+         width: "100%",
       },
-
       "&:hover": {
          color: "white",
          backgroundColor: "#4caef9",
       }
-
    },
    submitRelative: {
       position: "relative",
@@ -93,7 +117,6 @@ const useStyles = makeStyles(theme => ({
    submitFixed: {
       position: "fixed",
    },
-
    deleteButton: {
       marginTop: theme.spacing(13),
       backgroundColor: "white",
@@ -103,7 +126,6 @@ const useStyles = makeStyles(theme => ({
          color: "white",
       }
    }
-
 }))
 
 function ArticleDetail(props) {
@@ -111,12 +133,28 @@ function ArticleDetail(props) {
 
    const theme = useTheme();
    const matches = useMediaQuery(theme.breakpoints.up('md'));
+
+   const {slug} = useParams();
+
    const [post, setPost] = useState(null)
-   const [editMode, setEditMode] = useState(false)
+   const [editMode, setEditMode] = useState(!slug)
    const [title, setTitle] = useState('')
    const [body, setBody] = useState('')
 
    const [open, setOpen] = React.useState(false);
+
+   const translateMap = {
+      'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'jo', 'ж': 'zh', 'з': 'z', 'и': 'i',
+      'й': 'j', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't',
+      'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ъ': '', 'ы': 'y',
+      'ь': '', 'э': 'e', 'ю': 'ju', 'я': 'ja', 'і': 'i', 'є': 'e', 'ї': 'yi'
+   }
+
+   const slugify = str => {
+      return str.toLowerCase().split('').map(x => translateMap[[x]] || x).join('')
+        .normalize('NFKD').trim().replace(/[^a-z0-9 ]/g, '')
+        .replace(/\s+/g, '-');
+   }
 
    const handleClickOpen = () => {
       setOpen(true);
@@ -126,41 +164,53 @@ function ArticleDetail(props) {
       setOpen(false);
    };
 
-   const {slug} = useParams();
+
    const makeDate = dateString => new Date(dateString).toDateString().split(' ')
      .splice(1).join(' ')
 
    useEffect(() => {
-      props.stores.posts.getPost(slug).then(post => {
-         setPost(post)
-         setTitle(post.title)
-         setBody(post.body)
-      }).catch((e) => {
-         props.stores.notifications.notify(JSON.stringify(e), 4)
-      })
+      if (slug) {
+         props.stores.posts.getPost(slug).then(post => {
+            setPost(post)
+            setTitle(post.title)
+            setBody(post.body)
+         }).catch((e) => {
+            props.stores.notifications.notify(JSON.stringify(e), 4)
+         })
+      }
    }, [])
 
    const {currentUser} = props.stores.authStore
 
    const showEditButton = () => {
-      return !!currentUser && !!post && (currentUser.is_staff ||
+      return !slug || !!currentUser && !!post && (currentUser.is_staff ||
         currentUser.username.toLowerCase() === post.author.username.toLowerCase())
    }
 
-   const handleSubmit = () => {
-      if (editMode) {
+   const handleSubmit = (e) => {
+      if (!slug) {
+         props.stores.posts.create(slugify(title), title, body).then((data) => {
+            props.stores.notifications.notify('success')
+            // props.stores.storage.removeItem('draft')
+            props.history.push(`/blog/${slugify(title)}`)
+            setPost(data)
+            setEditMode(false)
+         }).catch((e) => {
+            // props.stores.notifications.notify(JSON.stringify(e), 4)
+            props.stores.notifications.notify("something goes wrong...", 3)
+         })
+      } else if (editMode) {
          props.stores.posts.updatePost(slug, {slug, title, body}).then(data => {
-            setEditMode(!editMode)
             setPost(data)
             setTitle(data.title)
             setBody(data.body)
-
+            setEditMode(false)
          }).catch(e => {
             // props.stores.notifications.notify(JSON.stringify(e), 4)
             props.stores.notifications.notify("something goes wrong...", 3)
          })
       } else {
-         setEditMode(!editMode)
+         setEditMode(true)
       }
    }
 
@@ -189,7 +239,7 @@ function ArticleDetail(props) {
       'link', 'image'
    ]
 
-   if (!post) return <Spinner/>
+   if (!post && slug) return <Spinner/>
 
    return (
      <Grid container direction={"row"}>
@@ -197,12 +247,33 @@ function ArticleDetail(props) {
         <Grid item lg={8} md={9} sm={12} xs={12}>
            <Container className={classes.root} maxWidth={"md"}>
               <div>
-                 <Typography variant={"h3"} align={"center"}>{title}</Typography>
-                 <Typography gutterBottom variant="subtitle2" color="textSecondary" align={"center"}>
-                    {makeDate(post.publish)} by <Link
-                   href={`/users/${post.author.username}`}>{post.author.username}</Link>
-                 </Typography><br/><br/>
+                 {slug && !editMode &&
+                 <Typography variant={"h3"} className={classes.title}>{title}</Typography>
+                 ||
+                 <TextField
+                   className={classes.title}
+                   value={title}
+                   multiline
+                   onChange={e => setTitle(e.target.value)}
+                   variant="standard"
+                   margin="normal"
+                   name="title"
+                   label={""}
+                   placeholder={"Title"}
+                   type="text"
+                   id="title"
+                   autoComplete={"off"}
+                   fullWidth
+                   InputProps={{disableUnderline: true, style: {fontSize: "3rem", padding: 0}}}
+                 />
+                 }
+                 {
+                    slug && <><Typography variant="subtitle2" color="textSecondary">
+                       {makeDate(post.publish)} by <Link
+                      href={`/users/${post.author.username}`}>{post.author.username}</Link>
+                    </Typography><br/></>
 
+                 }
                  <ReactQuill
                    className={classes.editor}
                    value={body}
@@ -212,32 +283,27 @@ function ArticleDetail(props) {
                    readOnly={!editMode}
                    modules={modules}
                    formats={formats}
-                 >
-                    {/*<article>*/}
-                    {/*   /!*<h1/>*!/*/}
-                    {/*</article>*/}
-                 </ReactQuill>
+                 />
               </div>
            </Container>
         </Grid>
         <Grid container direction={matches ? 'column' : "row"} item xs={12} sm={12} md={2} lg={2}>
            <Grid item>
-              {showEditButton() ?
-                <Button
-                  size={"small"}
-                  onClick={handleSubmit}
-                  className={`${classes.submit} ${matches ? classes.submitFixed : classes.submitRelative}`}
-                >{editMode ? "Publish" : "Edit"}</Button> : null}
+              {showEditButton() &&
+              <Button
+                size={"small"}
+                onClick={handleSubmit}
+                className={`${classes.submit} ${matches ? classes.submitFixed : classes.submitRelative}`}
+              >{editMode ? "Publish" : "Edit"}</Button>}
            </Grid>
            <Grid item>
-              {showEditButton() && editMode &&
+              {showEditButton() && editMode && slug &&
               <Button
                 size={"small"}
                 onClick={handleClickOpen}
                 className={`${classes.submit} 
                ${classes.deleteButton} ${matches ? classes.submitFixed : classes.submitRelative}`}
               >Delete</Button>}
-
            </Grid>
         </Grid>
         <Dialog
@@ -245,7 +311,6 @@ function ArticleDetail(props) {
           onClose={handleClose}
           onDelete={handleDelete}
         />
-
      </Grid>
    )
 }

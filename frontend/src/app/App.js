@@ -17,9 +17,9 @@ import ChangePassword from "../pages/Auth/ChangePassword";
 import UserProfile from "../pages/UserProfile";
 import EditProfile from "../pages/EditProfile";
 import SnackBar from "../components/snackbar";
-import ArticleNew from "../pages/Blog/ArticleNew";
 import ArticleDetail from "../pages/Blog/ArticleDetail";
 import Articles from '../pages/Blog/Articles';
+// import ArticleNew from "../pages/Blog/ArticleNew";
 
 
 function App(props) {
@@ -50,7 +50,8 @@ function App(props) {
                     <Route path="/login" exact={true} component={Login}/>
                     <Route path="/signup" exact={true} component={Register}/>
                     <Route path="/blog" exact={true} component={Articles}/>
-                    <Route path="/blog/new" exact={true} component={ArticleNew}/>
+                    <Route path="/blog/page/:currentPage" exact={true} component={Articles}/>
+                    <Route path="/blog/new" exact={true} component={ArticleDetail}/>
                     <Route path="/blog/:slug" exact={true} component={ArticleDetail}/>
                     <Route path="/accounts/confirm-email/:id/:token" exact={true} component={AccountActivation}/>
                     <PrivateRoute path="/accounts/password/change" exact={true} component={ChangePassword}/>

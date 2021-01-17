@@ -4,15 +4,13 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import {Link, Redirect} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
    root: {
-
-      maxWidth: 500,
-      margin: theme.spacing(2),
+      height: "100%",
+      border: 0,
       "& $button": {
          textTransform: "none"
       },
@@ -21,6 +19,9 @@ const useStyles = makeStyles(theme => ({
          color: "black"
       },
    },
+   clickArea:{
+      height: "100%",
+   }
 
 }));
 
@@ -34,7 +35,7 @@ export default function MediaCard(props) {
 
    return (
      <Card className={classes.root} variant={"outlined"}>
-        <CardActionArea disableRipple component={Link} to={`/blog/${article.slug}`}>
+        <CardActionArea className={classes.clickArea} disableRipple component={Link} to={`/blog/${article.slug}`}>
            <CardContent>
               <Typography variant="h5" component="h2">
                  {article.title}
@@ -44,17 +45,12 @@ export default function MediaCard(props) {
               </Typography>
               <br/>
               <br/>
-
-              <Typography variant="body2" color="textSecondary" component="p"
+              <Typography variant="body2" color="textSecondary" component="div"
                           dangerouslySetInnerHTML={{"__html": article.body.replace(/<[^>]+>/g, '').slice(0, 300)
                                + (article.body.replace(/<[^>]+>/g, '').length > 300? "...":"")}}/>
            </CardContent>
         </CardActionArea>
         <CardActions>
-           <Button size="small" color="primary" variant={"outlined"}
-                   disableRipple >
-              <Link to={`/blog/${article.slug}`}>Learn More</Link>
-           </Button>
         </CardActions>
      </Card>
    );

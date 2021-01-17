@@ -76,6 +76,7 @@ class api {
       patch: (id, data) => this.requests.patch(`${apiArticles}${id}/`, {body: JSON.stringify({...data})}, true),
       delete: (id) => this.requests.delete(`${apiArticles}${id}/`, {}, true),
       list: () => this.requests.get(apiArticles),
+      listPage: (page) => this.requests.get(apiArticles + '?' + new URLSearchParams({page})),
    }
 
    // wrap on fetch: requests.METHOD_NAME(URL, OPTIONS, WITH_AUTH)
