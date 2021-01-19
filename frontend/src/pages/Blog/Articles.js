@@ -1,10 +1,20 @@
 import React, {useEffect, useState} from "react";
 import {Link, useParams} from 'react-router-dom';
-import {Container, makeStyles, Grid, Button, useTheme, useMediaQuery, Box} from "@material-ui/core";
+import {
+   Container,
+   makeStyles,
+   Grid,
+   Button,
+   useTheme,
+   useMediaQuery,
+   Box,
+   Typography,
+} from "@material-ui/core";
 import withStore from '../../hocs/withStore';
 import Card from "../../components/Card";
-import Spinner from "../../components/spinner";
 import Error404 from "../../errors/error404";
+import {Helmet} from "react-helmet";
+import {Skeleton} from '@material-ui/lab';
 
 const useStyles = makeStyles(theme => ({
    root: {
@@ -41,6 +51,9 @@ const useStyles = makeStyles(theme => ({
       maxHeight: 26, minHeight: 26,
       margin: "25px 4px",
    },
+   skeleton: {
+      padding: theme.spacing(5)
+   }
 }))
 
 const navigationButton = props => {
@@ -65,6 +78,7 @@ function Articles(props) {
    const [pages, setPages] = useState(1)
 
    useEffect(() => {
+      setIsLoading(true)
       props.stores.posts.all(currentPage || 1).then(data => {
          setArticles(data.results)
          setPages(Math.trunc(data.count / 10) + !!(data.count % 10))
@@ -96,43 +110,94 @@ function Articles(props) {
       return res
    }
 
-   if (isLoading) return <Spinner/>
+   if (isLoading) return (
+     <Container maxWidth={"md"} className={classes.skeleton}>
+        <Skeleton width={"0%"}/>
+        <Skeleton width={"0%"}/>
+        <Skeleton width={"0%"}/>
+        <Typography variant={"h4"}>
+           <Skeleton width={"80%"} animation={"wave"}/>
+        </Typography>
+        <Typography>
+           <Skeleton width={"15%"}/>
+           <Skeleton width={"0%"}/>
+           <Skeleton width={"95%"}/>
+           <Skeleton width={"91%"}/>
+           <Skeleton width={"99%"}/>
+           <Skeleton width={"47%"}/>
+        </Typography>
+        <Skeleton width={"0%"}/>
+        <Skeleton width={"0%"}/>
+        <Typography variant={"h4"}>
+           <Skeleton width={"90%"} animation={"wave"}/>
+           <Skeleton width={"40%"} animation={"wave"}/>
+        </Typography>
+        <Typography>
+           <Skeleton width={"15%"}/>
+           <Skeleton width={"0%"}/>
+           <Skeleton width={"97%"}/>
+           <Skeleton width={"91%"}/>
+           <Skeleton width={"74%"}/>
+        </Typography>
+        <Skeleton width={"0%"}/>
+        <Skeleton width={"0%"}/>
+        <Typography variant={"h4"}>
+           <Skeleton width={"40%"} animation={"wave"}/>
+        </Typography>
+        <Typography>
+           <Skeleton width={"15%"}/>
+           <Skeleton width={"0%"}/>
+           <Skeleton width={"90%"}/>
+           <Skeleton width={"86%"}/>
+           <Skeleton width={"97%"}/>
+           <Skeleton width={"95%"}/>
+           <Skeleton width={"45%"}/>
+        </Typography>
+        <Skeleton width={"0%"}/>
+        <Skeleton width={"0%"}/>
+     </Container>
+   )
    else if (!articles) return <Error404/>
    return (
-     <Grid container>
-        <Grid item sm={1} md={2}/>
-        <Grid item xs={12} sm={10} md={8}>
-           <Box display={{xs: 'block', md: 'none'}}>
-              {props.stores.authStore.currentUser && props.stores.authStore.currentUser.is_staff &&
-              <Button className={classes.newPostBtn} onClick={() => props.history.push('/blog/new')}>new</Button>}
-           </Box>
-           <div className={classes.root}>
-              <Grid container component={matchesMD ? Container : "div"} maxWidth={"md"} justify={"center"}>
-                 <Grid item>
-                    {pagination(pages, currentPage || 1).map((x, i) => {
-                       return <React.Fragment key={i}>{x}</React.Fragment>
-                    })}
+     <>
+        <Helmet
+          title={currentPage && currentPage !== "1" ? `Blog - page ${currentPage}` : "Blog"}
+        />
+        <Grid container>
+           <Grid item sm={1} md={2}/>
+           <Grid item xs={12} sm={10} md={8}>
+              <Box display={{xs: 'block', md: 'none'}}>
+                 {props.stores.authStore.currentUser && props.stores.authStore.currentUser.is_staff &&
+                 <Button className={classes.newPostBtn} onClick={() => props.history.push('/blog/new')}>new</Button>}
+              </Box>
+              <div className={classes.root}>
+                 <Grid container component={matchesMD ? Container : "div"} maxWidth={"md"} justify={"center"}>
+                    <Grid item>
+                       {pagination(pages, currentPage || 1).map((x, i) => {
+                          return <React.Fragment key={i}>{x}</React.Fragment>
+                       })}
+                    </Grid>
+                    {articles && articles.map((article, i) =>
+                      <Grid item xs={12} key={i}>
+                         <Card article={article}/>
+                      </Grid>
+                    )}
+                    <Grid item>
+                       {(articles.length > 1) && pagination(pages, currentPage || 1).map((x, i) => {
+                          return <React.Fragment key={i}>{x}</React.Fragment>
+                       })}
+                    </Grid>
                  </Grid>
-                 {articles && articles.map((article, i) =>
-                   <Grid item xs={12} key={i}>
-                      <Card article={article}/>
-                   </Grid>
-                 )}
-                 <Grid item>
-                    {(articles.length > 1) && pagination(pages, currentPage || 1).map((x, i) => {
-                       return <React.Fragment key={i}>{x}</React.Fragment>
-                    })}
-                 </Grid>
-              </Grid>
-           </div>
-        </Grid>
-        <Box display={{xs: 'none', md: 'block'}}>
-           <Grid item sm={1} md={2}>
-              {props.stores.authStore.currentUser && props.stores.authStore.currentUser.is_staff &&
-              <Button className={classes.newPostBtn} onClick={() => props.history.push('/blog/new')}>new</Button>}
+              </div>
            </Grid>
-        </Box>
-     </Grid>
+           <Box display={{xs: 'none', md: 'block'}}>
+              <Grid item sm={1} md={2}>
+                 {props.stores.authStore.currentUser && props.stores.authStore.currentUser.is_staff &&
+                 <Button className={classes.newPostBtn} onClick={() => props.history.push('/blog/new')}>new</Button>}
+              </Grid>
+           </Box>
+        </Grid>
+     </>
    )
 }
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import {Grid, makeStyles, Container, Box, Typography} from "@material-ui/core";
+import {Helmet} from "react-helmet";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -16,6 +17,9 @@ const Error404 = (props) => {
 //todo simplify return iframe size for mobile and desktop
     return (
         <Container>
+            <Helmet
+            title={"404. Page not found"}
+            />
             <Grid
                 container
                 spacing={0}

@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Button, CssBaseline, TextField, Grid, Box, Typography, makeStyles, Container} from '@material-ui/core';
 import withStore from '../../hocs/withStore';
+import {Helmet} from "react-helmet";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -87,6 +88,9 @@ function ChangePassword(props) {
 
     return (
         <Container component="main" maxWidth="xs">
+            <Helmet
+            title={'Change password'}
+            />
             <CssBaseline/>
             <div className={classes.paper}>
                 <Typography component="h1" variant="h5">

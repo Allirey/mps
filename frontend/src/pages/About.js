@@ -1,5 +1,6 @@
 import React from "react";
 import {Container, Link, ListItem, makeStyles, List, Typography} from "@material-ui/core";
+import {Helmet} from "react-helmet";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -18,6 +19,7 @@ const About = (props) => {
     const classes = useStyles();
     return (
         <Container maxWidth={"md"} className={classes.root}>
+            <Helmet title={'About'}/>
             <Typography gutterBottom variant={"h5"}>Hi. I'm Python/JavaScript developer.</Typography>
                 <Typography gutterBottom>This website is my home-project, portfolio and
                 set of useful services primarily for myself, chess players, and people who is interested in chess and
@@ -26,11 +28,11 @@ const About = (props) => {
                 Technologies used in project:
                 <List >
                     <ListItem dense>Backend: Django/DRF</ListItem>
-                    <ListItem dense>Frontend: React/Material ui/Mobx</ListItem>
+                    <ListItem dense>Frontend: React/Material ui/Mobx/React-Quill (Blog)</ListItem>
                     <ListItem dense>Tasks: Celery/RabbitMQ</ListItem>
                     <ListItem dense>Deploy: Docker/Docker-compose in AWS EC2 instance / nginx webserver</ListItem>
                     <ListItem dense>Database: AWS RDS PostgreSQL</ListItem>
-                    <ListItem dense>Other: JWT token Auth</ListItem>
+                    <ListItem dense>Other: JWT Auth </ListItem>
                 </List>
             </Typography>
                 <Typography gutterBottom>Feel free to contact

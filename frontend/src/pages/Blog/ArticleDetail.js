@@ -7,13 +7,14 @@ import {
    Button,
    useTheme,
    useMediaQuery,
-   Grid, TextField,
+   Grid, TextField
 } from "@material-ui/core";
 import withStore from '../../hocs/withStore';
 import {useParams} from 'react-router-dom'
-import Spinner from '../../components/spinner';
 import Dialog from "../../components/Dialog";
 import ReactQuill, {Quill} from "react-quill";
+import {Helmet} from "react-helmet";
+import {Skeleton} from '@material-ui/lab';
 
 const LinkQuill = Quill.import('formats/link');
 
@@ -125,6 +126,9 @@ const useStyles = makeStyles(theme => ({
          backgroundColor: "grey",
          color: "white",
       }
+   },
+   skeleton: {
+      padding: theme.spacing(3)
    }
 }))
 
@@ -215,7 +219,6 @@ function ArticleDetail(props) {
    }
 
    const handleDelete = () => {
-      //todo show alert yes or no
       props.stores.posts.deletePost(slug).then((data) => {
          props.stores.notifications.notify('Successfully deleted', 2)
          props.history.replace('/blog')
@@ -239,10 +242,49 @@ function ArticleDetail(props) {
       'link', 'image'
    ]
 
-   if (!post && slug) return <Spinner/>
+   if (!post && slug) return (
+     <Container maxWidth={"md"} className={classes.skeleton}>
+        <Typography variant={"h2"}>
+           <Skeleton width={'90%'} animation={"wave"}/>
+        </Typography>
+        <Typography>
+           <Skeleton variant={"text"} width={"17%"} animation={"wave"}/>
+           <Skeleton variant={"text"} width={"0%"}/>
+           <Skeleton variant={"text"} width={"86%"}/>
+           <Skeleton variant={"text"} width={"90%"}/>
+           <Skeleton variant={"text"} width={"98%"}/>
+           <Skeleton variant={"text"} width={"94%"}/>
+           <Skeleton variant={"text"} width={"89%"}/>
+           <Skeleton variant={"text"} width={"97%"}/>
+           <Skeleton variant={"text"} width={"20%"}/>
+           <Skeleton variant={"text"} width={"0%"}/>
+           <Skeleton variant={"text"} width={"95%"}/>
+           <Skeleton variant={"text"} width={"87%"}/>
+           <Skeleton variant={"text"} width={"93%"}/>
+           <Skeleton variant={"text"} width={"35%"}/>
+           <Skeleton variant={"text"} width={"0%"}/>
+           <Skeleton variant={"text"} width={"97%"}/>
+           <Skeleton variant={"text"} width={"93%"}/>
+           <Skeleton variant={"text"} width={"50%"}/>
+           <Skeleton variant={"text"} width={"0%"}/>
+           <Skeleton variant={"text"} width={"94%"}/>
+           <Skeleton variant={"text"} width={"90%"}/>
+           <Skeleton variant={"text"} width={"20%"}/>
+           <Skeleton variant={"text"} width={"0%"}/>
+           <Skeleton variant={"text"} width={"95%"}/>
+           <Skeleton variant={"text"} width={"92%"}/>
+           <Skeleton variant={"text"} width={"98%"}/>
+           <Skeleton variant={"text"} width={"89%"}/>
+           <Skeleton variant={"text"} width={"60%"}/>
+        </Typography>
+     </Container>
+   )
 
    return (
      <Grid container direction={"row"}>
+        <Helmet
+          title={slug ? title : "New article"}
+        />
         <Grid item lg={2} md={1} sm={1}/>
         <Grid item lg={8} md={9} sm={12} xs={12}>
            <Container className={classes.root} maxWidth={"md"}>

@@ -14,6 +14,7 @@ import {
 import withStore from '../hocs/withStore';
 import {Link, Redirect} from "react-router-dom";
 import StyledTabs from "../components/StyledTabs";
+import {Helmet} from "react-helmet";
 
 const useStyles = makeStyles(theme => ({
    root: {
@@ -31,7 +32,7 @@ const useStyles = makeStyles(theme => ({
       textTransform: "none",
       marginRight: "7px",
       marginTop: "7px",
-      "&:hover":{
+      "&:hover": {
          backgroundColor: "#4caef9",
       }
    },
@@ -102,43 +103,48 @@ function EditProfile(props) {
    }
 
    return (
-     <Container disableGutters={!matches} className={classes.root} maxWidth={'sm'}>{!currentUser ? null :
-       <StyledTabs variant={matches && "fullWidth" || "scrollable"} tabs={{
-          'Basic Info':
-            <Table>
-               <TableBody>
-                  {Object.entries(userInfo).map(([key, value], i) => {
-                     return (editRowIndex === i ?
-                       <TableRow key={i}>
-                          <TableCell width={"20%"}>{key}</TableCell>
-                          <TableCell align={"left"}><StyledTextField value={editValue}
-                                                                     onChange={(e) => setEditValue(e.target.value)}/>
-                             <br/>
-                             <Button className={classes.saveButton} disableRipple size={"small"}
-                                     onClick={() => handleSave(i)}>Save</Button>
-                             <Button className={classes.cancelButton} disableRipple size={"small"}
-                                     onClick={() => setEditRowIndex(null)}>Cancel</Button></TableCell>
-                       </TableRow> :
-                       <TableRow key={i}>
-                          <TableCell width={"20%"}>{key}</TableCell>
-                          <TableCell align={"left"}>{value}</TableCell>
-                          <TableCell width={"15%"}><Link to={"#"} onClick={(e) => {
-                             e.preventDefault();
-                             setEditRowIndex(i);
-                             setEditValue(value)
-                          }} key={i}>Edit</Link></TableCell>
-                       </TableRow>)
-                  })}
-               </TableBody>
-            </Table>,
-          'Account Info': <AccountInfo currentUser={currentUser}/>,
-          'Notifications': <Typography variant={"h5"} align={"center"}>Coming soon...</Typography>,
-          'Security': <Typography variant={"h5"} align={"center"}>Coming soon...</Typography>,
-       }}/>
-     }
-
-     </Container>
+     <>
+        <Helmet
+          title={'Settings'}
+        />
+        <Container disableGutters={!matches} className={classes.root} maxWidth={'sm'}>{!currentUser ? null :
+          <StyledTabs variant={matches && "fullWidth" || "scrollable"} tabs={{
+             'Basic Info':
+               <Table>
+                  <TableBody>
+                     {Object.entries(userInfo).map(([key, value], i) => {
+                        return (editRowIndex === i ?
+                          <TableRow key={i}>
+                             <TableCell width={"20%"}>{key}</TableCell>
+                             <TableCell align={"left"}><StyledTextField value={editValue}
+                                                                        onChange={(e) => setEditValue(e.target.value)}/>
+                                <br/>
+                                <Button className={classes.saveButton} disableRipple size={"small"}
+                                        onClick={() => handleSave(i)}>Save</Button>
+                                <Button className={classes.cancelButton} disableRipple size={"small"}
+                                        onClick={() => setEditRowIndex(null)}>Cancel</Button></TableCell>
+                          </TableRow> :
+                          <TableRow key={i}>
+                             <TableCell width={"20%"}>{key}</TableCell>
+                             <TableCell align={"left"}>{value}</TableCell>
+                             <TableCell width={"15%"}><Link to={"#"} onClick={(e) => {
+                                e.preventDefault();
+                                setEditRowIndex(i);
+                                setEditValue(value)
+                             }} key={i}>Edit</Link></TableCell>
+                          </TableRow>)
+                     })}
+                  </TableBody>
+               </Table>,
+             'Account Info': <AccountInfo currentUser={currentUser}/>,
+             'Notifications': <Typography variant={"h5"} align={"center"}>Coming soon...</Typography>,
+             'Security': <Typography variant={"h5"} align={"center"}>Coming soon...</Typography>,
+          }}/>
+        }
+        </Container>
+     </>
    )
+
 }
 
 export default withStore(EditProfile)

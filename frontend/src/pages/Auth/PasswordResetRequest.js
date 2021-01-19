@@ -3,6 +3,7 @@ import {Link, Redirect} from "react-router-dom";
 import {Button, CssBaseline, TextField, Grid, Box, Typography, makeStyles, Container} from '@material-ui/core';
 import withStore from '../../hocs/withStore';
 import forgotImg from "./imgs/auth.png";
+import {Helmet} from "react-helmet";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -71,6 +72,9 @@ function ResetPasswordRequest(props) {
 
     return (
         <Container component="main" maxWidth="xs">
+            <Helmet
+            title={"Reset password"}
+            />
             <CssBaseline/>
             <div className={classes.paper}>
                 <Typography component="h1" variant="h5">

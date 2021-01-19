@@ -2,8 +2,9 @@ import React, {useEffect, useState} from "react";
 import {Container, makeStyles, Link, Typography} from "@material-ui/core";
 import withStore from '../hocs/withStore';
 import {useParams} from "react-router-dom";
-import Spinner from '../components/spinner';
 import UserNotFound from '../errors/UserNotFound';
+import {Helmet} from "react-helmet";
+import {Skeleton} from '@material-ui/lab';
 
 const useStyles = makeStyles(theme => ({
    root: {
@@ -36,10 +37,26 @@ function UserProfile(props) {
       };
    }, [username])
 
-   if (inProgress) return <Spinner/>
+   if (inProgress) return (
+     <Container>
+        <Skeleton width={"0%"}/><Skeleton width={"0%"}/><Skeleton width={"0%"}/><Skeleton width={"0%"}/>
+        <Typography>
+           <Skeleton width={"17%"}/>
+           <Skeleton width={"0%"}/>
+           <Skeleton width={"30%"}/>
+           <Skeleton width={"40%"}/>
+           <Skeleton width={"25%"}/>
+           <Skeleton width={"0%"}/>
+           <Skeleton width={"20%"}/>
+        </Typography>
+     </Container>
+   )
    else if (!currentUser) return <UserNotFound username={username}/>
    else return (
         <Container className={classes.root}>
+           <Helmet
+             title={`${username} - user profile`}
+           />
            User's public info:
            <ul>
               <li><Typography>name: {currentUser.first_name}</Typography></li>

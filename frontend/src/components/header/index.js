@@ -17,10 +17,10 @@ function Header(props) {
     return (
         <>
             <Box display={{xs: "none", md: "block"}}>
-                <DesktopHeader currentUser={!!store.currentUser?store.currentUser.username:''} logout={logout}/>
+                <DesktopHeader currentUser={store.currentUser} isLoading={props.isLoading} logout={logout}/>
             </Box>
             <Box display={{xs: "block", md: "none"}}>
-                <MobileHeader currentUser={!!store.currentUser?store.currentUser.username:''} logout={logout}/>
+                <MobileHeader currentUser={store.currentUser} isLoading={props.isLoading} logout={logout}/>
             </Box>
         </>
     )
