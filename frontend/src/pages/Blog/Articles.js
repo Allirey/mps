@@ -88,19 +88,18 @@ function Articles(props) {
    }, [currentPage])
 
    const pagination = (pages, current) => {
-      current = +current
+      // 1 ... 3 4 [5] 6 7 ... 9    for desktop
+      //   1 ... 4 [5] 6 ... 9      for mobile
+      let res = [current - 2, current - 1, current, current + 1, current + 2]
 
-      let INIT_SIZE = matchesSM ? 5 : 3  // 1 2 [3] 4 5 for desktop; and 2 [3] 4  for mobile
-      let res = [current]
-
-      while (res.length < INIT_SIZE) {
-         res = [res[0] - 1, ...res, res[res.length - 1] + 1]
-      }
+      res = matchesSM ? res : res.slice(1, -1)
       res = res.filter(x => x > 0 && x <= pages)
 
-      if (res[0] > 1) res = res[0] > 2 ? [1, ' . . . ', ...res] : [1, ...res]
-      if (res[res.length - 1] < pages) res = (res[res.length - 1]) + 1 < pages ? [...res, ' . . . ', pages] : [...res, pages]
+      if (res[0] > 1)
+         res = res[0] > 2 ? [1, ' . . . ', ...res] : [1, ...res]
 
+      if (res[res.length - 1] < pages)
+         res = (res[res.length - 1]) + 1 < pages ? [...res, ' . . . ', pages] : [...res, pages]
 
       res = res.map(x => {
          if (typeof x === "string") return x
@@ -173,7 +172,7 @@ function Articles(props) {
               <div className={classes.root}>
                  <Grid container component={matchesMD ? Container : "div"} maxWidth={"md"} justify={"center"}>
                     <Grid item>
-                       {pagination(pages, currentPage || 1).map((x, i) => {
+                       {pagination(pages, +currentPage || 1).map((x, i) => {
                           return <React.Fragment key={i}>{x}</React.Fragment>
                        })}
                     </Grid>
@@ -183,7 +182,7 @@ function Articles(props) {
                       </Grid>
                     )}
                     <Grid item>
-                       {(articles.length > 1) && pagination(pages, currentPage || 1).map((x, i) => {
+                       {(articles.length > 1) && pagination(pages, +currentPage || 1).map((x, i) => {
                           return <React.Fragment key={i}>{x}</React.Fragment>
                        })}
                     </Grid>
