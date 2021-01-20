@@ -176,6 +176,8 @@ ALLOWED_EMAIL_DOMAINS = [
     "free.fr",
     # German ISP domains
     "gmx.de", "hotmail.de", "live.de", "online.de", "t-online.de", "web.de", "yahoo.de",
+    # Ukrainian ISP domains
+    "i.ua", "ua.fm", "email.ua", "ukr.net", "meta.ua",
     # Russian ISP domains
     "mail.ru", "rambler.ru", "yandex.ru", "ya.ru", "list.ru",
     # Belgian ISP domains
