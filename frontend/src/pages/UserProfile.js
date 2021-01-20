@@ -26,18 +26,20 @@ const useStyles = makeStyles(theme => ({
 function UserProfile(props) {
    const classes = useStyles();
    const [currentUser, setCurrentUser] = useState(null);
+   const [isLoading, setIsLoading] = useState(true);
    const {username} = useParams();
-   const {inProgress} = props.stores.authStore
 
    useEffect(() => {
       props.stores.authStore.getUser(username).then(data => setCurrentUser(data)).catch(e => {
          console.warn(e)
+      }).finally(() => {
+         setIsLoading(false)
       })
       return () => {
       };
    }, [username])
 
-   if (inProgress) return (
+   if (isLoading) return (
      <Container>
         <Skeleton width={"0%"}/><Skeleton width={"0%"}/><Skeleton width={"0%"}/><Skeleton width={"0%"}/>
         <Typography>
