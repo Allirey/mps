@@ -7,7 +7,7 @@ import {
    Button,
    useTheme,
    useMediaQuery,
-   Grid, TextField
+   Grid, TextField, Fade
 } from "@material-ui/core";
 import withStore from '../../hocs/withStore';
 import {useParams} from 'react-router-dom'
@@ -287,47 +287,49 @@ function ArticleDetail(props) {
         />
         <Grid item lg={2} md={1} sm={1}/>
         <Grid item lg={8} md={9} sm={12} xs={12}>
-           <Container className={classes.root} maxWidth={"md"}>
-              <div>
-                 {slug && !editMode &&
-                 <Typography variant={"h3"} className={classes.title}>{title}</Typography>
-                 ||
-                 <TextField
-                   className={classes.title}
-                   value={title}
-                   multiline
-                   onChange={e => setTitle(e.target.value)}
-                   variant="standard"
-                   margin="normal"
-                   name="title"
-                   label={""}
-                   placeholder={"Title"}
-                   type="text"
-                   id="title"
-                   autoComplete={"off"}
-                   fullWidth
-                   InputProps={{disableUnderline: true, style: {fontSize: "3rem", padding: 0}}}
-                 />
-                 }
-                 {
-                    slug && <><Typography variant="subtitle2" color="textSecondary">
-                       {makeDate(post.publish)} by <Link
-                      href={`/users/${post.author.username}`}>{post.author.username}</Link>
-                    </Typography><br/></>
+           <Fade in={true}>
+              <Container className={classes.root} maxWidth={"md"}>
+                 <div>
+                    {slug && !editMode &&
+                    <Typography variant={"h3"} className={classes.title}>{title}</Typography>
+                    ||
+                    <TextField
+                      className={classes.title}
+                      value={title}
+                      multiline
+                      onChange={e => setTitle(e.target.value)}
+                      variant="standard"
+                      margin="normal"
+                      name="title"
+                      label={""}
+                      placeholder={"Title"}
+                      type="text"
+                      id="title"
+                      autoComplete={"off"}
+                      fullWidth
+                      InputProps={{disableUnderline: true, style: {fontSize: "3rem", padding: 0}}}
+                    />
+                    }
+                    {
+                       slug && <><Typography variant="subtitle2" color="textSecondary">
+                          {makeDate(post.publish)} by <Link
+                         href={`/users/${post.author.username}`}>{post.author.username}</Link>
+                       </Typography><br/></>
 
-                 }
-                 <ReactQuill
-                   className={classes.editor}
-                   value={body}
-                   theme={'bubble'}
-                   placeholder={"Share your experience here..."}
-                   onChange={setBody}
-                   readOnly={!editMode}
-                   modules={modules}
-                   formats={formats}
-                 />
-              </div>
-           </Container>
+                    }
+                    <ReactQuill
+                      className={classes.editor}
+                      value={body}
+                      theme={'bubble'}
+                      placeholder={"Share your experience here..."}
+                      onChange={setBody}
+                      readOnly={!editMode}
+                      modules={modules}
+                      formats={formats}
+                    />
+                 </div>
+              </Container>
+           </Fade>
         </Grid>
         <Grid container direction={matches ? 'column' : "row"} item xs={12} sm={12} md={2} lg={2}>
            <Grid item>

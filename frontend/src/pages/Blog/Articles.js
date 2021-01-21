@@ -8,13 +8,14 @@ import {
    useTheme,
    useMediaQuery,
    Box,
-   Typography,
+   Typography, Fade, Fab
 } from "@material-ui/core";
 import withStore from '../../hocs/withStore';
 import Card from "../../components/Card";
 import Error404 from "../../errors/error404";
 import {Helmet} from "react-helmet";
 import {Skeleton} from '@material-ui/lab';
+import EditIcon from '@material-ui/icons/Edit';
 
 const useStyles = makeStyles(theme => ({
    root: {
@@ -26,24 +27,6 @@ const useStyles = makeStyles(theme => ({
          height: "auto",
       }
    },
-   newPostBtn: {
-      borderRadius: '17px',
-      borderColor: "black",
-      color: "#4caef9",
-      backgroundColor: "white",
-      fontSize: "18px",
-      height: "30px",
-      textTransform: "none",
-      margin: theme.spacing(2),
-      "& button": {
-         fontStyle: "normal",
-         fontWeight: "600",
-      },
-      "&:hover": {
-         color: "white",
-         backgroundColor: "#4caef9",
-      }
-   },
    paginationBtn: {
       borderRadius: "13px",
       padding: 0,
@@ -53,6 +36,19 @@ const useStyles = makeStyles(theme => ({
    },
    skeleton: {
       padding: theme.spacing(5)
+   },
+   addPost: {
+      position: "fixed",
+      right: "2vw",
+      bottom: "13vh",
+      zIndex: 100,
+      opacity: "1",
+      color: "#4caef9",
+      backgroundColor: "transparent",
+      "&:hover": {
+         color: "white",
+         backgroundColor: "#4caef9",
+      }
    }
 }))
 
@@ -165,10 +161,7 @@ function Articles(props) {
         <Grid container>
            <Grid item sm={1} md={2}/>
            <Grid item xs={12} sm={10} md={8}>
-              <Box display={{xs: 'block', md: 'none'}}>
-                 {props.stores.authStore.currentUser && props.stores.authStore.currentUser.is_staff &&
-                 <Button className={classes.newPostBtn} onClick={() => props.history.push('/blog/new')}>new</Button>}
-              </Box>
+              <Box display={{xs: 'block', md: 'none'}}/>
               <div className={classes.root}>
                  <Grid container component={matchesMD ? Container : "div"} maxWidth={"md"} justify={"center"}>
                     <Grid item>
@@ -176,11 +169,15 @@ function Articles(props) {
                           return <React.Fragment key={i}>{x}</React.Fragment>
                        })}
                     </Grid>
+
                     {articles && articles.map((article, i) =>
-                      <Grid item xs={12} key={i}>
-                         <Card article={article}/>
-                      </Grid>
+                      <Fade in={true}>
+                         <Grid item xs={12} key={i}>
+                            <Card article={article}/>
+                         </Grid>
+                      </Fade>
                     )}
+
                     <Grid item>
                        {(articles.length > 1) && pagination(pages, +currentPage || 1).map((x, i) => {
                           return <React.Fragment key={i}>{x}</React.Fragment>
@@ -190,11 +187,11 @@ function Articles(props) {
               </div>
            </Grid>
            <Box display={{xs: 'none', md: 'block'}}>
-              <Grid item sm={1} md={2}>
-                 {props.stores.authStore.currentUser && props.stores.authStore.currentUser.is_staff &&
-                 <Button className={classes.newPostBtn} onClick={() => props.history.push('/blog/new')}>new</Button>}
-              </Grid>
+              <Grid item sm={1} md={2}/>
            </Box>
+           {props.stores.authStore.currentUser && props.stores.authStore.currentUser.is_staff &&
+           <Fab disableRipple className={`${classes.addPost} ${classes.newPostBtn}`}
+                onClick={() => props.history.push('/blog/new')}><EditIcon/></Fab>}
         </Grid>
      </>
    )
