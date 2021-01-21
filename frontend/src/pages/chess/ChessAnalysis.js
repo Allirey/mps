@@ -70,10 +70,10 @@ const ChessAnalysis = (props) => {
                       height={matchesSM ? "512px" : "90vmin"}
                       orientation={notation.boardOrientation}
                       viewOnly={false}
-                      turnColor={notation.turnColor()}
+                      // turnColor={notation.turnColor()}
                       movable={notation.calcMovable()}
                       // lastMove={notation.lastMove()}
-                      fen={notation.currentFen}
+                      fen={notation.fen}
                       // check={"false"}
                       style={{margin: "auto"}}
                       coordinates={false}
