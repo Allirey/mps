@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Container, makeStyles, Link, Typography} from "@material-ui/core";
+import {Container, makeStyles, Link, Typography, Fade, Paper, useTheme, useMediaQuery} from "@material-ui/core";
 import withStore from '../hocs/withStore';
 import {useParams} from "react-router-dom";
 import UserNotFound from '../errors/UserNotFound';
@@ -8,23 +8,29 @@ import {Skeleton} from '@material-ui/lab';
 
 const useStyles = makeStyles(theme => ({
    root: {
-      marginTop: theme.spacing(10),
       "& $a": {
          color: "blue",
          '&:hover': {
             textDecoration: "none",
             backgroundColor: "cyan",
          },
-      }
-   },
-   logo: {
-      width: "21em",
-      "& img": {width: "100%", height: "100%"}
+      },
+      backgroundColor: "#f5f5f5",
+      [theme.breakpoints.down("xs")]: {
+         margin: theme.spacing(0),
+         marginTop: theme.spacing(1),
+      },
+      margin: theme.spacing(3),
+      padding: theme.spacing(3),
    },
 }))
 
 function UserProfile(props) {
    const classes = useStyles();
+   const theme = useTheme();
+   const matchesMD = useMediaQuery(theme.breakpoints.up('md'));
+   const matchesSM = useMediaQuery(theme.breakpoints.up('sm'));
+
    const [currentUser, setCurrentUser] = useState(null);
    const [isLoading, setIsLoading] = useState(true);
    const {username} = useParams();
@@ -40,36 +46,32 @@ function UserProfile(props) {
    }, [username])
 
    if (isLoading) return (
-     <Container>
-        <Skeleton width={"0%"}/><Skeleton width={"0%"}/><Skeleton width={"0%"}/><Skeleton width={"0%"}/>
+     <Container className={classes.root} maxWidth={"sm"}>
+        <Typography variant={"h3"}><Skeleton width={'150px'}/></Typography>
         <Typography>
-           <Skeleton width={"17%"}/>
-           <Skeleton width={"0%"}/>
-           <Skeleton width={"30%"}/>
-           <Skeleton width={"40%"}/>
-           <Skeleton width={"25%"}/>
-           <Skeleton width={"0%"}/>
-           <Skeleton width={"20%"}/>
+           <Skeleton width={"170px"}/>
+           <Skeleton width={"250px"}/>
+           <Skeleton width={"160px"}/>
         </Typography>
      </Container>
    )
    else if (!currentUser) return <UserNotFound username={username}/>
    else return (
-        <Container className={classes.root}>
-           <Helmet
-             title={`${username} - user profile`}
-           />
-           User's public info:
-           <ul>
-              <li><Typography>name: {currentUser.first_name}</Typography></li>
-              <li><Typography>bio: {currentUser.biography}</Typography></li>
-              <li><Typography>website: <Link rel="noreferrer" target="_blank"
-                                             href={`//${currentUser.web_site.split("//").reverse()[0]}`}>
-                 {currentUser.web_site.split("//").reverse()[0]}</Link></Typography>
-              </li>
-           </ul>
-           More coming soon...
-        </Container>
+        <Fade in={true}>
+           <Container className={classes.root} component={Paper} maxWidth={"sm"}>
+              <Helmet
+                title={`${username} - user profile`}
+              />
+              <Typography variant={"h3"}>{currentUser.username}</Typography>
+              <Typography>name: {currentUser.first_name}</Typography>
+              <Typography>bio: {currentUser.biography}</Typography>
+              <Typography>website: <Link rel="noreferrer" target="_blank"
+                                         href={`//${currentUser.web_site.split("//").reverse()[0]}`}>
+                 {currentUser.web_site.split("//").reverse()[0]}</Link>
+              </Typography>
+           </Container>
+
+        </Fade>
       )
 }
 
