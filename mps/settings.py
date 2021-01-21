@@ -129,7 +129,7 @@ AUTH_USER_MODEL = 'users.User'
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
-    'ROTATE_REFRESH_TOKENS': True,
+    # 'ROTATE_REFRESH_TOKENS': True,
 }
 JWT_REFRESH_COOKIE_NAME = 'rt'
 JWT_REFRESH_COOKIE_PATH = '/api/token/refresh/'
@@ -142,10 +142,10 @@ AUTHENTICATION_BACKENDS = [
 EMAIL_BACKEND = f'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = env("EMAIL_HOST")
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
-EMAIL_PORT = 587
+EMAIL_PORT = env("EMAIL_PORT")
 EMAIL_USE_TLS = True
 
 CELERY_BROKER_URL = f'pyamqp://{"localhost" if DEBUG else "rabbitmq"}:5672'
