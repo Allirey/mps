@@ -19,11 +19,11 @@ class ChessOpeningExplorerStore {
 
     getGameByUrl = (url) => {
         if (url in this.pgn_games_cache) {
-            this.rootStore.chessNotation.initMainLineNodes(this.pgn_games_cache[url])
+            this.rootStore.chessNotation.loadGame(this.pgn_games_cache[url])
         } else {
             this.rootStore.api.ChessExplorer.getGameByUrl(url).then((data) => {
                 this.pgn_games_cache[url] = data.game;
-                this.rootStore.chessNotation.initMainLineNodes(this.pgn_games_cache[url])
+                this.rootStore.chessNotation.loadGame(this.pgn_games_cache[url])
             });
         }
     }

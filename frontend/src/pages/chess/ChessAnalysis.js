@@ -70,10 +70,10 @@ const ChessAnalysis = (props) => {
                       height={matchesSM ? "512px" : "90vmin"}
                       orientation={notation.boardOrientation}
                       viewOnly={false}
-                      // turnColor={notation.turnColor()}
-                      movable={notation.calcMovable()}
+                      turnColor={notation.turnColor()}
+                      movable={notation.calcMovable}
                       // lastMove={notation.lastMove()}
-                      fen={notation.fen}
+                      fen={notation.currentNode.fen}
                       // check={"false"}
                       style={{margin: "auto"}}
                       coordinates={false}
@@ -97,8 +97,8 @@ const ChessAnalysis = (props) => {
 
            <Grid item component={Box} display={{xs: "none", lg: "block"}} lg={4}>
               <Notation
-                notation={notation.mainLineNodes}
-                currentNode={notation.node}
+                notation={notation.rootLine}
+                currentNode={notation.currentNode}
                 jumpTo={notation.jumpToMove}
               />
               <br/>
@@ -122,8 +122,8 @@ const ChessAnalysis = (props) => {
                           "Notation":
                             <>
                                <Notation
-                                 notation={notation.mainLineNodes}
-                                 currentNode={notation.node}
+                                 notation={notation.rootLine}
+                                 currentNode={notation.currentNode}
                                  jumpTo={notation.jumpToMove}
                                />
                             </>
