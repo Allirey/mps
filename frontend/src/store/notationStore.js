@@ -33,9 +33,10 @@ class ChessMoveLine {
          let newline = new ChessMoveLine(currentNode.next)
          move.moveLine = newline
          move.prev = currentNode
-         newline.append(move)
-         currentNode.next.subLines.push(newline)
 
+         newline.first = move
+         newline.last = move
+         currentNode.next.subLines.push(newline)
          return {line: newline, node: move}
       }
 
@@ -102,10 +103,7 @@ class NotationStore {
       this.rootLine = new ChessMoveLine()
 
       const {line, node} = this.rootLine.append({
-         fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-         san: '',
-         from: '',
-         to: ''
+         fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', san: '', from: '', to: ''
       })
 
       this.currentNode = node
@@ -113,6 +111,7 @@ class NotationStore {
    }
 
    chessGame = new Chess();
+   inCheck = false
 
    boardOrientation = "white";
 
@@ -124,20 +123,7 @@ class NotationStore {
 
       this.rootLine = history.reduce((line, m) => {
          let move = this.chessGame.move(m, {sloppy: true});
-
-         let moveData = {
-            fen: this.chessGame.fen(),
-            san: move.san,
-            from: move.from,
-            to: move.to
-         }
-
-         line.append({
-            fen: this.chessGame.fen(),
-            san: move.san,
-            from: move.from,
-            to: move.to
-         })
+         line.append({fen: this.chessGame.fen(), san: move.san, from: move.from, to: move.to})
 
          return line
       }, this.rootLine)
@@ -165,7 +151,7 @@ class NotationStore {
    };
 
    toPrev = () => {
-      let node = this.currentNode.prev || this.currentNode.moveLine.parentMove || this.currentNode
+      let node = this.currentNode.prev || this.currentNode
 
       this.currentNode = node
       this.currentLine = node.moveLine
@@ -198,10 +184,7 @@ class NotationStore {
       this.rootLine = new ChessMoveLine()
 
       const {line, node} = this.rootLine.append({
-         fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-         san: '',
-         from: '',
-         to: ''
+         fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', san: '', from: '', to: ''
       })
 
       this.currentNode = node
@@ -217,50 +200,47 @@ class NotationStore {
 
       let m = this.chessGame.move({from, to})
       if (m) {
-         let moveData = {
-            fen: this.chessGame.fen(),
-            san: m.san,
-            from: m.from,
-            to: m.to
-         }
+         let moveData = {fen: this.chessGame.fen(), san: m.san, from: m.from, to: m.to}
 
          const {line, node} = this.currentLine.append(moveData, this.currentNode)
 
          this.currentLine = line
          this.currentNode = node
 
+         this.rootStore.chessOpeningExplorer.searchData.fen = node.fen
+         this.rootStore.chessOpeningExplorer.searchGames();
       }
    }
 
    get calcMovable() {
       this.chessGame.load(this.currentNode.fen)
+      this.inCheck = this.chessGame.in_check()
 
       const dests = new Map()
       this.chessGame.SQUARES.forEach(s => {
          const ms = this.chessGame.moves({square: s, verbose: true})
          if (ms.length) dests.set(s, ms.map(m => m.to))
       })
-      return {
-         free: false,
-         dests,
-         color: this.turnColor()
-      }
+      return {free: false, dests, color: this.turnColor()}
    }
 
    turnColor() {
       return this.chessGame.turn() === "w" ? "white" : "black"
    }
+
+   get lastMove() {
+      return this.currentNode.from ? [this.currentNode.from, this.currentNode.to] : [];
+   }
 }
 
 decorate(NotationStore, {
      boardOrientation: observable,
-     calcMovable: computed,
-
-     loadGame: action,
+     chessGame: observable,
      rootLine: observable,
      currentNode: observable,
      currentLine: observable,
 
+     loadGame: action,
      flipBoard: action,
      jumpToMove: action,
      toNext: action,
@@ -270,7 +250,8 @@ decorate(NotationStore, {
      resetNode: action,
      onMove: action,
 
-     chessGame: observable,
+     calcMovable: computed,
+     lastMove: computed,
   }
 );
 

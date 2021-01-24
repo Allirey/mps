@@ -18,8 +18,7 @@ import {Helmet} from "react-helmet";
 const useStyles = makeStyles(theme => ({
    root: {},
 
-   chessField: {
-        }
+   chessField: {}
 
 }))
 
@@ -41,49 +40,69 @@ const ChessAnalysis = (props) => {
    return (
      <>
         <Helmet
-        title={"Ukrainian chess database"}
+          title={"Ukrainian chess database"}
         />
-     <Grid container justify={"space-evenly"}>
-        <Grid item display={{xs: "none", lg: "block"}} lg={4} component={Box}>
-           <GamesSearch
-             name={chess.searchData.name}
-             color={chess.searchData.color}
-             onSubmit={chess.searchGames}
-             onChangeColor={e => chess.setColor(e.target.value)}
-             onChangeName={e => chess.setName(e.target.value)}
-             onKeyPressed={e => e.keyCode === 13 ? chess.searchGames() : []}
-           />
-           <GamesTable
-             games={chess.currentGames}
-             onSelectGame={chess.getGameByUrl}
-           />
-        </Grid>
+        <Grid container justify={"space-evenly"}>
+           <Grid item display={{xs: "none", lg: "block"}} lg={4} component={Box}>
+              <GamesSearch
+                name={chess.searchData.name}
+                color={chess.searchData.color}
+                onSubmit={chess.searchGames}
+                onChangeColor={e => chess.setColor(e.target.value)}
+                onChangeName={e => chess.setName(e.target.value)}
+                onKeyPressed={e => e.keyCode === 13 ? chess.searchGames() : []}
+              />
+              <GamesTable
+                games={chess.currentGames}
+                onSelectGame={chess.getGameByUrl}
+              />
+           </Grid>
 
-        <Grid item container xs={12} sm={12} md={7} lg={8} justify={"center"} >
-           <Grid item lg={8} container direction={"column"}>
+           <Grid item container xs={12} sm={12} md={7} lg={8} justify={"center"}>
+              <Grid item lg={8} container direction={"column"}>
 
-              <Grid item>
-                 <div className={classes.chessField}
-                      onWheel={e => e.deltaY < 0 ? notation.toPrev() : notation.toNext()}>
-                    <ChessBoard
-                      width={matchesSM ? "512px" : "90vmin"}
-                      height={matchesSM ? "512px" : "90vmin"}
-                      orientation={notation.boardOrientation}
-                      viewOnly={false}
-                      turnColor={notation.turnColor()}
-                      movable={notation.calcMovable}
-                      // lastMove={notation.lastMove()}
-                      fen={notation.currentNode.fen}
-                      // check={"false"}
-                      style={{margin: "auto"}}
-                      coordinates={false}
-                      onMove={notation.onMove}
-                    />
-                 </div>
+                 <Grid item>
+                    <div className={classes.chessField}
+                         onWheel={e => e.deltaY < 0 ? notation.toPrev() : notation.toNext()}>
+                       <ChessBoard
+                         width={matchesSM ? "512px" : "90vmin"}
+                         height={matchesSM ? "512px" : "90vmin"}
+                         orientation={notation.boardOrientation}
+                         viewOnly={false}
+                         turnColor={notation.turnColor()}
+                         movable={notation.calcMovable}
+                         lastMove={notation.lastMove}
+                         fen={notation.currentNode.fen}
+                         check={notation.inCheck}
+                         style={{margin: "auto"}}
+                         coordinates={false}
+                         onMove={notation.onMove}
+                       />
+                    </div>
+                 </Grid>
+
+                 <Box display={{sm: "block", lg: "none"}}>
+                    <Grid item container justify={"center"}>
+                       <NavButtons
+                         toFirst={notation.toFirst}
+                         toLast={notation.toLast}
+                         toNext={notation.toNext}
+                         toPrev={notation.toPrev}
+                         onFlip={notation.flipBoard}
+                       />
+                    </Grid>
+                 </Box>
               </Grid>
 
-              <Box display={{sm: "block", lg: "none"}}>
-                 <Grid item container justify={"center"}>
+              <Grid item component={Box} display={{xs: "none", lg: "block"}} lg={4}>
+                 <Notation
+                   notation={notation.rootLine}
+                   currentNode={notation.currentNode}
+                   jumpTo={notation.jumpToMove}
+                 />
+                 <br/>
+                 <MovesTree explorerData={chess.currentMoves}/>
+                 <Grid component={Box} container justify={"center"} display={{sm: "none", lg: "block"}}>
                     <NavButtons
                       toFirst={notation.toFirst}
                       toLast={notation.toLast}
@@ -92,65 +111,45 @@ const ChessAnalysis = (props) => {
                       onFlip={notation.flipBoard}
                     />
                  </Grid>
-              </Box>
-           </Grid>
-
-           <Grid item component={Box} display={{xs: "none", lg: "block"}} lg={4}>
-              <Notation
-                notation={notation.rootLine}
-                currentNode={notation.currentNode}
-                jumpTo={notation.jumpToMove}
-              />
-              <br/>
-              <MovesTree explorerData={chess.currentMoves}/>
-              <Grid component={Box} container justify={"center"} display={{sm: "none", lg: "block"}}>
-                 <NavButtons
-                   toFirst={notation.toFirst}
-                   toLast={notation.toLast}
-                   toNext={notation.toNext}
-                   toPrev={notation.toPrev}
-                   onFlip={notation.flipBoard}
-                 />
               </Grid>
+
            </Grid>
 
-        </Grid>
-
-        <Grid item component={Box} display={{xs: "block", lg: "none"}} xs sm md={5}>
-           <StyledTabs variant={"fullWidth"}
-                       tabs={{
-                          "Notation":
-                            <>
-                               <Notation
-                                 notation={notation.rootLine}
-                                 currentNode={notation.currentNode}
-                                 jumpTo={notation.jumpToMove}
-                               />
-                            </>
-                          ,
-                          "Games":
-                            <>
-                               <GamesSearch
-                                 name={chess.searchData.name}
-                                 color={chess.searchData.color}
-                                 onSubmit={chess.searchGames}
-                                 onChangeColor={e => chess.setColor(e.target.value)}
-                                 onChangeName={e => chess.setName(e.target.value)}
-                                 onKeyPressed={e => e.keyCode === 13 ? chess.searchGames() : []}
-                               />
-                               <GamesTable
-                                 games={chess.currentGames}
-                                 onSelectGame={chess.getGameByUrl}
-                               />
-                            </>,
-                          "Book":
-                            <>
-                               <MovesTree explorerData={chess.currentMoves}/>
-                            </>
-                       }}
-           />
-        </Grid>
-     </Grid></>
+           <Grid item component={Box} display={{xs: "block", lg: "none"}} xs sm md={5}>
+              <StyledTabs variant={"fullWidth"}
+                          tabs={{
+                             "Notation":
+                               <>
+                                  <Notation
+                                    notation={notation.rootLine}
+                                    currentNode={notation.currentNode}
+                                    jumpTo={notation.jumpToMove}
+                                  />
+                               </>
+                             ,
+                             "Games":
+                               <>
+                                  <GamesSearch
+                                    name={chess.searchData.name}
+                                    color={chess.searchData.color}
+                                    onSubmit={chess.searchGames}
+                                    onChangeColor={e => chess.setColor(e.target.value)}
+                                    onChangeName={e => chess.setName(e.target.value)}
+                                    onKeyPressed={e => e.keyCode === 13 ? chess.searchGames() : []}
+                                  />
+                                  <GamesTable
+                                    games={chess.currentGames}
+                                    onSelectGame={chess.getGameByUrl}
+                                  />
+                               </>,
+                             "Book":
+                               <>
+                                  <MovesTree explorerData={chess.currentMoves}/>
+                               </>
+                          }}
+              />
+           </Grid>
+        </Grid></>
    )
 }
 

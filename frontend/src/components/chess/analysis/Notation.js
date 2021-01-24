@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Fragment} from "react";
 import {makeStyles, Typography} from "@material-ui/core";
 
 const useStyles = makeStyles({
@@ -7,7 +7,7 @@ const useStyles = makeStyles({
       height: "35vh",
       cursor: "default",
 
-      "& span": {
+      "& $span": {
          cursor: "pointer",
          whiteSpace: 'nowrap'
       },
@@ -16,15 +16,18 @@ const useStyles = makeStyles({
          color: "#FFFFFF",
          borderRadius: 4,
       },
-      "& blockquote":{
-         borderLeft: "4px solid #ccc",
-         paddingLeft: "7px",
+      "& blockquote": {
+         borderLeft: "3px solid #ccc",
+         paddingLeft: "15px",
+         paddingRight: "15px",
+
+         marginRight: 5,
 
          marginLeft: "0px",
          marginTop: 0,
          marginBottom: 0,
       },
-      "& $p":{
+      "& $p": {
          margin: 0,
          padding: 0,
       }
@@ -34,7 +37,6 @@ const useStyles = makeStyles({
 function Notation(props) {
    const classes = useStyles();
 
-
    const toArr = tree => {
       const nodes = [];
 
@@ -43,22 +45,30 @@ function Notation(props) {
          nodes.push(currentNode);
          currentNode = currentNode.next;
       }
-   console.log(nodes.map(x=> x.san))
       return nodes
    }
 
    const nodes = toArr(props.notation);
 
-   const renderTree = data => {
+   // todo this shit should be refactored one day, but for now it's worked, and fuck you notation!! fuck you!!!
+   const renderTree = (data, appender = 0) => {
+      const M = (pr) => <span key={pr.move.san}
+                              onClick={() => {
+                                 props.jumpTo(pr.move)
+                              }}
+                              className={props.currentNode === pr.move ? "active" : null}>
+         {pr.i % 2 === 1 ? Math.round((pr.i + 1) / 2) + '. ' :
+           (pr.dots ? `${Math.round((pr.i + 1) / 2) - 1}...` : '')}{pr.move.san}{" "}</span>
       return (
         <>
-           {data.map(x => {
-              return !x.subLines.length? <span key={x.san}>{x.san}{' '}</span>:
-                <><span key={x.san}>{x.san}</span>{x.subLines.map(x => {
-                    return <blockquote key={x.parentMove.fen}>
-                       {renderTree(toArr(x))}
-                    </blockquote>
-                 })} </>
+           {data.map((node, i) => {
+              return !node.subLines.length ? <Fragment key={i}>{<M move={node} i={i + appender}
+                                                   dots={i === 0 && !!node.san}/>}{" "}</Fragment> :
+                <Fragment key={i}><M i={i + appender} move={node} dots={i === 0}/>{" "}{node.subLines.map(variation => {
+                   return <blockquote key={variation.parentMove.fen}>
+                      {renderTree(toArr(variation), i + appender)}
+                   </blockquote>
+                })} </Fragment>
            })}
         </>
       )
@@ -70,20 +80,7 @@ function Notation(props) {
      <>
         {/*<Typography><h3>{game.white} - {game.black} {game.result}</h3></Typography>*/}
         <Typography className={classes.root}>
-           {/*{renderTree(nodes)}*/}
-           {nodes.map((move, i) => (
-             <React.Fragment key={i}>
-                        <span
-                          onClick={() => {
-                             props.jumpTo(move)
-                          }}
-                          className={props.currentNode === move ? "active" : null}
-                        >
-                            {i % 2 === 1 ? Math.round((i + 1) / 2) + '. ' : ''}{move.san}
-                        </span>
-                {' '}
-             </React.Fragment>
-           ))}
+           {renderTree(nodes)}
         </Typography>
      </>
    )
