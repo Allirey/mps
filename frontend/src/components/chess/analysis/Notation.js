@@ -6,10 +6,12 @@ const useStyles = makeStyles({
       overflow: "auto",
       height: "35vh",
       cursor: "default",
+      padding: 5,
 
       "& $span": {
          cursor: "pointer",
-         whiteSpace: 'nowrap'
+         whiteSpace: 'nowrap',
+         padding: 1,
       },
       "& span.active": {
          backgroundColor: "#435866",
@@ -17,7 +19,7 @@ const useStyles = makeStyles({
          borderRadius: 4,
       },
       "& blockquote": {
-         borderLeft: "3px solid #ccc",
+         borderLeft: "2px solid #ccc",
          paddingLeft: "15px",
          paddingRight: "15px",
 
@@ -56,9 +58,9 @@ function Notation(props) {
                               onClick={() => {
                                  props.jumpTo(pr.move)
                               }}
-                              className={props.currentNode === pr.move ? "active" : null}>
-         {pr.i % 2 === 1 ? Math.round((pr.i + 1) / 2) + '. ' :
-           (pr.dots ? `${Math.round((pr.i + 1) / 2) - 1}...` : '')}{pr.move.san}{" "}</span>
+                              className={props.currentNode === pr.move && !!pr.move.san ? "active" : null}>
+         {pr.i % 2 === 1 ? Math.round((pr.i + 1) / 2) + '.' :
+           (pr.dots ? `${Math.round((pr.i + 1) / 2) - 1}...` : '')}{pr.move.san}</span>
       return (
         <>
            {data.map((node, i) => {

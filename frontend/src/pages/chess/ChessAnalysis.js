@@ -6,9 +6,8 @@ import Notation from "../../components/chess/analysis/Notation";
 import NavButtons from "../../components/chess/analysis/NavButtons";
 
 import ChessBoard from 'react-chessground'
-// import "react-chessground/dist/assets/chessground.css"
 import "react-chessground/dist/styles/chessground.css"
-// import "react-chessground/dist/assets/theme.css"
+import ChessBoardBlueTheme from './chessBoardBlue.svg'
 
 import {Grid, Box, makeStyles, useTheme, useMediaQuery} from "@material-ui/core";
 import withStore from "../../hocs/withStore";
@@ -18,7 +17,15 @@ import {Helmet} from "react-helmet";
 const useStyles = makeStyles(theme => ({
    root: {},
 
-   chessField: {}
+   chessField: {
+      "& .cg-wrap":{
+         backgroundImage: `url(${ChessBoardBlueTheme})`
+      },
+      "& cg-board square.last-move":{
+         backgroundColor: "lightgreen",
+         opacity: "0.41"
+      }
+   }
 
 }))
 
