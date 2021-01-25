@@ -52,6 +52,12 @@ const useStyles = makeStyles({
          margin: 0,
          padding: 0,
       }
+   },
+   menu:{
+      "& $li":{
+         "&:hover":{
+         backgroundColor: 'lightblue',
+      }}
    }
 });
 
@@ -113,7 +119,8 @@ function Notation(props) {
                    className={props.currentNode === node && !!node.san ? "active" : null}>
          {(i + appender) % 2 ? `${moveCount(i)}.` : !i && !!node.san && `${moveCount(i) - 1}...`}{node.san}
          </span>{" "}{node.subLines.map(variation =>
-                <blockquote key={i}>{console.log(node.san)}{renderTree(toArr(variation), i + appender)}</blockquote>)}
+                <blockquote key={`${node.fen}${node.san}`}>{renderTree(toArr(variation), i + appender)}
+                </blockquote>)}
               </Fragment>
            })}
         </Fragment>
@@ -129,6 +136,7 @@ function Notation(props) {
            {renderTree(nodes)}
         </Typography>
         <Menu
+          className={classes.menu}
           keepMounted
           open={menuState.mouseY !== null}
           onClose={handleClose}
@@ -139,9 +147,9 @@ function Notation(props) {
                : undefined
           }
         >
-           <MenuItem disableRipple disabled onClick={() => handleClose(ACTIONS.PROMOTE)}>promote line</MenuItem>
-           <MenuItem disableRipple onClick={() => handleClose(ACTIONS.DELETE_NEXT)}>delete next moves</MenuItem>
-           <MenuItem disableRipple onClick={() => handleClose(ACTIONS.DELETE_LINE)}>delete line</MenuItem>
+           <MenuItem tabIndex={0} disableRipple onClick={() => handleClose(ACTIONS.PROMOTE)}>promote line</MenuItem>
+           <MenuItem tabIndex={0} disableRipple onClick={() => handleClose(ACTIONS.DELETE_NEXT)}>delete next moves</MenuItem>
+           <MenuItem tabIndex={0} disableRipple onClick={() => handleClose(ACTIONS.DELETE_LINE)}>delete line</MenuItem>
         </Menu>
      </>
    )

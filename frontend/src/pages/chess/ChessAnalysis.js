@@ -183,7 +183,7 @@ const ChessAnalysis = (props) => {
            notation.pendingMove = null;
         }}>
            {['q', 'n', 'r', 'b'].map(piece =>
-             <DialogActions>
+             <DialogActions key={piece}>
                 <Button disableRipple onClick={() => notation.promotion(piece)}>
                    <img src={pieceImages[notation.turnColor()][piece]} alt={''}/>
                 </Button>

@@ -48,41 +48,39 @@ class ChessMoveLine {
    }
 
    promoteLine(move) {
-      //todo
-      if (move.moveLine.parentMove === null || !move.moveLine.parentMove) return
+      if (move.moveLine.parentMove === null || !move.moveLine.parentMove) return {line: move.moveLine, node: move}
 
-      let oldMainMove = move.moveLine.parentMove
-      move = move.moveLine.first
+      let toDemote = move.moveLine.parentMove
+      let toPromote = move.moveLine.first
+      let lineToDemote = new ChessMoveLine(toPromote)
+      let lineToPromote = toDemote.moveLine
 
-      oldMainMove.prev.next = move
+      toPromote.subLines = toDemote.subLines.filter(x => x.first.san !== toPromote.san).concat([lineToDemote])
+      toDemote.subLines = []
+      lineToDemote.first = toDemote
+      lineToDemote.parentMove = toPromote
 
-      move.subLines = oldMainMove.subLines.filter(x => x.first.fen !== move.moveLine.first.fen)
-          //wrong moveline, its old moveline and new for "move"
-
-      let cur = move
+      let cur = toDemote
       while (cur) {
-         cur.moveLine = oldMainMove.moveLine
-         cur = move.next
+         cur.moveLine = lineToDemote
+         if (!cur.next) {
+            lineToDemote.last = cur;
+            break
+         } else cur = cur.next
       }
 
-      let moveLineOld = new ChessMoveLine(move)
-
-      moveLineOld.first = oldMainMove
-
-      cur = oldMainMove
-      while(cur){
-         cur.moveLine = moveLineOld.first.moveLine
-         moveLineOld.last = cur
-         cur = cur.next
+      cur = toPromote
+      while (cur) {
+         cur.moveLine = lineToPromote
+         if (!cur.next) {
+            lineToPromote.last = cur;
+            break
+         } else cur = cur.next
       }
 
+      toDemote.prev.next = toPromote
 
-      move.subLines = [...move.subLines, moveLineOld]
-      oldMainMove.subLines = []
-
-      move.subLines.forEach(line => {
-         line.parentMove = move
-      })
+      return {line: move.moveLine, node: move}
    }
 
    deleteNextMoves(move) {
@@ -225,7 +223,6 @@ class NotationStore {
    }
 
    onMove = (from, to, piece = 'x') => {
-      console.log(this.currentNode.san)
       this.chessGame = new Chess()
       this.chessGame.load(this.currentNode.fen)
 
@@ -272,12 +269,12 @@ class NotationStore {
    }
 
    promoteLine = (move) => {
-      //todo
-      this.currentNode = move
-      this.chessGame.reset()
-      this.chessGame.load(move.fen)
+      const {line, node} = move.moveLine.promoteLine(move)
 
-      move.moveLine.promoteLine(move)
+      this.currentNode = node
+      this.currentLine = line
+      this.chessGame.reset()
+      this.chessGame.load(node.fen)
    }
 
    deleteLine = (move) => {
