@@ -48,12 +48,41 @@ class ChessMoveLine {
    }
 
    promoteLine(move) {
+      //todo
+      if (move.moveLine.parentMove === null || !move.moveLine.parentMove) return
+
       let oldMainMove = move.moveLine.parentMove
+      move = move.moveLine.first
 
-      move.subLines = [...oldMainMove.subLines.filter(x => x.first.fen !== move.moveLine.first.fen),
-         oldMainMove.moveLine]
+      oldMainMove.prev.next = move
 
-      oldMainMove.prev.next = move // ?? wtf is this really work?
+      move.subLines = oldMainMove.subLines.filter(x => x.first.fen !== move.moveLine.first.fen)
+          //wrong moveline, its old moveline and new for "move"
+
+      let cur = move
+      while (cur) {
+         cur.moveLine = oldMainMove.moveLine
+         cur = move.next
+      }
+
+      let moveLineOld = new ChessMoveLine(move)
+
+      moveLineOld.first = oldMainMove
+
+      cur = oldMainMove
+      while(cur){
+         cur.moveLine = moveLineOld.first.moveLine
+         moveLineOld.last = cur
+         cur = cur.next
+      }
+
+
+      move.subLines = [...move.subLines, moveLineOld]
+      oldMainMove.subLines = []
+
+      move.subLines.forEach(line => {
+         line.parentMove = move
+      })
    }
 
    deleteNextMoves(move) {
@@ -62,24 +91,16 @@ class ChessMoveLine {
    }
 
    deleteLine(move) {
-      this.first = null
-   }
+      if (!move.moveLine.parentMove) {
+         move.moveLine.first.next = null
+         move.moveLine.last = move.moveLine.first
 
-   reset() {
-      this.parentMove = null
-      this.first = null
-      this.last = null
-   }
+         return {line: move.moveLine, node: move.moveLine.first}
+      } else {
+         move.moveLine.parentMove.subLines = move.moveLine.parentMove.subLines.filter(line => line !== move.moveLine)
 
-   toArr() {
-      const nodes = [];
-
-      let currentNode = this.first;
-      while (currentNode) {
-         nodes.push(currentNode);
-         currentNode = currentNode.next;
+         return {line: move.prev.moveLine, node: move.moveLine.first.prev}
       }
-      return nodes;
    }
 }
 
@@ -121,12 +142,13 @@ class NotationStore {
 
       this.resetNode()
 
-      this.rootLine = history.reduce((line, m) => {
+      history.forEach(m => {
          let move = this.chessGame.move(m, {sloppy: true});
-         line.append({fen: this.chessGame.fen(), san: move.san, from: move.from, to: move.to})
+         this.rootLine.append({fen: this.chessGame.fen(), san: move.san, from: move.from, to: move.to})
+      })
 
-         return line
-      }, this.rootLine)
+      this.currentNode = this.rootLine.first.next
+      this.toPrev()
    }
 
    flipBoard = () => this.boardOrientation = this.boardOrientation === "white" ? "black" : "white";
@@ -178,31 +200,48 @@ class NotationStore {
       this.rootStore.chessOpeningExplorer.searchGames();
    };
 
-   resetNode = () => {
-      this.chessGame.reset();
+   resetNode() {
+      this.chessGame = new Chess()
 
-      this.rootLine = new ChessMoveLine()
-
-      const {line, node} = this.rootLine.append({
+      const {line, node} = new ChessMoveLine().append({
          fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', san: '', from: '', to: ''
       })
 
       this.currentNode = node
       this.currentLine = line
+      this.rootLine = line
 
       this.rootStore.chessOpeningExplorer.searchData.fen = node.fen
       this.rootStore.chessOpeningExplorer.searchGames();
    }
 
-   onMove = (from, to) => {
+   showPieceSelectMenu = false
+   pendingMove = null
+
+   promotion(piece) {
+      this.onMove(this.pendingMove.from, this.pendingMove.to, piece)
+      this.showPieceSelectMenu = false
+      this.pendingMove = null
+   }
+
+   onMove = (from, to, piece = 'x') => {
+      console.log(this.currentNode.san)
       this.chessGame = new Chess()
       this.chessGame.load(this.currentNode.fen)
 
-      let m = this.chessGame.move({from, to})
-      if (m) {
-         let moveData = {fen: this.chessGame.fen(), san: m.san, from: m.from, to: m.to}
+      for (let move of this.chessGame.moves({verbose: true})) {
+         if (!this.pendingMove && move.flags.indexOf("p") !== -1 && move.from === from) {
+            this.pendingMove = {from, to}
+            this.showPieceSelectMenu = true
+            return
+         }
+      }
 
-         const {line, node} = this.currentLine.append(moveData, this.currentNode)
+      let m = this.chessGame.move({from, to, promotion: piece})
+
+      if (m) {
+         const {line, node} = this.currentLine.append(
+           {fen: this.chessGame.fen(), san: m.san, from: m.from, to: m.to}, this.currentNode)
 
          this.currentLine = line
          this.currentNode = node
@@ -224,12 +263,39 @@ class NotationStore {
       return {free: false, dests, color: this.turnColor()}
    }
 
-   turnColor() {
+   turnColor = () => {
       return this.chessGame.turn() === "w" ? "white" : "black"
    }
 
    get lastMove() {
       return this.currentNode.from ? [this.currentNode.from, this.currentNode.to] : [];
+   }
+
+   promoteLine = (move) => {
+      //todo
+      this.currentNode = move
+      this.chessGame.reset()
+      this.chessGame.load(move.fen)
+
+      move.moveLine.promoteLine(move)
+   }
+
+   deleteLine = (move) => {
+      const {line, node} = move.moveLine.deleteLine(move)
+
+      this.currentNode = node
+      this.currentLine = line
+
+      this.chessGame.reset()
+      this.chessGame.load(node.fen)
+   }
+
+   deleteRemaining = (move) => {
+      this.currentNode = move
+      move.moveLine.deleteNextMoves(move)
+
+      this.chessGame.reset()
+      this.chessGame.load(move.fen)
    }
 }
 
@@ -239,7 +305,12 @@ decorate(NotationStore, {
      rootLine: observable,
      currentNode: observable,
      currentLine: observable,
+     showPieceSelectMenu: observable,
+     pendingMove: observable,
 
+     promoteLine: action,
+     deleteLine: action,
+     deleteRemaining: action,
      loadGame: action,
      flipBoard: action,
      jumpToMove: action,

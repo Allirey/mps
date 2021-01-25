@@ -8,20 +8,35 @@ import NavButtons from "../../components/chess/analysis/NavButtons";
 import ChessBoard from 'react-chessground'
 import "react-chessground/dist/styles/chessground.css"
 import ChessBoardBlueTheme from './chessBoardBlue.svg'
+import "./cburnett.css"
+import wR from './pieces/wR.svg'
+import wQ from './pieces/wQ.svg'
+import wB from './pieces/wB.svg'
+import wN from './pieces/wN.svg'
+import bR from './pieces/bR.svg'
+import bQ from './pieces/bQ.svg'
+import bN from './pieces/bN.svg'
+import bB from './pieces/bB.svg'
 
-import {Grid, Box, makeStyles, useTheme, useMediaQuery} from "@material-ui/core";
+import {Grid, Box, makeStyles, useTheme, useMediaQuery, Dialog, DialogActions, Button} from "@material-ui/core";
 import withStore from "../../hocs/withStore";
 import StyledTabs from "../../components/StyledTabs";
 import {Helmet} from "react-helmet";
+
+const pieceImages = {
+   'white': {'q': wQ, 'n': wN, 'r': wR, 'b': wB,},
+   'black': {'q': bQ, 'n': bN, 'r': bR, 'b': bB,},
+}
+
 
 const useStyles = makeStyles(theme => ({
    root: {},
 
    chessField: {
-      "& .cg-wrap":{
+      "& .cg-wrap": {
          backgroundImage: `url(${ChessBoardBlueTheme})`
       },
-      "& cg-board square.last-move":{
+      "& cg-board square.last-move": {
          backgroundColor: "lightgreen",
          opacity: "0.41"
       }
@@ -106,6 +121,9 @@ const ChessAnalysis = (props) => {
                    notation={notation.rootLine}
                    currentNode={notation.currentNode}
                    jumpTo={notation.jumpToMove}
+                   promoteLine={notation.promoteLine}
+                   deleteRemaining={notation.deleteRemaining}
+                   deleteLine={notation.deleteLine}
                  />
                  <br/>
                  <MovesTree explorerData={chess.currentMoves}/>
@@ -131,6 +149,9 @@ const ChessAnalysis = (props) => {
                                     notation={notation.rootLine}
                                     currentNode={notation.currentNode}
                                     jumpTo={notation.jumpToMove}
+                                    promoteLine={notation.promoteLine}
+                                    deleteRemaining={notation.deleteRemaining}
+                                    deleteLine={notation.deleteLine}
                                   />
                                </>
                              ,
@@ -156,7 +177,20 @@ const ChessAnalysis = (props) => {
                           }}
               />
            </Grid>
-        </Grid></>
+        </Grid>
+        <Dialog open={notation.showPieceSelectMenu} onClose={() => {
+           notation.showPieceSelectMenu = false;
+           notation.pendingMove = null;
+        }}>
+           {['q', 'n', 'r', 'b'].map(piece =>
+             <DialogActions>
+                <Button disableRipple onClick={() => notation.promotion(piece)}>
+                   <img src={pieceImages[notation.turnColor()][piece]} alt={''}/>
+                </Button>
+             </DialogActions>
+           )}
+        </Dialog>
+     </>
    )
 }
 
