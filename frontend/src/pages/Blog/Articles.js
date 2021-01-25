@@ -15,7 +15,7 @@ import Card from "../../components/Card";
 import Error404 from "../../errors/error404";
 import {Helmet} from "react-helmet";
 import {Skeleton} from '@material-ui/lab';
-import EditIcon from '@material-ui/icons/Edit';
+import PostAddIcon from '@material-ui/icons/PostAdd';
 
 const useStyles = makeStyles(theme => ({
    root: {
@@ -191,7 +191,7 @@ function Articles(props) {
            </Box>
            {props.stores.authStore.currentUser && props.stores.authStore.currentUser.is_staff &&
            <Fab disableRipple className={`${classes.addPost} ${classes.newPostBtn}`}
-                onClick={() => props.history.push('/blog/new')}><EditIcon/></Fab>}
+                onClick={() => props.history.push('/blog/new')}><PostAddIcon/></Fab>}
         </Grid>
      </>
    )

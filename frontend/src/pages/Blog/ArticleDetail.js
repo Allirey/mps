@@ -4,10 +4,9 @@ import {
    makeStyles,
    Typography,
    Link,
-   Button,
    useTheme,
    useMediaQuery,
-   Grid, TextField, Fade
+   Grid, TextField, Fade, Fab
 } from "@material-ui/core";
 import withStore from '../../hocs/withStore';
 import {useParams} from 'react-router-dom'
@@ -15,6 +14,9 @@ import Dialog from "../../components/Dialog";
 import ReactQuill, {Quill} from "react-quill";
 import {Helmet} from "react-helmet";
 import {Skeleton} from '@material-ui/lab';
+import PostAddIcon from "@material-ui/icons/PostAdd";
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 
 const LinkQuill = Quill.import('formats/link');
 
@@ -76,6 +78,7 @@ const useStyles = makeStyles(theme => ({
          color: 'black',
          fontWeight: 400,
          fontFamily: "Menlo,'Courier New',Courier,monospace",
+         fontSize: "0.8em"
       },
    },
    title: {
@@ -89,43 +92,31 @@ const useStyles = makeStyles(theme => ({
       },
    },
    submit: {
-      borderRadius: '17px',
-      borderColor: "black",
-      // border: "2px solid #333",
       color: "#4caef9",
-      backgroundColor: "white",
-      margin: theme.spacing(7),
-      fontSize: "18px",
-      height: "30px",
-      textTransform: "none",
-      "& button": {
-         fontStyle: "normal",
-         padding: "4px 12px",
-         margin: "0 0 15px",
-         fontWeight: "600",
-         width: "100%",
-      },
+      backgroundColor: "transparent",
+      right: "2vw",
+      bottom: "80px",
       "&:hover": {
          color: "white",
          backgroundColor: "#4caef9",
-      }
-   },
-   submitRelative: {
-      position: "relative",
-      marginLeft: theme.spacing(5),
-      marginTop: theme.spacing(7),
+      },
+      zIndex: 100,
+      opacity: "1",
    },
    submitFixed: {
       position: "fixed",
    },
    deleteButton: {
-      marginTop: theme.spacing(13),
-      backgroundColor: "white",
-      color: "lightgrey",
+      color: "red",
       "&:hover": {
-         backgroundColor: "grey",
+         backgroundColor: "black",
          color: "white",
-      }
+      },
+      bottom: "20px",
+      zIndex: 100,
+      opacity: "1",
+      backgroundColor: "transparent",
+
    },
    skeleton: {
       padding: theme.spacing(3)
@@ -284,6 +275,14 @@ function ArticleDetail(props) {
      <Grid container direction={"row"}>
         <Helmet
           title={slug ? title : "New article"}
+          meta={[
+             {"name": "description", "content": `${slug ? body.replace(/<[^>]+>/g, '').slice(0, 200) :
+                  'Share your experience here...'}`},
+             {"property": "og:title", "content": `${slug ? title : "New Article"}`},
+             {"property": "og:description", "content": `${slug ? body.replace(/<[^>]+>/g, '').slice(0, 200) :
+                  'Share your experience here...'}`},
+            {"property": "og:type", "content": "article"},
+          ]}
         />
         <Grid item lg={2} md={1} sm={1}/>
         <Grid item lg={8} md={9} sm={12} xs={12}>
@@ -332,29 +331,24 @@ function ArticleDetail(props) {
            </Fade>
         </Grid>
         <Grid container direction={matches ? 'column' : "row"} item xs={12} sm={12} md={2} lg={2}>
-           <Grid item>
-              {showEditButton() &&
-              <Button
-                size={"small"}
-                onClick={handleSubmit}
-                className={`${classes.submit} ${matches ? classes.submitFixed : classes.submitRelative}`}
-              >{editMode ? "Publish" : "Edit"}</Button>}
-           </Grid>
-           <Grid item>
-              {showEditButton() && editMode && slug &&
-              <Button
-                size={"small"}
-                onClick={handleClickOpen}
-                className={`${classes.submit} 
-               ${classes.deleteButton} ${matches ? classes.submitFixed : classes.submitRelative}`}
-              >Delete</Button>}
-           </Grid>
         </Grid>
         <Dialog
           open={open}
           onClose={handleClose}
           onDelete={handleDelete}
         />
+        {showEditButton() &&
+        <Fab disableRipple size={"small"}
+             onClick={handleSubmit}
+             className={`${classes.submit} ${classes.submitFixed}`}>
+           {editMode ? <PostAddIcon/> : <EditIcon/>}
+        </Fab>}
+        {showEditButton() && editMode && slug &&
+        <Fab disableRipple size={"small"}
+             onClick={handleClickOpen}
+             className={`${classes.submit} 
+               ${classes.deleteButton} ${classes.submitFixed}`}
+        ><DeleteOutlineIcon/></Fab>}
      </Grid>
    )
 }
