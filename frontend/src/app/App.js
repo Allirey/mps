@@ -44,6 +44,7 @@ function App(props) {
              {"property": "og:title", "content": "Technologies and chess"},
              {"property": "og:description", "content": "Personal website of web developer. " +
                   "Content related to chess and programming, or another hobbies of mine."},
+            {"property": "og:type", "content": "website"},
           ]}
 
         />
