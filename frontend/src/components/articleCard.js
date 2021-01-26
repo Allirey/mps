@@ -1,11 +1,7 @@
 import React from 'react';
-import {makeStyles} from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import {Link, Redirect} from "react-router-dom";
+import {makeStyles, Card, CardActionArea, CardActions, CardContent, Typography} from '@material-ui/core';
+import {Link} from "react-router-dom";
+import VisibilityIcon from '@material-ui/icons/Visibility';
 
 const useStyles = makeStyles(theme => ({
    root: {
@@ -27,7 +23,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function MediaCard(props) {
    const classes = useStyles();
-
    const {article} = props
 
    const makeDate = dateString => new Date(dateString).toDateString().split(' ')
@@ -41,13 +36,14 @@ export default function MediaCard(props) {
                  {article.title}
               </Typography>
               <Typography gutterBottom variant="caption" color="textSecondary">
-                 {makeDate(article.created)} by {article.author.username}
+                 {makeDate(article.created)}{' · '}{article.read_time} min read{' · '}
+                 <VisibilityIcon fontSize={"inherit"}/> {article.views}
               </Typography>
               <br/>
               <br/>
               <Typography variant="body2" color="textSecondary" component="div"
-                          dangerouslySetInnerHTML={{"__html": article.body.replace(/<[^>]+>/g, '').slice(0, 300)
-                               + (article.body.replace(/<[^>]+>/g, '').length > 300? "...":"")}}/>
+                          dangerouslySetInnerHTML={{"__html": article.body.slice(0, 300)
+                               + (article.body.length > 300? "...":"")}}/>
            </CardContent>
         </CardActionArea>
         <CardActions>

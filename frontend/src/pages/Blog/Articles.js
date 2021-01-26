@@ -11,7 +11,7 @@ import {
    Typography, Fade, Fab
 } from "@material-ui/core";
 import withStore from '../../hocs/withStore';
-import Card from "../../components/Card";
+import Card from "../../components/articleCard";
 import Error404 from "../../errors/error404";
 import {Helmet} from "react-helmet";
 import {Skeleton} from '@material-ui/lab';

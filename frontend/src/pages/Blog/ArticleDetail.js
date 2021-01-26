@@ -3,7 +3,6 @@ import {
    Container,
    makeStyles,
    Typography,
-   Link,
    useTheme,
    useMediaQuery,
    Grid, TextField, Fade, Fab
@@ -17,6 +16,7 @@ import {Skeleton} from '@material-ui/lab';
 import PostAddIcon from "@material-ui/icons/PostAdd";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 
 const LinkQuill = Quill.import('formats/link');
 
@@ -170,7 +170,7 @@ function ArticleDetail(props) {
             setTitle(post.title)
             setBody(post.body)
          }).catch((e) => {
-            props.stores.notifications.notify(JSON.stringify(e), 4)
+            props.stores.notifications.notify('Post not found', 4)
          })
       }
    }, [])
@@ -311,8 +311,7 @@ function ArticleDetail(props) {
                     }
                     {
                        slug && <><Typography variant="subtitle2" color="textSecondary">
-                          {makeDate(post.publish)} by <Link
-                         href={`/users/${post.author.username}`}>{post.author.username}</Link>
+                          {makeDate(post.publish)}{' · '}{post.read_time} min read {' · '}<VisibilityIcon fontSize={"inherit"}/> {post.views}
                        </Typography><br/></>
 
                     }
