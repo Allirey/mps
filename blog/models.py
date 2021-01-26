@@ -3,6 +3,7 @@ from django.conf import settings
 from django.utils.text import slugify
 from django.utils import timezone
 from lxml.html.clean import Cleaner
+import re
 
 
 class Article(models.Model):
@@ -17,6 +18,8 @@ class Article(models.Model):
     slug = models.SlugField(max_length=96, unique=True)
     body = models.TextField()
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='articles')
+    views = models.IntegerField(default=0)
+    read_time = models.IntegerField(default=0)
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -31,5 +34,7 @@ class Article(models.Model):
 
             self.body = cleaner.clean_html(self.body).replace('<p><br></p>', '')
             # frontend editor creates unnecessary empty lines
+
+            self.read_time = len(re.sub(r'<[^>]+>', '', self.body).split()) // 200 + 1
 
         super().save(*args, **kwargs)
