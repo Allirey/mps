@@ -183,18 +183,20 @@ class NotationStore {
    };
 
    toFirst = () => {
-      let node = this.currentNode.moveLine.first
-      this.currentNode = node
-      this.chessGame.load(node.fen)
+      this.currentNode = this.rootLine.first
+      this.currentLine = this.rootLine
+      this.chessGame.load(this.rootLine.first.fen)
 
-      this.rootStore.chessOpeningExplorer.searchData.fen = node.fen
+      this.rootStore.chessOpeningExplorer.searchData.fen = this.rootLine.first.fen
       this.rootStore.chessOpeningExplorer.searchGames();
    };
 
    toLast = () => {
-      this.currentNode = this.currentNode.moveLine.last
+      this.currentNode = this.rootLine.last
+      this.currentLine = this.rootLine
+      this.chessGame.load(this.rootLine.last.fen)
 
-      this.rootStore.chessOpeningExplorer.searchData.fen = this.currentNode.moveLine.last.fen
+      this.rootStore.chessOpeningExplorer.searchData.fen = this.rootLine.last.fen
       this.rootStore.chessOpeningExplorer.searchGames();
    };
 
@@ -223,7 +225,6 @@ class NotationStore {
    }
 
    onMove = (from, to, piece = 'x') => {
-      this.chessGame = new Chess()
       this.chessGame.load(this.currentNode.fen)
 
       for (let move of this.chessGame.moves({verbose: true})) {
@@ -273,7 +274,6 @@ class NotationStore {
 
       this.currentNode = node
       this.currentLine = line
-      this.chessGame.reset()
       this.chessGame.load(node.fen)
    }
 
@@ -283,7 +283,6 @@ class NotationStore {
       this.currentNode = node
       this.currentLine = line
 
-      this.chessGame.reset()
       this.chessGame.load(node.fen)
    }
 
@@ -291,7 +290,6 @@ class NotationStore {
       this.currentNode = move
       move.moveLine.deleteNextMoves(move)
 
-      this.chessGame.reset()
       this.chessGame.load(move.fen)
    }
 }
