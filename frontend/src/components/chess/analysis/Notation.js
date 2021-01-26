@@ -26,16 +26,10 @@ const useStyles = makeStyles({
          whiteSpace: 'nowrap',
          padding: 1,
          borderRadius: 4,
-         "&:hover": {
-            backgroundColor: "lightblue",
-         }
       },
       "& span.active": {
          backgroundColor: "#435866",
          color: "#FFFFFF",
-         "&:hover": {
-            backgroundColor: "#435866",
-         }
       },
       "& blockquote": {
          borderLeft: "2px solid #ccc",
@@ -53,12 +47,6 @@ const useStyles = makeStyles({
          padding: 0,
       }
    },
-   menu:{
-      "& $li":{
-         "&:hover":{
-         backgroundColor: 'lightblue',
-      }}
-   }
 });
 
 function Notation(props) {
