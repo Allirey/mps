@@ -17,6 +17,7 @@ import PostAddIcon from "@material-ui/icons/PostAdd";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import logo from "../../public/photo5233438708856892657.jpg"
 
 const LinkQuill = Quill.import('formats/link');
 
@@ -286,7 +287,7 @@ function ArticleDetail(props) {
            <meta name="twitter:title" content={`${slug ? title : "New Article"}`}/>
            <meta name="twitter:description" content={`${slug ? body.replace(/<[^>]+>/g, ' ').slice(0, 200) :
              'Share your experience here...'}`}/>
-           <meta name="twitter:image" content="%PUBLIC_URL%/photo5233438708856892657.jpg"/>
+           <meta name="twitter:image" content={logo}/>
            <meta name="twitter:site:id" content="741164490"/>
         </Helmet>
         <Grid item lg={2} md={1} sm={1}/>

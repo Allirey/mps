@@ -22,6 +22,7 @@ import {Grid, Box, makeStyles, useTheme, useMediaQuery, Dialog, DialogActions, B
 import withStore from "../../hocs/withStore";
 import StyledTabs from "../../components/StyledTabs";
 import {Helmet} from "react-helmet";
+import logo from "../../public/photo5233438708856892657.jpg"
 
 const pieceImages = {
    'white': {'q': wQ, 'n': wN, 'r': wR, 'b': wB,},
@@ -71,7 +72,7 @@ const ChessAnalysis = (props) => {
            <meta name="twitter:card" content="summary"/>
            <meta name="twitter:title" content="Ukrainian chess games database"/>
            <meta name="twitter:description" content="Search and analyse."/>
-           <meta name="twitter:image" content="%PUBLIC_URL%/photo5233438708856892657.jpg"/>
+           <meta name="twitter:image" content={logo}/>
            <meta name="twitter:site:id" content="741164490"/>
         </Helmet>
         <Grid container justify={"space-evenly"}>

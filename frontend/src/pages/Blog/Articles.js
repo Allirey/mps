@@ -16,6 +16,7 @@ import Error404 from "../../errors/error404";
 import {Helmet} from "react-helmet";
 import {Skeleton} from '@material-ui/lab';
 import PostAddIcon from '@material-ui/icons/PostAdd';
+import logo from "../../public/photo5233438708856892657.jpg"
 
 const useStyles = makeStyles(theme => ({
    root: {
@@ -168,7 +169,7 @@ function Articles(props) {
            <meta name="twitter:title" content={currentPage && currentPage !== "1" ? `Blog - page ${currentPage}` : "Blog"}/>
            <meta name="twitter:description"
                  content={"Blog. Content related to chess and programming, or another hobbies of mine."}/>
-           <meta name="twitter:image" content="%PUBLIC_URL%/photo5233438708856892657.jpg"/>
+           <meta name="twitter:image" content={logo}/>
            <meta name="twitter:site:id" content="741164490"/>
         </Helmet>
         <Grid container>
