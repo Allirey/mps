@@ -165,7 +165,7 @@ function Articles(props) {
            <meta property={"og:description"}
                  content={"Blog. Content related to chess and programming, or another hobbies of mine."}/>
            <meta property={"og:type"} content={"website"}/>
-           <meta name="twitter:card" content="summary"/>
+           <meta name="twitter:card" content="summary_large_image"/>
            <meta name="twitter:title" content={currentPage && currentPage !== "1" ? `Blog - page ${currentPage}` : "Blog"}/>
            <meta name="twitter:description"
                  content={"Blog. Content related to chess and programming, or another hobbies of mine."}/>

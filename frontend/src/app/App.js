@@ -43,7 +43,7 @@ function App(props) {
            <meta property={"og:description"}
                  content={"Personal website of web developer. Content related to chess and programming, or another hobbies of mine."}/>
            <meta property={"og:type"} content={"website"}/>
-           <meta name="twitter:card" content="summary"/>
+           <meta name="twitter:card" content="summary_large_image"/>
            <meta name="twitter:title" content="Technologies and chess"/>
            <meta name="twitter:description"
                  content="Personal website of web developer. Content related to chess and programming, or another hobbies of mine."/>

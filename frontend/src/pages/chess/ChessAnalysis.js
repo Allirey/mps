@@ -69,7 +69,7 @@ const ChessAnalysis = (props) => {
            <meta property={"og:title"} content={"Ukrainian chess games database"}/>
            <meta property={"og:description"} content={"Search and analyse."}/>
            <meta property={"og:type"} content={"website"}/>
-           <meta name="twitter:card" content="summary"/>
+           <meta name="twitter:card" content="summary_large_image"/>
            <meta name="twitter:title" content="Ukrainian chess games database"/>
            <meta name="twitter:description" content="Search and analyse."/>
            <meta name="twitter:image" content={logo}/>

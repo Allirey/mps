@@ -283,7 +283,7 @@ function ArticleDetail(props) {
            <meta property={"og:description"} content={`${slug ? body.replace(/<[^>]+>/g, ' ').slice(0, 200) :
              'Share your experience here...'}`}/>
            <meta property={"og:type"} content={"article"}/>
-           <meta name="twitter:card" content="summary"/>
+           <meta name="twitter:card" content="summary_large_image"/>
            <meta name="twitter:title" content={`${slug ? title : "New Article"}`}/>
            <meta name="twitter:description" content={`${slug ? body.replace(/<[^>]+>/g, ' ').slice(0, 200) :
              'Share your experience here...'}`}/>
