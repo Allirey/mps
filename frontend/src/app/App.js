@@ -35,19 +35,15 @@ function App(props) {
         <Helmet
           title={'Technologies and chess'}
           titleTemplate="%s / Glitcher"
+        >
+           <meta name={"description"}
+                 content={"Personal website of web developer. Content related to chess and programming, or another hobbies of mine."}/>
+           <meta property={"og:title"} content={"Technologies and chess"}/>
+           <meta property={"og:description"}
+                 content={"Personal website of web developer. Content related to chess and programming, or another hobbies of mine."}/>
+           <meta property={"og:type"} content={"website"}/>
+        </Helmet>
 
-          meta={[
-             {
-                "name": "description", "content": "Personal website of web developer. " +
-                  "Content related to chess and programming, or another hobbies of mine."
-             },
-             {"property": "og:title", "content": "Technologies and chess"},
-             {"property": "og:description", "content": "Personal website of web developer. " +
-                  "Content related to chess and programming, or another hobbies of mine."},
-            {"property": "og:type", "content": "website"},
-          ]}
-
-        />
         <Header isLoading={appLoading}/>
         <SnackBar
           open={notifications.isOpen}

@@ -157,7 +157,14 @@ function Articles(props) {
      <>
         <Helmet
           title={currentPage && currentPage !== "1" ? `Blog - page ${currentPage}` : "Blog"}
-        />
+        >
+           <meta name={"description"}
+                 content={"Blog. Content related to chess and programming, or another hobbies of mine."}/>
+           <meta property={"og:title"} content={currentPage && currentPage !== "1" ? `Blog - page ${currentPage}` : "Blog"}/>
+           <meta property={"og:description"}
+                 content={"Blog. Content related to chess and programming, or another hobbies of mine."}/>
+           <meta property={"og:type"} content={"website"}/>
+        </Helmet>
         <Grid container>
            <Grid item sm={1} md={2}/>
            <Grid item xs={12} sm={10} md={8}>

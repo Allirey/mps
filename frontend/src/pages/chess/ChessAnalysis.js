@@ -62,8 +62,13 @@ const ChessAnalysis = (props) => {
    return (
      <>
         <Helmet
-          title={"Ukrainian chess database"}
-        />
+          title={"Ukrainian chess games database"}
+        >
+           <meta name={"description"} content={"Search and analyse."}/>
+           <meta property={"og:title"} content={"Ukrainian chess games database"}/>
+           <meta property={"og:description"} content={"Search and analyse."}/>
+           <meta property={"og:type"} content={"website"}/>
+        </Helmet>
         <Grid container justify={"space-evenly"}>
            <Grid item display={{xs: "none", lg: "block"}} lg={4} component={Box}>
               <GamesSearch

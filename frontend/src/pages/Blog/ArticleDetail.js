@@ -275,15 +275,14 @@ function ArticleDetail(props) {
      <Grid container direction={"row"}>
         <Helmet
           title={slug ? title : "New article"}
-          meta={[
-             {"name": "description", "content": `${slug ? body.replace(/<[^>]+>/g, '').slice(0, 200) :
-                  'Share your experience here...'}`},
-             {"property": "og:title", "content": `${slug ? title : "New Article"}`},
-             {"property": "og:description", "content": `${slug ? body.replace(/<[^>]+>/g, '').slice(0, 200) :
-                  'Share your experience here...'}`},
-            {"property": "og:type", "content": "article"},
-          ]}
-        />
+        >
+           <meta name={"description"} content={`${slug ? body.replace(/<[^>]+>/g, '').slice(0, 200) :
+             'Share your experience here...'}`}/>
+           <meta property={"og:title"} content={`${slug ? title : "New Article"}`}/>
+           <meta property={"og:description"} content={`${slug ? body.replace(/<[^>]+>/g, '').slice(0, 200) :
+             'Share your experience here...'}`}/>
+           <meta property={"og:type"} content={"article"}/>
+        </Helmet>
         <Grid item lg={2} md={1} sm={1}/>
         <Grid item lg={8} md={9} sm={12} xs={12}>
            <Fade in={true}>
@@ -311,7 +310,8 @@ function ArticleDetail(props) {
                     }
                     {
                        slug && <><Typography variant="subtitle2" color="textSecondary">
-                          {makeDate(post.publish)}{' · '}{post.read_time} min read {' · '}<VisibilityIcon fontSize={"inherit"}/> {post.views}
+                          {makeDate(post.publish)}{' · '}{post.read_time} min read {' · '}<VisibilityIcon
+                         fontSize={"inherit"}/> {post.views}
                        </Typography><br/></>
 
                     }
