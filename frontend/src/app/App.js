@@ -42,6 +42,12 @@ function App(props) {
            <meta property={"og:description"}
                  content={"Personal website of web developer. Content related to chess and programming, or another hobbies of mine."}/>
            <meta property={"og:type"} content={"website"}/>
+           <meta name="twitter:card" content="summary"/>
+           <meta name="twitter:title" content="Technologies and chess"/>
+           <meta name="twitter:description"
+                 content="Personal website of web developer. Content related to chess and programming, or another hobbies of mine."/>
+           <meta name="twitter:image" content="%PUBLIC_URL%/photo5233438708856892657.jpg"/>
+           <meta name="twitter:site:id" content="741164490"/>
         </Helmet>
 
         <Header isLoading={appLoading}/>

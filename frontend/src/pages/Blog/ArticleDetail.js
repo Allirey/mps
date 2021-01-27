@@ -276,12 +276,18 @@ function ArticleDetail(props) {
         <Helmet
           title={slug ? title : "New article"}
         >
-           <meta name={"description"} content={`${slug ? body.replace(/<[^>]+>/g, '').slice(0, 200) :
+           <meta name={"description"} content={`${slug ? body.replace(/<[^>]+>/g, ' ').slice(0, 200) :
              'Share your experience here...'}`}/>
            <meta property={"og:title"} content={`${slug ? title : "New Article"}`}/>
-           <meta property={"og:description"} content={`${slug ? body.replace(/<[^>]+>/g, '').slice(0, 200) :
+           <meta property={"og:description"} content={`${slug ? body.replace(/<[^>]+>/g, ' ').slice(0, 200) :
              'Share your experience here...'}`}/>
            <meta property={"og:type"} content={"article"}/>
+           <meta name="twitter:card" content="summary"/>
+           <meta name="twitter:title" content={`${slug ? title : "New Article"}`}/>
+           <meta name="twitter:description" content={`${slug ? body.replace(/<[^>]+>/g, ' ').slice(0, 200) :
+             'Share your experience here...'}`}/>
+           <meta name="twitter:image" content="%PUBLIC_URL%/photo5233438708856892657.jpg"/>
+           <meta name="twitter:site:id" content="741164490"/>
         </Helmet>
         <Grid item lg={2} md={1} sm={1}/>
         <Grid item lg={8} md={9} sm={12} xs={12}>

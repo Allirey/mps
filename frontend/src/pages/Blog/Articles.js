@@ -164,6 +164,12 @@ function Articles(props) {
            <meta property={"og:description"}
                  content={"Blog. Content related to chess and programming, or another hobbies of mine."}/>
            <meta property={"og:type"} content={"website"}/>
+           <meta name="twitter:card" content="summary"/>
+           <meta name="twitter:title" content={currentPage && currentPage !== "1" ? `Blog - page ${currentPage}` : "Blog"}/>
+           <meta name="twitter:description"
+                 content={"Blog. Content related to chess and programming, or another hobbies of mine."}/>
+           <meta name="twitter:image" content="%PUBLIC_URL%/photo5233438708856892657.jpg"/>
+           <meta name="twitter:site:id" content="741164490"/>
         </Helmet>
         <Grid container>
            <Grid item sm={1} md={2}/>

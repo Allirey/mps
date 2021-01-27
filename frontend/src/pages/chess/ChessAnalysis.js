@@ -68,6 +68,11 @@ const ChessAnalysis = (props) => {
            <meta property={"og:title"} content={"Ukrainian chess games database"}/>
            <meta property={"og:description"} content={"Search and analyse."}/>
            <meta property={"og:type"} content={"website"}/>
+           <meta name="twitter:card" content="summary"/>
+           <meta name="twitter:title" content="Ukrainian chess games database"/>
+           <meta name="twitter:description" content="Search and analyse."/>
+           <meta name="twitter:image" content="%PUBLIC_URL%/photo5233438708856892657.jpg"/>
+           <meta name="twitter:site:id" content="741164490"/>
         </Helmet>
         <Grid container justify={"space-evenly"}>
            <Grid item display={{xs: "none", lg: "block"}} lg={4} component={Box}>
