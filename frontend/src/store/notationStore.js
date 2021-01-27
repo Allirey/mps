@@ -55,7 +55,9 @@ class ChessMoveLine {
       let lineToDemote = new ChessMoveLine(toPromote)
       let lineToPromote = toDemote.moveLine
 
-      toPromote.subLines = toDemote.subLines.filter(x => x.first.san !== toPromote.san).concat([lineToDemote])
+      toPromote.subLines = toDemote.subLines.filter(x => x.first !== toPromote).concat([lineToDemote])
+      toPromote.subLines.forEach(line=> line.parentMove = toPromote)
+
       toDemote.subLines = []
       lineToDemote.first = toDemote
       lineToDemote.parentMove = toPromote
@@ -225,8 +227,6 @@ class NotationStore {
    }
 
    onMove = (from, to, piece = 'x') => {
-      this.chessGame.load(this.currentNode.fen)
-
       for (let move of this.chessGame.moves({verbose: true})) {
          if (!this.pendingMove && move.flags.indexOf("p") !== -1 && move.from === from) {
             this.pendingMove = {from, to}

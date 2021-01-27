@@ -1,5 +1,5 @@
 import React, {Fragment} from "react";
-import {makeStyles, Typography, Menu, MenuItem} from "@material-ui/core";
+import {makeStyles, Menu, MenuItem} from "@material-ui/core";
 
 const initialState = {
    mouseX: null,
@@ -102,12 +102,12 @@ function Notation(props) {
               return <Fragment key={i}>
                  <span
                    onContextMenu={(e) => handleClick(e, node)}
-                   key={node.san}
+                   key={`${node.san}${node.fen}`}
                    onClick={() => props.jumpTo(node)}
                    className={props.currentNode === node && !!node.san ? "active" : null}>
          {(i + appender) % 2 ? `${moveCount(i)}.` : !i && !!node.san && `${moveCount(i) - 1}...`}{node.san}
-         </span>{" "}{node.subLines.map(variation =>
-                <blockquote key={`${node.fen}${node.san}`}>{renderTree(toArr(variation), i + appender)}
+         </span>{" "}{node.subLines.map((variation,j) =>
+                <blockquote key={`${variation.first.fen}${j+100}`}>{renderTree(toArr(variation), i + appender)}
                 </blockquote>)}
               </Fragment>
            })}
@@ -120,9 +120,9 @@ function Notation(props) {
    return (
      <>
         {/*<Typography><h3>{game.white} - {game.black} {game.result}</h3></Typography>*/}
-        <Typography className={classes.root}>
+        <div className={classes.root}>
            {renderTree(nodes)}
-        </Typography>
+        </div>
         <Menu
           className={classes.menu}
           keepMounted
