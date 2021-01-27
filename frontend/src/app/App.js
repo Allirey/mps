@@ -5,7 +5,6 @@ import Header from '../components/header';
 import PrivateRoute from "../components/PrivateRoute";
 import SnackBar from "../components/snackbar";
 import {Helmet} from "react-helmet";
-import logo from "./photo5233438708856892657.jpg"
 
 const Articles = lazy(() => import("../pages/Blog/Articles"));
 const ArticleDetail = lazy(() => import("../pages/Blog/ArticleDetail"));
@@ -43,11 +42,10 @@ function App(props) {
            <meta property={"og:description"}
                  content={"Personal website of web developer. Content related to chess and programming, or another hobbies of mine."}/>
            <meta property={"og:type"} content={"website"}/>
-           <meta name="twitter:card" content="summary_large_image"/>
+           <meta name="twitter:card" content="summary"/>
            <meta name="twitter:title" content="Technologies and chess"/>
            <meta name="twitter:description"
                  content="Personal website of web developer. Content related to chess and programming, or another hobbies of mine."/>
-           <meta name="twitter:image" content={logo}/>
            <meta name="twitter:site:id" content="741164490"/>
         </Helmet>
 
