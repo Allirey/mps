@@ -16,7 +16,7 @@ import Error404 from "../../errors/error404";
 import {Helmet} from "react-helmet";
 import {Skeleton} from '@material-ui/lab';
 import PostAddIcon from '@material-ui/icons/PostAdd';
-import logo from "../../public/photo5233438708856892657.jpg"
+import logo from "../../app/photo5233438708856892657.jpg"
 
 const useStyles = makeStyles(theme => ({
    root: {

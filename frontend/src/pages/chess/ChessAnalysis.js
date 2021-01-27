@@ -22,7 +22,7 @@ import {Grid, Box, makeStyles, useTheme, useMediaQuery, Dialog, DialogActions, B
 import withStore from "../../hocs/withStore";
 import StyledTabs from "../../components/StyledTabs";
 import {Helmet} from "react-helmet";
-import logo from "../../public/photo5233438708856892657.jpg"
+import logo from "../../app/photo5233438708856892657.jpg"
 
 const pieceImages = {
    'white': {'q': wQ, 'n': wN, 'r': wR, 'b': wB,},

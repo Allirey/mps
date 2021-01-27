@@ -5,7 +5,7 @@ import Header from '../components/header';
 import PrivateRoute from "../components/PrivateRoute";
 import SnackBar from "../components/snackbar";
 import {Helmet} from "react-helmet";
-import logo from "../../public/photo5233438708856892657.jpg"
+import logo from "./photo5233438708856892657.jpg"
 
 const Articles = lazy(() => import("../pages/Blog/Articles"));
 const ArticleDetail = lazy(() => import("../pages/Blog/ArticleDetail"));

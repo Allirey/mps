@@ -17,7 +17,7 @@ import PostAddIcon from "@material-ui/icons/PostAdd";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import logo from "../../public/photo5233438708856892657.jpg"
+import logo from "../../app/photo5233438708856892657.jpg"
 
 const LinkQuill = Quill.import('formats/link');
 
