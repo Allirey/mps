@@ -39,7 +39,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
             d = serializer.data
 
             for el in d:
-                el['body'] = re.sub(r'<[^>]+>', '', el['body'])[:350]
+                el['body'] = re.sub(r'<[^>]+>', ' ', el['body'])[:350]
 
             return self.get_paginated_response(serializer.data)
 
