@@ -56,7 +56,7 @@ class ChessMoveLine {
       let lineToPromote = toDemote.moveLine
 
       toPromote.subLines = toDemote.subLines.filter(x => x.first !== toPromote).concat([lineToDemote])
-      toPromote.subLines.forEach(line=> line.parentMove = toPromote)
+      toPromote.subLines.forEach(line => line.parentMove = toPromote)
 
       toDemote.subLines = []
       lineToDemote.first = toDemote
@@ -135,9 +135,12 @@ class NotationStore {
    inCheck = false
 
    boardOrientation = "white";
+   gameHeaders = null
 
    loadGame = (pgn) => {
       this.chessGame.load_pgn(pgn, {sloppy: true})
+      this.gameHeaders = this.chessGame.header()
+
       let history = this.chessGame.history()
 
       this.resetNode()
@@ -249,6 +252,22 @@ class NotationStore {
       }
    }
 
+   makeSanMove = (san) => {
+      let m = this.chessGame.move(san, {sloppy: true})
+
+      if (m) {
+         const {line, node} = this.currentLine.append(
+           {fen: this.chessGame.fen(), san: m.san, from: m.from, to: m.to}, this.currentNode)
+
+         this.currentLine = line
+         this.currentNode = node
+
+         this.rootStore.chessOpeningExplorer.searchData.fen = node.fen
+         this.rootStore.chessOpeningExplorer.searchGames();
+      }
+   }
+
+
    get calcMovable() {
       this.chessGame.load(this.currentNode.fen)
       this.inCheck = this.chessGame.in_check()
@@ -288,6 +307,7 @@ class NotationStore {
 
    deleteRemaining = (move) => {
       this.currentNode = move
+      this.currentLine = move.moveLine
       move.moveLine.deleteNextMoves(move)
 
       this.chessGame.load(move.fen)
@@ -302,7 +322,9 @@ decorate(NotationStore, {
      currentLine: observable,
      showPieceSelectMenu: observable,
      pendingMove: observable,
+     gameHeaders: observable,
 
+     makeSanMove: action,
      promoteLine: action,
      deleteLine: action,
      deleteRemaining: action,

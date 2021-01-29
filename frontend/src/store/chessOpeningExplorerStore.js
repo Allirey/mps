@@ -13,6 +13,7 @@ class ChessOpeningExplorerStore {
    table_games_cache = {};
    explorer_moves_cache = {};
    pgn_games_cache = {};
+   inProgress = false;
 
    setName = (name) => this.searchData.name = name;
    setColor = (color) => this.searchData.color = color;
@@ -21,10 +22,12 @@ class ChessOpeningExplorerStore {
       if (url in this.pgn_games_cache) {
          this.rootStore.chessNotation.loadGame(this.pgn_games_cache[url])
       } else {
+         // this.inProgress = true
          this.rootStore.api.ChessExplorer.getGameByUrl(url).then((data) => {
             this.pgn_games_cache[url] = data.game;
             this.rootStore.chessNotation.loadGame(this.pgn_games_cache[url])
-         });
+         })
+           // .finally(() => this.inProgress = false);
       }
    }
 
@@ -38,10 +41,11 @@ class ChessOpeningExplorerStore {
 
       if (!(check in this.table_games_cache)) {
          const {name, color, fen} = this.searchData
+         this.inProgress = true
          this.rootStore.api.ChessExplorer.getGamesAndMoves(name, color, fen).then(data => {
             this.table_games_cache[check] = data.games;
             this.explorer_moves_cache[check] = data.moves;
-         }).catch(console.log)
+         }).catch(console.log).finally(()=> this.inProgress = false)
       }
       // reset current board game when searching another player's game
       // this.rootStore.chessNotation.resetNode();
@@ -62,6 +66,10 @@ decorate(ChessOpeningExplorerStore, {
      searchData: observable,
      explorer_moves_cache: observable,
      table_games_cache: observable,
+     inProgress: observable,
+
+   // setColor:action,
+   // setName:action,
 
      currentMoves: computed,
      currentGames: computed,

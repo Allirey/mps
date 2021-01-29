@@ -1,24 +1,15 @@
 import React, {Fragment} from "react";
-import {makeStyles, Menu, MenuItem} from "@material-ui/core";
+import {makeStyles, Menu, MenuItem, Typography} from "@material-ui/core";
 
-const initialState = {
-   mouseX: null,
-   mouseY: null,
-};
-
-const ACTIONS = {
-   PROMOTE: 'promote',
-   DELETE_LINE: 'deleteLine',
-   DELETE_NEXT: 'deleteNext'
-}
+const initialState = {mouseX: null, mouseY: null,};
+const ACTIONS = {PROMOTE: 'promote', DELETE_LINE: 'deleteLine', DELETE_NEXT: 'deleteNext'}
 
 const useStyles = makeStyles({
    root: {
       userSelect: "none",
       overflow: "auto",
-      height: "35vh",
       cursor: "default",
-      padding: 5,
+      padding: 8,
       lineHeight: "1.3",
 
       "& $span": {
@@ -37,7 +28,6 @@ const useStyles = makeStyles({
          paddingRight: "15px",
 
          marginRight: 5,
-
          marginLeft: "0px",
          marginTop: 0,
          marginBottom: 0,
@@ -106,8 +96,8 @@ function Notation(props) {
                    onClick={() => props.jumpTo(node)}
                    className={props.currentNode === node && !!node.san ? "active" : null}>
          {(i + appender) % 2 ? `${moveCount(i)}.` : !i && !!node.san && `${moveCount(i) - 1}...`}{node.san}
-         </span>{" "}{node.subLines.map((variation,j) =>
-                <blockquote key={`${variation.first.fen}${j+100}`}>{renderTree(toArr(variation), i + appender)}
+         </span>{" "}{node.subLines.map((variation, j) =>
+                <blockquote key={`${variation.first.fen}${j + 100}`}>{renderTree(toArr(variation), i + appender)}
                 </blockquote>)}
               </Fragment>
            })}
@@ -115,13 +105,11 @@ function Notation(props) {
       )
    }
 
-   if (nodes === []) return <></>;
-
    return (
      <>
-        {/*<Typography><h3>{game.white} - {game.black} {game.result}</h3></Typography>*/}
         <div className={classes.root}>
-           {renderTree(nodes)}
+           {nodes.length !== 1 ? renderTree(nodes) :
+             <Typography variant="h4" color="textSecondary" style={{opacity: 0.2}}>Notation</Typography>}
         </div>
         <Menu
           className={classes.menu}
@@ -136,7 +124,8 @@ function Notation(props) {
           }
         >
            <MenuItem tabIndex={0} disableRipple onClick={() => handleClose(ACTIONS.PROMOTE)}>promote line</MenuItem>
-           <MenuItem tabIndex={0} disableRipple onClick={() => handleClose(ACTIONS.DELETE_NEXT)}>delete next moves</MenuItem>
+           <MenuItem tabIndex={0} disableRipple onClick={() => handleClose(ACTIONS.DELETE_NEXT)}>delete next
+              moves</MenuItem>
            <MenuItem tabIndex={0} disableRipple onClick={() => handleClose(ACTIONS.DELETE_LINE)}>delete line</MenuItem>
         </Menu>
      </>
