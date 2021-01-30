@@ -17,6 +17,7 @@ import bR from './pieces/bR.svg'
 import bQ from './pieces/bQ.svg'
 import bN from './pieces/bN.svg'
 import bB from './pieces/bB.svg'
+import Colobki from './undraw_elements_cipa.svg'
 
 import {
    Grid,
@@ -26,15 +27,14 @@ import {
    Dialog,
    DialogActions,
    Button,
-   createMuiTheme
+   createMuiTheme, Fade, ThemeProvider
 } from "@material-ui/core";
 import withStore from "../../hocs/withStore";
 import {Helmet} from "react-helmet";
 
 const breakpointValues = {
    xs: 0,
-   lt: 650,
-   sm: 720,
+   sm: 700,
    md: 960,
    lg: 1280,
    xl: 1920,
@@ -47,7 +47,9 @@ const pieceImages = {
 }
 
 const useStyles = makeStyles(theme => ({
-   root: {},
+   root: {
+      touchAction: "manipulation",
+   },
    chessField: {
       "& .cg-wrap": {
          backgroundImage: `url(${ChessBoardBlueTheme})`
@@ -61,16 +63,17 @@ const useStyles = makeStyles(theme => ({
 
 const ChessAnalysis = (props) => {
    const classes = useStyles();
-   const theme = useTheme();
+   // const theme = useTheme();
    const matchesLG = useMediaQuery(theme.breakpoints.up('lg'));
    const matchesMD = useMediaQuery(theme.breakpoints.up('md'));
    const matchesSM = useMediaQuery(theme.breakpoints.up('sm'));
    const matchesOnlyXS = useMediaQuery(theme.breakpoints.only('xs'));
+   const matchesOnlySM = useMediaQuery(theme.breakpoints.only('sm'));
+   const matchesOnlyMD = useMediaQuery(theme.breakpoints.only('md'));
    let refEl = React.createRef();
 
-   const [showBook, setShowBook] = useState(true);
+   const [showBook, setShowBook] = useState(false);
    const [showSearch, setShowSearch] = useState(false);
-   const boardSize = matchesLG ? "512px" : matchesOnlyXS ? "100vmin" : "448px"
 
    const {chessNotation: notation, chessOpeningExplorer: chess} = props.stores
 
@@ -82,8 +85,15 @@ const ChessAnalysis = (props) => {
       }
    }, [])
 
+   const handleSearchSubmit = () => {
+      notation.toFirst()
+      setShowSearch(false)
+      setShowBook(true)
+      chess.searchGames()
+   }
+
    return (
-     <>
+     <ThemeProvider theme={theme}>
         <Helmet
           title={"Ukrainian chess games database"}
         >
@@ -97,21 +107,24 @@ const ChessAnalysis = (props) => {
            <meta name="twitter:site:id" content="741164490"/>
         </Helmet>
 
-        <Grid container direction={"row"}>
+        <Grid container direction={"row"} className={classes.root}>
 
-           <Grid item container direction={"column"} lg style={{padding: matchesSM ? "8px" : 0}}>
-              {matchesLG && <Grid item style={{maxHeight: "17vh"}}>
+           {matchesLG && <Grid item container direction={"column"} lg style={{padding: matchesSM ? "8px" : 0}}>
+              <Grid item style={{maxHeight: "17vh"}}>
                  <GameInfo data={notation.gameHeaders}/>
-              </Grid>}
-           </Grid>
+              </Grid>
+              <Grid item>
+                 <img src={Colobki} alt={''} width={"100%"} height={"auto"}/>
+              </Grid>
+           </Grid>}
 
            <Grid item container justify={"center"}
                  style={{padding: matchesSM ? "8px" : 0}}
                  sm md lg>
-              {matchesMD && !matchesLG && <Grid item style={{maxHeight: "17vh", width: "90%"}}>
-                 <GameInfo data={notation.gameHeaders}/>
-              </Grid>}
               <Grid item>
+                 {matchesSM && !matchesLG && <Grid item style={{maxHeight: "17vh"}}>
+                    <GameInfo data={notation.gameHeaders}/>
+                 </Grid>}
                  <div ref={elem => refEl = elem} className={classes.chessField}
                       onWheel={e => e.deltaY < 0 ? notation.toPrev() : notation.toNext()}>
                     <ChessBoard
@@ -146,34 +159,30 @@ const ChessAnalysis = (props) => {
                     </Grid>
                  </Grid>}
 
-                 {showSearch && <Grid item><GamesSearch
-                   name={chess.searchData.name}
-                   color={chess.searchData.color === 'w'}
-                   onSubmit={() => {
-                      setShowSearch(false);
-                      chess.searchGames()
-                   }}
-                   onChangeColor={e => chess.setColor(e.target.checked ? 'b' : 'w')}
-                   onChangeName={e => chess.setName(e.target.value)}
-                   onKeyPressed={e =>
-                     e.keyCode === 13 && (chess.searchGames() | setShowSearch(false))}
-
-                 /></Grid>}
+                 {showSearch &&
+                 <Grid item>
+                    <Fade in={showSearch}>
+                       <GamesSearch
+                         name={chess.searchData.name}
+                         color={chess.searchData.color === 'w'}
+                         onSubmit={() => handleSearchSubmit()}
+                         onChangeColor={e => chess.setColor(e.target.checked ? 'b' : 'w')}
+                         onChangeName={e => chess.setName(e.target.value)}
+                         onKeyPressed={e => e.keyCode === 13 && handleSearchSubmit()}
+                       /></Fade>
+                 </Grid>}
               </Grid>
            </Grid>
 
            <Grid container direction={"column"} sm md lg item style={{
-              height: "90vh",
-              // padding: matchesMD ? "8px" : 4,
-              border: "1px solid #ccc",
-              // maxWidth: "90%",
-              // marginRight: "20px",
-              padding: matchesSM ? "8px" : 0
+              height: "92vh",
+              padding: matchesSM ? "8px" : 0,
+              maxHeight: matchesOnlyXS ? "calc(20vh + 100px)" : "none",
+              minHeight: matchesOnlyXS ? "calc(20vh + 100px)" : "none",
+
            }}>
-              <Grid sm md item style={{
-                 // minHeight: showBook ? "35vh" : "75vh",
-                 // maxHeight: showBook ? "35vh" : "75vh",
-                 overflow: "auto"
+              {(matchesSM || !showBook) && <Grid sm md item style={{
+                 overflow: "auto",
               }}>
                  <Notation
                    notation={notation.rootLine}
@@ -183,21 +192,25 @@ const ChessAnalysis = (props) => {
                    deleteRemaining={notation.deleteRemaining}
                    deleteLine={notation.deleteLine}
                  />
-              </Grid>
+              </Grid>}
 
-              {showBook && <Grid item sm md style={{overflow: "auto"}}>
-                 <ExplorerBox
-                   explorerData={chess.currentMoves}
-                   onMove={notation.makeSanMove}
-                   loading={chess.inProgress}
-                   currentGames={chess.currentGames}
-                   games={chess.currentGames}
-                   onSelectGame={(url) => {
-                      chess.getGameByUrl(url);
-                      setShowSearch(false)
-                   }}
-                   close={() => setShowBook(!showBook)}
-                 />
+              {showBook && <Grid item sm md style={{
+                 overflow: "auto",
+              }}>
+                 <Fade in={showBook}>
+                    <ExplorerBox
+                      explorerData={chess.currentMoves}
+                      onMove={notation.makeSanMove}
+                      loading={chess.inProgress}
+                      currentGames={chess.currentGames}
+                      games={chess.currentGames}
+                      onSelectGame={(url) => {
+                         if (matchesOnlyXS) setShowBook(false);
+                         chess.getGameByUrl(url);
+                      }}
+                      close={() => setShowBook(!showBook)}
+                    />
+                 </Fade>
               </Grid>}
 
               {matchesLG && <Grid item>
@@ -230,7 +243,7 @@ const ChessAnalysis = (props) => {
              </DialogActions>
            )}
         </Dialog>
-     </>
+     </ThemeProvider>
    )
 }
 

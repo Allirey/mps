@@ -7,14 +7,50 @@ import {
    TableRow,
    withStyles,
    TableContainer,
-   makeStyles, Typography, Button, Grid
+   makeStyles, Typography, Button, Grid, useTheme, useMediaQuery, Box
 } from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close';
 
-const result = {0: '0-1', 0.5: '1/2', 1: '1-0'}
+const WhiteWin = props => <span
+  style={{
+     backgroundColor: "#fff",
+     color:"black",
+     borderRadius: "3px",
+     textAlign: "center",
+     boxShadow:'0 -5px 7px rgb(0, 0, 0, 10%) inset',
+     padding: "3px 5px",
+  }}>
+   1-0</span>
+
+const BlackWin = props => <span
+  style={{
+     backgroundColor: "#555",
+     color:"white",
+     borderRadius: "3px",
+     textAlign: "center",
+     boxShadow:'0 5px 7px rgb(255, 255, 255, 20%) inset',
+     padding: "3px 5px",
+  }}>
+   0-1</span>
+
+const Draw = props => <span
+  style={{
+     backgroundColor: "#a0a0a0",
+     color:"white",
+     borderRadius: "3px",
+     textAlign: "center",
+     boxShadow:'0 5px 7px rgb(255, 255, 255, 20%) inset',
+     padding: "3px 5px",
+  }}>
+   ½-½</span>
+
+const result = {0: <BlackWin/>, 0.5: <Draw/>, 1: <WhiteWin/>}
+
 
 const useStyles = makeStyles((theme) => ({
    root: {
+      userSelect: "none",
+      // transition: "all 150ms",
       // fontSize: "0.8em",
       overflow: "auto",
       // height: "30vh",
@@ -24,20 +60,21 @@ const useStyles = makeStyles((theme) => ({
          backgroundColor: 'cyan'
       },
       "& $tr": {
-         height: "30px",
+         // height: "30px",
       },
       "& $th": {
-         backgroundColor: "#c0d6a7"
+         backgroundColor: "#d5f3e3",
+         padding: 0,
       },
 
       // borderBottom: "1px solid #ccc",
    },
    gamesTable: {
-      "&::-webkit-scrollbar": {display: "none",},
+      // "&::-webkit-scrollbar": {display: "none",},
       borderBottom: "1px solid #ccc",
       // height: "66vh",
       // height: "20vh",
-      "& tbody > tr": {cursor: "pointer",},
+      "& tbody > tr": {cursor: "pointer"},
       '& tbody > tr:nth-child(even)': {backgroundColor: '#f7f6f4'},
       '&:hover table > tbody > tr:hover': {backgroundColor: 'cyan'},
       "& thead > tr > th": {
@@ -46,10 +83,14 @@ const useStyles = makeStyles((theme) => ({
          border: "none",
       },
       "& tbody > tr > td": {
-         // fontSize: '0.9em',
-         padding: "0px 5px",
+         "& $span":{
+            display: "block",
+         },
+         fontSize: '0.8em',
+         padding: "5px 0px 5px 7px",
          border: "none",
       },
+
    }
 }));
 
@@ -58,22 +99,33 @@ const StyledTableCell = withStyles((theme) => ({
       backgroundColor: "#ebebeb",
       color: "black",
       border: "none",
+      textAlign: "center",
    },
    body: {
       fontSize: "0.9em",
-      padding: "2px 16px",
+      padding: "2px 12px",
       border: "none",
+      textAlign:"center",
    },
 }))(TableCell);
 
 const ExplorerBox = props => {
    const classes = useStyles();
-   const [old, setOld] = React.useState([])
+   const theme = useTheme();
+
+   const matchesSM = useMediaQuery(theme.breakpoints.up('sm'));
+   const matchesMD = useMediaQuery(theme.breakpoints.up('md'));
+   const matchesLG = useMediaQuery(theme.breakpoints.up('lg'));
+
+   const [oldGames, setOldGames] = React.useState([])
+   const [oldMoves, setOldMoves] = React.useState([])
    const [opacity, setOpacity] = React.useState(1)
+
 
    useEffect(() => {
       if (!props.loading) {
-         setOld(props.games)
+         setOldGames(props.games)
+         setOldMoves(props.explorerData)
          setOpacity(1)
       } else setOpacity(0.3)
    })
@@ -81,7 +133,7 @@ const ExplorerBox = props => {
    const games = props.games;
    const explorerData = props.explorerData;
 
-   if (!old || !old.length) return <Grid style={{height: "40vh"}} container justify={"center"} direction={"column"}
+   if (!oldGames || !oldGames.length) return <Grid style={{height: "40vh"}} container justify={"center"} direction={"column"}
                                          alignItems={"center"}>
       <Typography variant={"h6"} align={"center"}> No games found</Typography>
       <Typography align={"center"}>
@@ -89,18 +141,18 @@ const ExplorerBox = props => {
       </Typography>
    </Grid>
 
-   return <TableContainer className={classes.root}>
+   return <TableContainer className={classes.root} >
       <Table size={"small"}>
          <TableHead>
-            <TableRow>
+            <TableRow style={{textAlign:"center"}}>
                <StyledTableCell>Moves</StyledTableCell>
                <StyledTableCell>Games</StyledTableCell>
                <StyledTableCell>Score</StyledTableCell>
                <StyledTableCell>Year</StyledTableCell>
             </TableRow>
          </TableHead>
-         <TableBody>
-            {typeof (explorerData) == "undefined" ? null : explorerData.map((row, i) =>
+         <TableBody style={{opacity: opacity}}>
+            {oldMoves && oldMoves.map((row, i) =>
               <TableRow key={i} hover style={{cursor: "pointer"}}
                         onClick={() => props.onMove(row.move)}>
                  <StyledTableCell><strong>{row.move}</strong></StyledTableCell>
@@ -117,12 +169,18 @@ const ExplorerBox = props => {
                <TableCell colSpan={4} align={"center"}>Games ({props.games.length})</TableCell>
             </TableRow>
          </TableHead>
-         <TableBody style={{opacity: opacity}}>{old ? old.map((game, i) => (
-           <TableRow key={game.url} hover={true} onClick={() => props.onSelectGame(game.url)}>
-              <TableCell>{game.white.split(', ')[0]}</TableCell>
-              <TableCell>{game.black.split(', ')[0]}</TableCell>
-              <TableCell align={"center"}>{result[[game.result]]}</TableCell>
-              <TableCell>{game.date.split('.')[0]}</TableCell>
+         <TableBody style={{opacity: opacity}}>{oldGames ? oldGames.map((game, i) => (
+           <TableRow selected={false} key={game.url} hover={true} onClick={() => props.onSelectGame(game.url)}>
+              <TableCell width={'15%'}>
+                 <span>{game.whiteelo}</span>
+                 <span>{game.blackelo}</span>
+              </TableCell>
+              <TableCell>
+                 <span>{game.white}</span>
+                 <span>{game.black}</span>
+              </TableCell>
+              <TableCell width={'18%'}>{result[[game.result]]}</TableCell>
+              <TableCell width={'15%'}>{game.date.split('-')[0]}</TableCell>
            </TableRow>)) : <TableCell colSpan={4}>No search Results...</TableCell>}
          </TableBody>
       </Table>

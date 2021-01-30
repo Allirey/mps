@@ -1,5 +1,5 @@
 import React, {Fragment} from "react";
-import {makeStyles, Menu, MenuItem, Typography} from "@material-ui/core";
+import {makeStyles, Menu, MenuItem, Typography, useMediaQuery, useTheme} from "@material-ui/core";
 
 const initialState = {mouseX: null, mouseY: null,};
 const ACTIONS = {PROMOTE: 'promote', DELETE_LINE: 'deleteLine', DELETE_NEXT: 'deleteNext'}
@@ -43,6 +43,8 @@ function Notation(props) {
    const classes = useStyles();
    const [menuState, setMenuState] = React.useState(initialState);
    const [contextMove, setContextMove] = React.useState(null);
+   const theme = useTheme()
+   const matchesOnlyXS = useMediaQuery(theme.breakpoints.only('xs'))
 
    const handleClick = (event, move) => {
       event.preventDefault();
@@ -109,7 +111,8 @@ function Notation(props) {
      <>
         <div className={classes.root}>
            {nodes.length !== 1 ? renderTree(nodes) :
-             <Typography variant="h4" color="textSecondary" style={{opacity: 0.2}}>Notation</Typography>}
+             <Typography variant="h4" color="textSecondary"
+                         style={{opacity: 0.2}}>{!matchesOnlyXS && "Notation"}</Typography>}
         </div>
         <Menu
           className={classes.menu}

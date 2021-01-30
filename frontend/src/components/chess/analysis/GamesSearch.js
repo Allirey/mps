@@ -5,6 +5,7 @@ import SearchIcon from '@material-ui/icons/Search';
 const useStyles = makeStyles(theme => ({
    root: {
       padding: "4px 10px",
+      // border: "1px solid #000"
    },
 
 }))
@@ -33,23 +34,26 @@ export default function (props) {
    const classes = useStyles();
 
    return (
-     <Grid className={classes.root} container direction={"row"} alignItems={"center"} justify={"space-between"} spacing={1}>
+     <Grid className={classes.root} container direction={"row"} alignItems={"center"} justify={"space-evenly"}>
         <Grid item>
            <TextField
+             style={{width: 110}}
              autoFocus
              margin={"normal"}
-             variant={"outlined"}
              size={"small"}
-             label={"Player name"}
+             label={""}
+             placeholder={"Player name"}
+             InputProps={{disableUnderline: true}}
              value={props.name}
              onChange={props.onChangeName}
              onKeyDown={props.onKeyPressed}
+             spellCheck={false}
            />
         </Grid>
         <Grid item>
            <Typography component="div">
               <Grid component="label" container alignItems="center" spacing={1}>
-                 <Grid item>White</Grid>
+                 <Grid item>w</Grid>
                  <Grid item>
                     <StyledSwitch
                       disableRipple
@@ -58,15 +62,15 @@ export default function (props) {
                       size={"small"}
                     />
                  </Grid>
-                 <Grid item>Black</Grid>
+                 <Grid item>b</Grid>
               </Grid>
            </Typography>
         </Grid>
         <Grid item>
            <Button
              size={"small"}
-             disableRipple variant={"contained"}
-             style={{backgroundColor: "lightblue", textTransform: "none"}}
+             disableRipple
+             style={{maxWidth: 45, minWidth: 45}}
              onClick={props.onSubmit}
            ><SearchIcon/></Button>
         </Grid>

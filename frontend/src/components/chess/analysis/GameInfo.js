@@ -4,13 +4,14 @@ import {Grid, makeStyles, Paper, Typography} from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
    root: {
       padding: 8,
-      backgroundColor: "#ebebeb",
+      backgroundColor: "#d5f3e3",
       height: "120px",
       "& $h6": {
          fontSize: "1em",
          padding: 0,
          margin: 0,
-      }
+      },
+      marginBottom: theme.spacing(2)
    },
 }));
 
@@ -22,7 +23,7 @@ export const GameInfo = props => {
      }
 
    return <Paper>
-      <Grid container direction={"row"} justify={"space-between"} className={classes.root}
+      <Grid  container direction={"row"} justify={"space-between"} className={classes.root}
             style={{opacity: props.data ? 1 : 0.2}}>
          <Grid item xs={4}>
             <div><Typography gutterBottom={false} align={"left"} variant={"h6"}>{data.White.split(' ')[0].replace(',', '')}</Typography>

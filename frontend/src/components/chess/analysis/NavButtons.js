@@ -38,11 +38,14 @@ const useStyles = makeStyles(theme => ({
       maxWidth: "10vw",
    },
    active: {
-      backgroundColor: "green",
+      backgroundColor: "black",
       color: "white",
+      boxShadow: "0 0 5px #1b78d0, 0 0 20px #1b78d0",
+      // boxShadow: "0 2px 2px 0 rgb(0, 0, 0, 14%), 0 3px 1px -2px rgb(0, 0, 0, 20%), 0 1px 5px 0 rgb(0, 0, 0, 12%)",
       "&:hover": {
-         backgroundColor: "green",
+         backgroundColor: "black",
          color: "white",
+         // boxShadow: "0 0 5px #1b78d0,0 0 20px #1b78d0",
       }
    }
 
@@ -60,31 +63,28 @@ export default function (props) {
      <div className={`${classes.root} ${!matchesSM && classes.mobile}`}>
 
         <Button className={`${!matchesSM ? classes.ffNavBtn : null} ${props.showBook && classes.active}`} disableRipple
-                size={"small"} variant={"outlined"}
+                size={"small"}
                 onClick={props.onBookClick}> <EqualizerIcon/></Button>
 
         <Button className={`${!matchesSM ? classes.ffNavBtn : null} ${props.showSearch && classes.active}`}
-                disableRipple size={"small"} variant={"outlined"}
+                disableRipple size={"small"}
                 onClick={props.onSearchClick}
         ><SearchIcon/></Button>
 
 
-        <Button className={!matchesSM && classes.ffNavBtn} disableRipple size={"small"} variant={"outlined"}
+        <Button className={!matchesSM && classes.ffNavBtn} disableRipple size={"small"}
                 onClick={props.toFirst}><FastRewindTwoToneIcon/></Button>
 
-        <Button className={!matchesSM && classes.navBtn} disableRipple size={"small"} variant={"contained"}
-                style={{backgroundColor: "#00CED1"}}
+        <Button className={!matchesSM && classes.navBtn} disableRipple size={"small"}
                 onClick={props.toPrev}><SkipPreviousTwoToneIcon/></Button>
 
-        <Button className={!matchesSM && classes.navBtn} disableRipple size={"small"} variant={"contained"}
-                style={{backgroundColor: "#00CED1"}}
+        <Button className={!matchesSM && classes.navBtn} disableRipple size={"small"}
                 onClick={props.toNext}><SkipNextTwoToneIcon/></Button>
 
-        <Button className={!matchesSM && classes.ffNavBtn} disableRipple size={"small"} variant={"outlined"}
+        <Button className={!matchesSM && classes.ffNavBtn} disableRipple size={"small"}
                 onClick={props.toLast}><FastForwardTwoToneIcon/></Button>
 
-        <Button className={!matchesSM && classes.ffNavBtn} disableRipple size={"small"} variant={"contained"}
-                color={"primary"}
+        <Button className={!matchesSM && classes.ffNavBtn} disableRipple size={"small"}
                 onClick={props.onFlip}><SwapVertTwoToneIcon/></Button>
 
         {/*<Button variant={"contained"}>reset</Button>*/}
