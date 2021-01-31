@@ -1,4 +1,4 @@
-import React from "react";
+import React, {memo} from "react";
 import {Button, Grid, TextField, Switch, Typography, withStyles, makeStyles} from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
 
@@ -30,7 +30,7 @@ const StyledSwitch = withStyles((theme) => ({
    checked: {},
 }))(Switch);
 
-export default function (props) {
+const SearchBox = props => {
    const classes = useStyles();
 
    return (
@@ -45,8 +45,8 @@ export default function (props) {
              placeholder={"Player name"}
              InputProps={{disableUnderline: true}}
              value={props.name}
-             onChange={props.onChangeName}
-             onKeyDown={props.onKeyPressed}
+             onChange={e => props.onChangeName(e.target.value)}
+             onKeyDown={e => e.keyCode === 13 && props.onSubmit()}
              spellCheck={false}
            />
         </Grid>
@@ -57,8 +57,8 @@ export default function (props) {
                  <Grid item>
                     <StyledSwitch
                       disableRipple
-                      checked={!props.color}
-                      onChange={props.onChangeColor}
+                      checked={props.color}
+                      onChange={e => props.onChangeColor(e.target.checked ? 'b' : 'w')}
                       size={"small"}
                     />
                  </Grid>
@@ -77,3 +77,5 @@ export default function (props) {
      </Grid>
    )
 }
+
+export default memo(SearchBox)

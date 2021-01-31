@@ -135,15 +135,18 @@ class NotationStore {
    inCheck = false
 
    boardOrientation = "white";
-   gameHeaders = null
+   gameHeaders = {
+      White: "?", WhiteElo: "0", Black: "?", BlackElo: "0", Date: "????.??.??", Event: "?", Result: "*", Site: '?'
+   }
 
    loadGame = (pgn) => {
       this.chessGame.load_pgn(pgn, {sloppy: true})
-      this.gameHeaders = this.chessGame.header()
+      let headers = this.chessGame.header() //todo refactor this
 
       let history = this.chessGame.history()
 
       this.resetNode()
+      this.gameHeaders = headers // todo refactor this
 
       history.forEach(m => {
          let move = this.chessGame.move(m, {sloppy: true});
@@ -207,6 +210,10 @@ class NotationStore {
 
    resetNode() {
       this.chessGame = new Chess()
+
+      this.gameHeaders = {
+         White: "?", WhiteElo: "0", Black: "?", BlackElo: "0", Date: "????.??.??", Event: "?", Result: "*", Site: '?'
+      }
 
       const {line, node} = new ChessMoveLine().append({
          fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', san: '', from: '', to: ''
@@ -311,6 +318,44 @@ class NotationStore {
       move.moveLine.deleteNextMoves(move)
 
       this.chessGame.load(move.fen)
+   }
+
+   gameToPgn = () => {
+      const toArr = linked => {
+         const nodes = [];
+
+         let currentNode = linked.first;
+         while (currentNode) {
+            nodes.push(currentNode);
+            currentNode = currentNode.next;
+         }
+         return nodes
+      }
+
+      let headers = ''
+      for (let key in this.gameHeaders) {
+         headers += `[${key + ''} "${this.gameHeaders[key] + ''}"]\r\n`
+      }
+      headers += '\r\n'
+
+      let moves = ''
+      const processLine = (root, appender = 0) => {
+         const moveCount = i => Math.round((i + appender + 1) / 2)
+         root.forEach((move, i) => {
+            moves += ((i + appender) % 2 ? `${moveCount(i)}.` : (!i && !!move.san) ? `${moveCount(i) - 1}...` : '') + `${move.san} `
+            if (move.subLines) {
+               move.subLines.forEach(line => {
+                  moves += `(`
+                  processLine(toArr(line), i + appender)
+                  moves += `)`
+               })
+            }
+         })
+      }
+      processLine(toArr(this.rootLine))
+      moves += ` ${this.gameHeaders.Result || '*'}\r\n\r\n`
+
+      return headers + moves.slice(1)
    }
 }
 

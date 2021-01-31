@@ -17,14 +17,11 @@ const useStyles = makeStyles((theme) => ({
 
 export const GameInfo = props => {
    const classes = useStyles();
-   const data = props.data ? props.data :
-     {
-        White: "White", WhiteElo: "ELO", Black: "Black", BlackElo: "ELO", Date: "Date", Event: "Event", Result: "?-?"
-     }
+   const data = props.data
 
    return <Paper>
       <Grid  container direction={"row"} justify={"space-between"} className={classes.root}
-            style={{opacity: props.data ? 1 : 0.2}}>
+            style={{opacity: data.White === '?' && data.Black === '?'  ? 0.2 : 1}}>
          <Grid item xs={4}>
             <div><Typography gutterBottom={false} align={"left"} variant={"h6"}>{data.White.split(' ')[0].replace(',', '')}</Typography>
             </div>

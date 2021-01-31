@@ -73,18 +73,20 @@ const ChessAnalysis = (props) => {
 
    const [showBook, setShowBook] = useState(false);
    const [showSearch, setShowSearch] = useState(false);
+   const [name, setName] = useState('')
+   const [color, setColor] = useState('w')
 
    const {chessNotation: notation, chessOpeningExplorer: chess} = props.stores
 
    const keyHandler = e => {
-         if (e.which > 36 && e.which < 41 && e.target.tagName !== "INPUT") {
-            if (e.which === 37) notation.toPrev();
-            else if (e.which === 38) notation.toFirst();
-            else if (e.which === 39) notation.toNext();
-            else notation.toLast();
-            e.preventDefault();
-         }
+      if (e.which > 36 && e.which < 41 && e.target.tagName !== "INPUT") {
+         if (e.which === 37) notation.toPrev();
+         else if (e.which === 38) notation.toFirst();
+         else if (e.which === 39) notation.toNext();
+         else notation.toLast();
+         e.preventDefault();
       }
+   }
 
    useEffect(() => {
       refEl.addEventListener('wheel', e => e.preventDefault(), {passive: false});
@@ -97,11 +99,48 @@ const ChessAnalysis = (props) => {
       }
    }, [])
 
-   const handleSearchSubmit = () => {
+   const handleSearchSubmit = (name, color) => {
       notation.toFirst()
       setShowSearch(false)
       setShowBook(true)
+
+      chess.setName(name)
+      chess.setColor(color)
       chess.searchGames()
+   }
+
+   const download = (filename, text) => {
+      let element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+      element.setAttribute('download', filename);
+
+      element.style.display = 'none';
+      document.body.appendChild(element);
+
+      element.click();
+
+      document.body.removeChild(element);
+   }
+
+   const translateMap = {
+      'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'jo', 'ж': 'zh', 'з': 'z', 'и': 'i',
+      'й': 'j', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't',
+      'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ъ': '', 'ы': 'y',
+      'ь': '', 'э': 'e', 'ю': 'ju', 'я': 'ja', 'і': 'i', 'є': 'e', 'ї': 'yi'
+   }
+
+   const slugify = str => {
+      return str.toLowerCase().split('').map(x => translateMap[[x]] || x).join('')
+        .normalize('NFKD').trim().replace(/[^a-z0-9 ]/g, '')
+        .replace(/\s+/g, '-');
+   }
+
+   const createFileName = () => {
+      let white = notation.gameHeaders.White.split(' ')[0]
+      let black = notation.gameHeaders.Black.split(' ')[0]
+      let year = notation.gameHeaders.Date.split('.')[0]
+
+      return slugify(`${white} ${black} ${year}`)
    }
 
    return (
@@ -163,6 +202,9 @@ const ChessAnalysis = (props) => {
                          toNext={notation.toNext}
                          toPrev={notation.toPrev}
                          onFlip={notation.flipBoard}
+                         onCopy={() => navigator.clipboard.writeText(notation.gameToPgn())} //works only on localhost and HTTPS!!
+                         onReset={() => notation.resetNode()}
+                         onDownload={() => download(`${createFileName()}.pgn`, notation.gameToPgn())}
                          onSearchClick={() => setShowSearch(!showSearch)}
                          onBookClick={() => setShowBook(!showBook)}
                          showBook={showBook}
@@ -175,12 +217,11 @@ const ChessAnalysis = (props) => {
                  <Grid item>
                     <Fade in={showSearch}>
                        <GamesSearch
-                         name={chess.searchData.name}
-                         color={chess.searchData.color === 'w'}
-                         onSubmit={() => handleSearchSubmit()}
-                         onChangeColor={e => chess.setColor(e.target.checked ? 'b' : 'w')}
-                         onChangeName={e => chess.setName(e.target.value)}
-                         onKeyPressed={e => e.keyCode === 13 && handleSearchSubmit()}
+                         name={name}
+                         color={color !== 'w'}
+                         onSubmit={() => handleSearchSubmit(name, color)}
+                         onChangeColor={setColor}
+                         onChangeName={setName}
                        /></Fade>
                  </Grid>}
               </Grid>
@@ -233,6 +274,9 @@ const ChessAnalysis = (props) => {
                       toNext={notation.toNext}
                       toPrev={notation.toPrev}
                       onFlip={notation.flipBoard}
+                      onCopy={() => navigator.clipboard.writeText(notation.gameToPgn())} //works only on localhost and HTTPS!!
+                      onReset={() => notation.resetNode()}
+                      onDownload={() => download(`${createFileName()}.pgn`, notation.gameToPgn())}
                       onSearchClick={() => setShowSearch(!showSearch)}
                       onBookClick={() => setShowBook(!showBook)}
                       showBook={showBook}
