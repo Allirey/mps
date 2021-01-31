@@ -22,12 +22,11 @@ import Colobki from './undraw_elements_cipa.svg'
 import {
    Grid,
    makeStyles,
-   useTheme,
    useMediaQuery,
    Dialog,
    DialogActions,
    Button,
-   createMuiTheme, Fade, ThemeProvider
+   createMuiTheme, Fade,
 } from "@material-ui/core";
 import withStore from "../../hocs/withStore";
 import {Helmet} from "react-helmet";
@@ -77,11 +76,24 @@ const ChessAnalysis = (props) => {
 
    const {chessNotation: notation, chessOpeningExplorer: chess} = props.stores
 
+   const keyHandler = e => {
+         if (e.which > 36 && e.which < 41 && e.target.tagName !== "INPUT") {
+            if (e.which === 37) notation.toPrev();
+            else if (e.which === 38) notation.toFirst();
+            else if (e.which === 39) notation.toNext();
+            else notation.toLast();
+            e.preventDefault();
+         }
+      }
+
    useEffect(() => {
       refEl.addEventListener('wheel', e => e.preventDefault(), {passive: false});
+      document.addEventListener('keydown', keyHandler)
+
       return () => {
          notation.chessGame.reset()
          notation.resetNode()
+         document.removeEventListener('keydown', keyHandler)
       }
    }, [])
 
@@ -93,7 +105,7 @@ const ChessAnalysis = (props) => {
    }
 
    return (
-     <ThemeProvider theme={theme}>
+     <>
         <Helmet
           title={"Ukrainian chess games database"}
         >
@@ -243,7 +255,7 @@ const ChessAnalysis = (props) => {
              </DialogActions>
            )}
         </Dialog>
-     </ThemeProvider>
+     </>
    )
 }
 
