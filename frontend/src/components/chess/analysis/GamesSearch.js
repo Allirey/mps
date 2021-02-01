@@ -36,21 +36,6 @@ const SearchBox = props => {
    return (
      <Grid className={classes.root} container direction={"row"} alignItems={"center"} justify={"space-evenly"}>
         <Grid item>
-           <TextField
-             style={{width: 110}}
-             autoFocus
-             margin={"normal"}
-             size={"small"}
-             label={""}
-             placeholder={"Player name"}
-             InputProps={{disableUnderline: true}}
-             value={props.name}
-             onChange={e => props.onChangeName(e.target.value)}
-             onKeyDown={e => e.keyCode === 13 && props.onSubmit()}
-             spellCheck={false}
-           />
-        </Grid>
-        <Grid item>
            <Typography component="div">
               <Grid component="label" container alignItems="center" spacing={1}>
                  <Grid item>w</Grid>
@@ -65,6 +50,21 @@ const SearchBox = props => {
                  <Grid item>b</Grid>
               </Grid>
            </Typography>
+        </Grid>
+        <Grid item>
+           <TextField
+             style={{width: 110}}
+             autoFocus
+             margin={"normal"}
+             size={"small"}
+             label={""}
+             placeholder={"Player name"}
+             InputProps={{disableUnderline: true}}
+             value={props.name}
+             onChange={e => props.onChangeName(e.target.value)}
+             onKeyDown={e => e.keyCode === 13 && props.onSubmit()}
+             spellCheck={false}
+           />
         </Grid>
         <Grid item>
            <Button
