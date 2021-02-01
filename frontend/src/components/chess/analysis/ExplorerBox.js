@@ -43,7 +43,6 @@ const useStyles = makeStyles((theme) => ({
       padding: "2px 0",
       textAlign: "center",
       boxShadow: '0 -5px 7px rgb(0, 0, 0, 10%) inset',
-      borderRadius: "3px 0 0 3px",
    },
    black: {
       backgroundColor: "#555",
@@ -51,7 +50,6 @@ const useStyles = makeStyles((theme) => ({
       padding: "2px 0",
       textAlign: "center",
       boxShadow: '0 5px 7px rgb(255, 255, 255, 20%) inset',
-      borderRadius: "0 3px 3px 0",
    },
    draw: {
       backgroundColor: "#a0a0a0",
@@ -60,15 +58,22 @@ const useStyles = makeStyles((theme) => ({
       textAlign: "center",
       boxShadow: '0 5px 7px rgb(255, 255, 255, 20%) inset',
    },
-   result: {borderRadius: "3px",},
+   result: {borderRadius: "3px"},
    bar: {
       whiteSpace: "nowrap",
       width: "100%",
       fontSize: "0.8em",
-      lineHeight: "15px",
       verticalAlign: 'middle',
+      "& $span:first-child": {
+         borderLeftWidth: "1px",
+         borderRadius: "3px 0 0 3px",
+      },
+      "& $span:last-child": {
+         borderRightWidth: "1px",
+         borderRadius: "0 3px 3px 0",
+      },
       "& $span": {
-         height: "15px",
+         height: "16px",
          border: '0 solid #d9d9d9',
          borderWidth: '1px 0',
          verticalAlign: "middle",
@@ -158,15 +163,15 @@ const ExplorerBox = props => {
                     <StyledTableCell>{total}</StyledTableCell>
                     <StyledTableCell>
                        <div className={classes.bar}>
-                        <span className={classes.white}
+                        {!!white && <span className={classes.white}
                               style={{width: `${white}%`, display: "inline-block"}}>
-                             {`${white > 11 ? white.toFixed(0) : ''}${white > 20 ? '%' : ''}`}</span>
-                          <span className={classes.draw}
+                             {`${white > 11 ? white.toFixed(0) : ''}${white > 20 ? '%' : ''}`}</span>}
+                          {!!draw && <span className={classes.draw}
                                 style={{width: `${draw}%`, display: "inline-block"}}>
-                           {`${draw > 11 ? draw.toFixed(0) : ''}${draw > 20 ? '%' : ''}`}</span>
-                          <span className={classes.black}
+                           {`${draw > 11 ? draw.toFixed(0) : ''}${draw > 20 ? '%' : ''}`}</span>}
+                          {!!black && <span className={classes.black}
                                 style={{width: `${black}%`, display: "inline-block"}}>
-                           {`${black > 11 ? black.toFixed(0) : ''}${black > 20 ? '%' : ''}`}</span>
+                           {`${black > 11 ? black.toFixed(0) : ''}${black > 20 ? '%' : ''}`}</span>}
                        </div>
                     </StyledTableCell>
                     <StyledTableCell>{row.date.split('-')[0]}</StyledTableCell>
