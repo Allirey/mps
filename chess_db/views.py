@@ -1,4 +1,4 @@
-from django.db.models import Q, Count, Sum, Max, Value, IntegerField, ExpressionWrapper
+from django.db.models import Q, Count, Sum, Case, Max, When, Value, IntegerField, ExpressionWrapper
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -35,10 +35,9 @@ class ChessOpeningExplorerView(APIView):
                                                                    'b': Q(game__black__istartswith=name)}[color]) \
             .values('move') \
             .annotate(date=Max('game__date')) \
-            .annotate(games=Count('move')) \
-            .annotate(score=ExpressionWrapper(Sum('game__result') / Count('move') * Value(100),
-                                              output_field=IntegerField())) \
-            .order_by('-games')
+            .annotate(white=Count(Case(When(game__result=1, then=1), output_field=IntegerField()))) \
+            .annotate(draw=Count(Case(When(game__result=0.5, then=1), output_field=IntegerField()))) \
+            .annotate(black=Count(Case(When(game__result=0, then=1), output_field=IntegerField()))) \
 
         games = ChessGame.objects.filter({'w': Q(white__istartswith=name),
                                           'b': Q(black__istartswith=name)}[color]
