@@ -1,8 +1,33 @@
 import React, {Fragment} from "react";
-import {makeStyles, Menu, MenuItem, Typography, useMediaQuery, useTheme} from "@material-ui/core";
+import {
+   makeStyles,
+   Menu,
+   MenuItem,
+   Typography,
+   useMediaQuery,
+   ThemeProvider,
+   createMuiTheme
+} from "@material-ui/core";
 
 const initialState = {mouseX: null, mouseY: null,};
 const ACTIONS = {PROMOTE: 'promote', DELETE_LINE: 'deleteLine', DELETE_NEXT: 'deleteNext'}
+
+const theme = createMuiTheme({
+   typography: {
+      fontFamily: [
+         '-apple-system',
+         'BlinkMacSystemFont',
+         '"Segoe UI"',
+         'Roboto',
+         '"Helvetica Neue"',
+         'Arial',
+         'sans-serif',
+         '"Apple Color Emoji"',
+         '"Segoe UI Emoji"',
+         '"Segoe UI Symbol"',
+      ].join(','),
+   },
+});
 
 const useStyles = makeStyles({
    root: {
@@ -12,11 +37,14 @@ const useStyles = makeStyles({
       padding: 8,
       lineHeight: "1.3",
 
+
       "& $span": {
          cursor: "pointer",
          whiteSpace: 'nowrap',
          padding: 1,
          borderRadius: 4,
+         fontSize: "0.9em",
+         fontWeight: 500,
       },
       "& span.active": {
          backgroundColor: "#435866",
@@ -43,7 +71,6 @@ function Notation(props) {
    const classes = useStyles();
    const [menuState, setMenuState] = React.useState(initialState);
    const [contextMove, setContextMove] = React.useState(null);
-   const theme = useTheme()
    const matchesOnlyXS = useMediaQuery(theme.breakpoints.only('xs'))
 
    const handleClick = (event, move) => {
@@ -92,13 +119,14 @@ function Notation(props) {
         <Fragment>
            {data.map((node, i) => {
               return <Fragment key={i}>
-                 <span
+                 <Typography
+                   component={"span"}
                    onContextMenu={(e) => handleClick(e, node)}
                    key={`${node.san}${node.fen}`}
                    onClick={() => props.jumpTo(node)}
                    className={props.currentNode === node && !!node.san ? "active" : null}>
          {(i + appender) % 2 ? `${moveCount(i)}.` : !i && !!node.san && `${moveCount(i) - 1}...`}{node.san}
-         </span>{" "}{node.subLines.map((variation, j) =>
+         </Typography>{" "}{node.subLines.map((variation, j) =>
                 <blockquote key={`${variation.first.fen}${j + 100}`}>{renderTree(toArr(variation), i + appender)}
                 </blockquote>)}
               </Fragment>
@@ -108,7 +136,7 @@ function Notation(props) {
    }
 
    return (
-     <>
+     <ThemeProvider theme={theme}>
         <div className={classes.root}>
            {nodes.length !== 1 ? renderTree(nodes) :
              <Typography variant="h4" color="textSecondary"
@@ -131,7 +159,7 @@ function Notation(props) {
               moves</MenuItem>
            <MenuItem tabIndex={0} disableRipple onClick={() => handleClose(ACTIONS.DELETE_LINE)}>delete line</MenuItem>
         </Menu>
-     </>
+     </ThemeProvider>
    )
 }
 
