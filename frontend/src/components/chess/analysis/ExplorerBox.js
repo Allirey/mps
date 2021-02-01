@@ -14,27 +14,17 @@ import CloseIcon from '@material-ui/icons/Close';
 const useStyles = makeStyles((theme) => ({
    root: {
       userSelect: "none",
-      // transition: "all 150ms",
-      // fontSize: "0.8em",
       overflow: "auto",
-      // height: "30vh",
-
-      // "& $tr:hover": {backgroundColor: "cyan"},
-      '&:hover table > tbody > tr:hover': {backgroundColor: 'cyan'},
-      "& $tr": {
-         // height: "30px",
-      },
+      '&:hover table > tbody > tr:hover': {backgroundColor: '#fff9d6'},
+   },
+   movesTable: {
+      '& tbody > tr:nth-child(even)': {backgroundColor: '#f7f6f4'},
       "& $th": {backgroundColor: "#d5f3e3", padding: 0,},
-      // borderBottom: "1px solid #ccc",
    },
    gamesTable: {
-      // "&::-webkit-scrollbar": {display: "none",},
       borderBottom: "1px solid #ccc",
-      // height: "66vh",
-      // height: "20vh",
       "& tbody > tr": {cursor: "pointer"},
       '& tbody > tr:nth-child(even)': {backgroundColor: '#f7f6f4'},
-      '&:hover table > tbody > tr:hover': {backgroundColor: 'cyan'},
       "& thead > tr > th": {
          backgroundColor: "#ebebeb",
          color: "black",
@@ -50,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
    white: {
       backgroundColor: "#fff",
       color: "black",
-      // padding: "3px 5px",
+      padding: "2px 0",
       textAlign: "center",
       boxShadow: '0 -5px 7px rgb(0, 0, 0, 10%) inset',
       borderRadius: "3px 0 0 3px",
@@ -58,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
    black: {
       backgroundColor: "#555",
       color: "white",
-      // padding: "3px 5px",
+      padding: "2px 0",
       textAlign: "center",
       boxShadow: '0 5px 7px rgb(255, 255, 255, 20%) inset',
       borderRadius: "0 3px 3px 0",
@@ -66,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
    draw: {
       backgroundColor: "#a0a0a0",
       color: "white",
-      // padding: "3px 5px",
+      padding: "2px 0",
       textAlign: "center",
       boxShadow: '0 5px 7px rgb(255, 255, 255, 20%) inset',
    },
@@ -76,15 +66,15 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
       fontSize: "0.8em",
       lineHeight: "15px",
-      verticalAlign:'middle',
-      "& $span":{
-         height:"15px",
+      verticalAlign: 'middle',
+      "& $span": {
+         height: "15px",
          border: '0 solid #d9d9d9',
-    borderWidth: '1px 0',
+         borderWidth: '1px 0',
          verticalAlign: "middle",
          padding: "2px 0"
       }
-   }
+   },
 }));
 
 const StyledTableCell = withStyles((theme) => ({
@@ -111,7 +101,6 @@ const ExplorerBox = props => {
    }
 
    const getPercentage = data => {
-      console.log(typeof data.white);
       let total = data.white + data.draw + data.black
       let white = +(data.white / total * 100).toFixed(1)
       let draw = +(data.draw / total * 100).toFixed(1)
@@ -139,9 +128,6 @@ const ExplorerBox = props => {
       } else setOpacity(0.3)
    })
 
-   const games = props.games;
-   const explorerData = props.explorerData;
-
    if (!oldGames || !oldGames.length) return <Grid style={{height: "40vh"}} container justify={"center"}
                                                    direction={"column"}
                                                    alignItems={"center"}>
@@ -152,17 +138,17 @@ const ExplorerBox = props => {
    </Grid>
 
    return <TableContainer className={classes.root}>
-      <Table size={"small"}>
+      <Table size={"small"} className={classes.movesTable}>
          <TableHead>
             <TableRow>
                <StyledTableCell width={"15%"}>Moves</StyledTableCell>
-               <StyledTableCell width={"15%"}>Games</StyledTableCell>
-               <StyledTableCell width={"45%"}>White/Draw/Black</StyledTableCell>
-               <StyledTableCell width={"15%"}>Year</StyledTableCell>
+               <StyledTableCell width={"14%"}>Games</StyledTableCell>
+               <StyledTableCell width={"48%"}>White/Draw/Black</StyledTableCell>
+               <StyledTableCell width={"12%"}>Year</StyledTableCell>
             </TableRow>
          </TableHead>
          <TableBody style={{opacity: opacity}}>
-            {oldMoves && oldMoves.sort((x, y) => (y.white + y.draw + y.black) - (x.white + x.draw + x.black))
+            {oldMoves && oldMoves.slice().sort((x, y) => (y.white + y.draw + y.black) - (x.white + x.draw + x.black))
               .map((row, i) => {
                  const {total, white, draw, black} = getPercentage(row)
 
