@@ -125,7 +125,7 @@ export default function (props) {
    const matchesLG = useMediaQuery(theme.breakpoints.up('lg'));
 
    return (
-     <div className={`${classes.root} ${!matchesSM && classes.mobile}`}>
+     <div className={`${classes.root} ${!matchesSM ? classes.mobile : null}`}>
 
         <Button className={`${!matchesSM ? classes.ffNavBtn : null} ${props.showBook && classes.active}`} disableRipple
                 size={"small"}
@@ -137,20 +137,20 @@ export default function (props) {
         ><SearchIcon/></Button>
 
 
-        <Button className={!matchesSM && classes.ffNavBtn} disableRipple size={"small"}
+        <Button className={!matchesSM ? classes.ffNavBtn : null} disableRipple size={"small"}
                 onClick={props.toFirst}><FastRewindTwoToneIcon/></Button>
 
-        <Button className={!matchesSM && classes.navBtn} disableRipple size={"small"}
+        <Button className={!matchesSM ? classes.navBtn : null} disableRipple size={"small"}
                 onClick={props.toPrev}><SkipPreviousTwoToneIcon/></Button>
 
-        <Button className={!matchesSM && classes.navBtn} disableRipple size={"small"}
+        <Button className={!matchesSM ? classes.navBtn : null} disableRipple size={"small"}
                 onClick={props.toNext}><SkipNextTwoToneIcon/></Button>
 
-        <Button className={!matchesSM && classes.ffNavBtn} disableRipple size={"small"}
+        <Button className={!matchesSM ? classes.ffNavBtn : null} disableRipple size={"small"}
                 onClick={props.toLast}><FastForwardTwoToneIcon/></Button>
 
         <Button
-          className={open && classes.active}
+          className={open ? classes.active : null}
           disableRipple
           ref={anchorRef}
           aria-controls={open ? 'menu-list-grow' : undefined}
