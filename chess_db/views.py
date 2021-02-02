@@ -42,7 +42,7 @@ class ChessOpeningExplorerView(APIView):
         games = ChessGame.objects.filter({'w': Q(white__istartswith=name),
                                           'b': Q(black__istartswith=name)}[color]
                                          & Q(moves__fen__startswith=fen)) \
-            .values('white', 'black', 'result', 'date', 'url', 'whiteelo', 'blackelo').order_by('-date')
+            .values('white', 'black', 'result', 'date', 'url', 'whiteelo', 'blackelo').order_by('-date').distinct()
 
         return Response({'moves': moves, 'games': games})
 
