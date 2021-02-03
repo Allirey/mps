@@ -22,6 +22,11 @@ const apiSearchAutocomplete = apiBase + '/autocomplete/';
 
 const apiArticles = apiBase + '/blog/'
 
+const lichessExplorerBaseApi = 'https://explorer.lichess.ovh'
+const lichessExplorerMasterApi = lichessExplorerBaseApi + '/master'
+const lichessExplorerApi = lichessExplorerBaseApi + '/lichess'
+const lichessGameApi = 'https://lichess.org/game/export/'
+
 class api {
    constructor(rootStore) {
       this.rootStore = rootStore;
@@ -35,12 +40,12 @@ class api {
       getUser: (username) => this.requests.get(`${apiPublicUser}${username}/`),
       editUserData: (username, data) => this.requests.patch(`${apiPublicUser}${username}/`,
         {body: JSON.stringify(data)}, true),
-      login: (username, password) => this.requests.post(apiLogin, {body: JSON.stringify({username, password})}),
+      login: (username, password) => this.requests.post(apiLogin, {body: JSON.stringify({username, password})}, true),
       logout: () => this.baseReq(apiLogout, 'POST', {}, false).then(data => {
          this.token = undefined;
          return data;
       }),
-      refresh: () => this.baseReq(apiRefresh, 'POST', {}, false),
+      refresh: () => this.baseReq(apiRefresh, 'POST', {}, true),
       activate: (id, token) => this.requests.get(`${apiActivation}${id}/${token}/`),
       changePassword: (old_password, password, password2) => this.requests.put(apiChangePassword, {
          body: JSON.stringify({old_password, password, password2})
@@ -66,7 +71,21 @@ class api {
       ),
       playerSearchAutocomplete: (name) =>
         (this.requests.get(apiSearchAutocomplete + '?' + new URLSearchParams({name}))
-        )
+        ),
+      explorerLichessMaster: (fen) => this.requests.get(lichessExplorerMasterApi + "?" + new URLSearchParams({
+         fen,
+      })),
+      explorerLichess: (fen) => this.requests.get(lichessExplorerApi + "?" + new URLSearchParams(
+        {
+           fen,
+           "variant": "standard",
+           "ratings[0]": 2200,
+           "ratings[1]": 2500,
+           "speeds[0]":"blitz",
+           "speeds[1]":"rapid",
+           "speeds[2]":"classical",
+        })),
+      getGameLichess: (url) => this.requests.get(`${lichessGameApi}${url}?${new URLSearchParams({pgnInJson: true})}`)
    }
 
    Posts = {
@@ -88,18 +107,18 @@ class api {
    baseReq(url, method, options, withAuth) {
       return fetch(url, {
          headers: {
-            'Content-Type': 'application/json',
+            ...withAuth ? {'Content-Type': 'application/json'} : {},
             'Accept': 'application/json',
             ...this.authHeader(withAuth)
          },
-         credentials: 'include',
+         ...withAuth ? {credentials: 'include'} : {},
          ...options,
          method: method,
       }).then(response => {
 
-          if (response.status >= 200 && response.status < 300 && response.status !== 204) {
+         if (response.status >= 200 && response.status < 300 && response.status !== 204) {
             return response.json();
-         }else if (response.status === 204){
+         } else if (response.status === 204) {
             return {"message": "No Content"}
          }
 
