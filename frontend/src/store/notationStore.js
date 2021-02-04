@@ -165,7 +165,8 @@ class NotationStore {
       this.chessGame.load(node.fen)
 
       this.rootStore.chessOpeningExplorer.searchData.fen = node.fen
-      this.rootStore.chessOpeningExplorer.searchGames();
+      // this.rootStore.chessOpeningExplorer.searchGames();
+      this.rootStore.chessOpeningExplorer.getExplorerData();
    };
 
    toNext = () => {
@@ -175,7 +176,8 @@ class NotationStore {
       this.chessGame.load(node.fen)
 
       this.rootStore.chessOpeningExplorer.searchData.fen = node.fen
-      this.rootStore.chessOpeningExplorer.searchGames();
+      // this.rootStore.chessOpeningExplorer.searchGames();
+      this.rootStore.chessOpeningExplorer.getExplorerData();
    };
 
    toPrev = () => {
@@ -187,7 +189,8 @@ class NotationStore {
       this.chessGame.load(node.fen)
 
       this.rootStore.chessOpeningExplorer.searchData.fen = node.fen
-      this.rootStore.chessOpeningExplorer.searchGames();
+      // this.rootStore.chessOpeningExplorer.searchGames();
+      this.rootStore.chessOpeningExplorer.getExplorerData();
    };
 
    toFirst = () => {
@@ -196,7 +199,8 @@ class NotationStore {
       this.chessGame.load(this.rootLine.first.fen)
 
       this.rootStore.chessOpeningExplorer.searchData.fen = this.rootLine.first.fen
-      this.rootStore.chessOpeningExplorer.searchGames();
+      // this.rootStore.chessOpeningExplorer.searchGames();
+      this.rootStore.chessOpeningExplorer.getExplorerData();
    };
 
    toLast = () => {
@@ -205,7 +209,8 @@ class NotationStore {
       this.chessGame.load(this.rootLine.last.fen)
 
       this.rootStore.chessOpeningExplorer.searchData.fen = this.rootLine.last.fen
-      this.rootStore.chessOpeningExplorer.searchGames();
+      // this.rootStore.chessOpeningExplorer.searchGames();
+      this.rootStore.chessOpeningExplorer.getExplorerData();
    };
 
    resetNode() {
@@ -224,7 +229,8 @@ class NotationStore {
       this.rootLine = line
 
       this.rootStore.chessOpeningExplorer.searchData.fen = node.fen
-      this.rootStore.chessOpeningExplorer.searchGames();
+      // this.rootStore.chessOpeningExplorer.searchGames();
+      this.rootStore.chessOpeningExplorer.getExplorerData();
    }
 
    showPieceSelectMenu = false
@@ -255,7 +261,8 @@ class NotationStore {
          this.currentNode = node
 
          this.rootStore.chessOpeningExplorer.searchData.fen = node.fen
-         this.rootStore.chessOpeningExplorer.searchGames();
+      // this.rootStore.chessOpeningExplorer.searchGames();
+      this.rootStore.chessOpeningExplorer.getExplorerData();
       }
    }
 
@@ -270,7 +277,8 @@ class NotationStore {
          this.currentNode = node
 
          this.rootStore.chessOpeningExplorer.searchData.fen = node.fen
-         this.rootStore.chessOpeningExplorer.searchGames();
+      // this.rootStore.chessOpeningExplorer.searchGames();
+      this.rootStore.chessOpeningExplorer.getExplorerData();
       }
    }
 

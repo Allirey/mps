@@ -18,6 +18,7 @@ import bQ from './pieces/bQ.svg'
 import bN from './pieces/bN.svg'
 import bB from './pieces/bB.svg'
 import Colobki from './undraw_elements_cipa.svg'
+import Error404 from "../../errors/error404";
 
 import {
    Grid,
@@ -30,6 +31,7 @@ import {
 } from "@material-ui/core";
 import withStore from "../../hocs/withStore";
 import {Helmet} from "react-helmet";
+import {useParams} from 'react-router-dom'
 
 const breakpointValues = {
    xs: 0,
@@ -63,6 +65,7 @@ const useStyles = makeStyles(theme => ({
 const ChessAnalysis = (props) => {
    const classes = useStyles();
    // const theme = useTheme();
+   const {id} = useParams()
    const matchesLG = useMediaQuery(theme.breakpoints.up('lg'));
    const matchesMD = useMediaQuery(theme.breakpoints.up('md'));
    const matchesSM = useMediaQuery(theme.breakpoints.up('sm'));
@@ -75,6 +78,8 @@ const ChessAnalysis = (props) => {
    const [showSearch, setShowSearch] = useState(false);
    const [name, setName] = useState('')
    const [color, setColor] = useState('w')
+   const [loading, setLoading] = useState(true)
+   const [notFound, setNotFound] = useState(false)
 
    const {chessNotation: notation, chessOpeningExplorer: chess} = props.stores
 
@@ -89,15 +94,23 @@ const ChessAnalysis = (props) => {
    }
 
    useEffect(() => {
-      refEl.addEventListener('wheel', e => e.preventDefault(), {passive: false});
+      if (refEl.hasOwnProperty('addEventListener')) refEl.addEventListener('wheel', e => e.preventDefault(), {passive: false});
       document.addEventListener('keydown', keyHandler)
+      if (id) {
+         chess.getGame(id).catch(() => {
+            setNotFound(true)
+         }).finally(() => {
+            setLoading(false)
+         })
+      }
+      chess.getExplorerData()
 
       return () => {
          notation.chessGame.reset()
          notation.resetNode()
          document.removeEventListener('keydown', keyHandler)
       }
-   }, [])
+   }, [id])
 
    const handleSearchSubmit = (name, color) => {
       notation.toFirst()
@@ -142,6 +155,8 @@ const ChessAnalysis = (props) => {
 
       return slugify(`${white} ${black} ${year}`)
    }
+   if (id && loading) return <div/>
+   if (id && notFound && !loading) return <Error404/>
 
    return (
      <>
@@ -248,20 +263,17 @@ const ChessAnalysis = (props) => {
               </Grid>}
 
               {showBook && <Grid item sm md style={{
-                 overflow: "auto",
+                 overflowY: "scroll",
               }}>
                  <Fade in={showBook}>
                     <ExplorerBox
-                      explorerData={chess.currentMoves}
+                      explorerData={chess.explorerData.moves}
                       onMove={notation.makeSanMove}
                       loading={chess.inProgress}
-                      currentGames={chess.currentGames}
-                      games={chess.currentGames}
-                      onSelectGame={(url) => {
-                         if (matchesOnlyXS) setShowBook(false);
-                         chess.getGameByUrl(url);
-                      }}
+                      games={chess.explorerData.games}
                       close={() => setShowBook(!showBook)}
+                      currentDB={chess.currentDB}
+                      changeDB={chess.setDatabase}
                     />
                  </Fade>
               </Grid>}
