@@ -14,5 +14,5 @@ class ChessGame(models.Model):
 
 class ChessMove(models.Model):
     game = models.ForeignKey(ChessGame, on_delete=models.CASCADE, related_name='moves')
-    fen = models.CharField(max_length=128, db_index=True)
+    fen = models.CharField(max_length=128)
     san = models.CharField(max_length=8)

@@ -1,4 +1,4 @@
-from django.db.models import Q, Count, Sum, Case, Max, When, Value, IntegerField, ExpressionWrapper
+from django.db.models import Q, Count, Case, Max, When, IntegerField
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -31,13 +31,13 @@ class ChessOpeningExplorerView(APIView):
 
         name = ', '.join(name.split()[:2]) if ',' not in name else name
 
-        moves = ChessMove.objects.filter(Q(fen__startswith=fen) & {'w': Q(game__white__istartswith=name),
-                                                                   'b': Q(game__black__istartswith=name)}[color]) \
-            .values('move') \
+        moves = ChessMove.objects.filter({'w': Q(game__white__istartswith=name),
+                                          'b': Q(game__black__istartswith=name)}[color] & Q(fen__startswith=fen)) \
+            .values('san') \
             .annotate(date=Max('game__date')) \
             .annotate(white=Count(Case(When(game__result=1, then=1), output_field=IntegerField()))) \
             .annotate(draw=Count(Case(When(game__result=0.5, then=1), output_field=IntegerField()))) \
-            .annotate(black=Count(Case(When(game__result=0, then=1), output_field=IntegerField()))) \
+            .annotate(black=Count(Case(When(game__result=0, then=1), output_field=IntegerField())))
 
         games = ChessGame.objects.filter({'w': Q(white__istartswith=name),
                                           'b': Q(black__istartswith=name)}[color]
