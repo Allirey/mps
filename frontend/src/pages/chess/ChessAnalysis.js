@@ -170,15 +170,15 @@ const ChessAnalysis = (props) => {
    return (
      <>
         <Helmet
-          title={"Ukrainian chess games database"}
+          title={"Chess analysis board"}
         >
-           <meta name={"description"} content={"Search and analyse."}/>
-           <meta property={"og:title"} content={"Ukrainian chess games database"}/>
+           <meta name={"description"} content={"Search and analyse with 3 databases: Ukraine, Masters, Lichess."}/>
+           <meta property={"og:title"} content={"Chess analysis board"}/>
            <meta property={"og:description"} content={"Search and analyse."}/>
            <meta property={"og:type"} content={"website"}/>
            <meta name="twitter:card" content="summary"/>
-           <meta name="twitter:title" content="Ukrainian chess games database"/>
-           <meta name="twitter:description" content="Search and analyse."/>
+           <meta name="twitter:title" content="Chess analysis board"/>
+           <meta name="twitter:description" content="Search and analyse with 3 databases: Ukraine, Masters, Lichess."/>
            <meta name="twitter:site:id" content="741164490"/>
         </Helmet>
 
