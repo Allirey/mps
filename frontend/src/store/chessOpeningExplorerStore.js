@@ -1,26 +1,25 @@
 import {observable, computed, action, decorate} from 'mobx';
 
-const DATABASES = {UKR: 'ukr', MASTER: "master", LICHESS: 'lichess'}
+const DATABASES = {UKR: 'ukr', MASTERS: "masters", LICHESS: 'lichess'}
 
 class ChessOpeningExplorerStore {
    constructor(rootStore) {
       this.rootStore = rootStore;
-      this.currentDB = this.rootStore.storage.getItem('chessdb') || DATABASES.MASTER
+      let db = this.rootStore.storage.getItem('chessdb')
+      this.currentDB = Object.values(DATABASES).includes(db)? db : DATABASES.UKR
    }
 
    searchData = {name: '', color: "w", fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'};
-   // lastSearchQuery = {};
    inProgress = false;
-   explorerCache = {[DATABASES.UKR]: {}, [DATABASES.LICHESS]: {}, [DATABASES.MASTER]: {}}
+   explorerCache = {[DATABASES.UKR]: {}, [DATABASES.LICHESS]: {}, [DATABASES.MASTERS]: {}}
 
    setName = (name) => this.searchData.name = name;
    setColor = (color) => this.searchData.color = color;
 
-   setDatabase=(db) =>{
+   setDatabase = (db) => {
       if (!Object.values(DATABASES).includes(db)) return
 
       this.currentDB = db
-      // this.lastSearchQuery = {}
       this.getExplorerData()
       this.rootStore.storage.setItem('chessdb', db)
    }
@@ -51,12 +50,12 @@ class ChessOpeningExplorerStore {
             this.explorerCache[this.currentDB][check] = data
          }).catch(console.log).finally(() => this.inProgress = false)
 
-      } else if ([DATABASES.MASTER, DATABASES.LICHESS].includes(this.currentDB)) {
+      } else if ([DATABASES.MASTERS, DATABASES.LICHESS].includes(this.currentDB)) {
          const {fen} = this.searchData
          if (fen in this.explorerCache[this.currentDB]) return
 
          const API = {
-            [DATABASES.MASTER]: this.rootStore.api.ChessExplorer.explorerLichessMaster,
+            [DATABASES.MASTERS]: this.rootStore.api.ChessExplorer.explorerLichessMaster,
             [DATABASES.LICHESS]: this.rootStore.api.ChessExplorer.explorerLichess,
          }
 
@@ -64,7 +63,6 @@ class ChessOpeningExplorerStore {
          API[this.currentDB](fen).then(data => {
             const moves = data.moves.map(({san, white, draws, black}) => {
                return {white, draw: draws, black, san, date: '?'}
-               // return {white, draw, black, move: san}
             })
             const games = data.topGames.map(game => {
                return {
@@ -84,7 +82,8 @@ class ChessOpeningExplorerStore {
    }
 
    get explorerData() {
-      return this.explorerCache[this.currentDB][JSON.stringify(this.searchData)] || {games: [], moves: []}
+      let filter = this.currentDB === DATABASES.UKR ? JSON.stringify(this.searchData) : this.searchData.fen
+      return this.explorerCache[this.currentDB][filter] || {games: [], moves: []}
    }
 }
 

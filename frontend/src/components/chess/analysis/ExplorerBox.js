@@ -1,19 +1,12 @@
 import React, {memo, useEffect, useState} from "react";
 import {
-   Table,
-   TableBody,
-   TableCell,
-   TableHead,
-   TableRow,
-   withStyles,
-   TableContainer,
-   makeStyles, Typography, Button, Grid, useTheme, useMediaQuery
+   Table, TableBody, TableCell, TableHead, TableRow, withStyles, makeStyles, Typography, Button, Grid
 } from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DoneIcon from '@material-ui/icons/Done';
 
-const DATABASES = {UKR: 'ukr', MASTER: "master", LICHESS: 'lichess'}
+const DATABASES = {UKR: 'ukr', MASTERS: "masters", LICHESS: 'lichess'}
 
 const useStyles = makeStyles((theme) => ({
    root: {
@@ -117,11 +110,11 @@ const useStyles = makeStyles((theme) => ({
       }
    },
    active: {
-      backgroundColor: 'lightgreen',
-      "&:hover":{
-         backgroundColor: 'lightgreen',
+      backgroundColor: '#629924',
+      color: "white",
+      "&:hover": {
+         backgroundColor: '#629924',
       },
-
    }
 }));
 
@@ -142,17 +135,12 @@ const StyledTableCell = withStyles((theme) => ({
 
 const ExplorerBox = props => {
    const classes = useStyles();
-   const theme = useTheme();
    const [showSettings, setShowSettings] = useState(false)
    const [selectedDb, setSelectedDb] = useState(props.currentDB)
 
    const [oldGames, setOldGames] = useState([])
    const [oldMoves, setOldMoves] = useState([])
    const [opacity, setOpacity] = useState(1)
-
-   const matchesSM = useMediaQuery(theme.breakpoints.up('sm'));
-   const matchesMD = useMediaQuery(theme.breakpoints.up('md'));
-   const matchesLG = useMediaQuery(theme.breakpoints.up('lg'));
 
    useEffect(() => {
       if (!props.loading) {
@@ -178,24 +166,21 @@ const ExplorerBox = props => {
    }
 
    const handleRowClick = (url) => {
-      let db = props.currentDB === DATABASES.UKR? 'u':'lc'
+      let db = props.currentDB === DATABASES.UKR ? 'u' : 'lc'
       let link = `/chess/${db}/${url}`
       window.open(link, '_blank', 'noopener')
    }
 
-   if (!oldGames || !oldGames.length) return <Grid style={{height: "40vh"}} container justify={"center"}
-                                                   direction={"column"}
-                                                   alignItems={"center"}>
-      <Typography variant={"h6"} align={"center"}> No games found</Typography>
-      <Typography align={"center"}>
-         <Button disableRipple style={{color: "#1b78d0"}} onClick={props.close}><CloseIcon/>Close</Button>
-      </Typography>
-   </Grid>
+   const handleClose = () => {
+      props.setShowBook(false)
+   }
 
-   return <TableContainer className={classes.root}>
+   console.log('render');
+   return <div className={classes.root}>
                 <span onClick={() => setShowSettings(!showSettings)} className={classes.settings}>
          {!showSettings ? <SettingsIcon/> : <CloseIcon/>}
       </span>
+
       {showSettings ?
         <Grid container style={{height: "40vh"}} direction={"column"}>
            <div style={{backgroundColor: '#d5f3e3'}}>Opening explorer</div>
@@ -203,81 +188,102 @@ const ExplorerBox = props => {
            <div><b>Database</b></div>
            <Grid item container direction={'row'} justify={"center"}>
               {Object.entries(DATABASES).map(([key, value]) => {
-                 return <Button key={value} className={value === selectedDb ? classes.active: null}
+                 return <Button key={value} className={value === selectedDb ? classes.active : null}
                                 disableRipple
                                 onClick={() => setSelectedDb(value)}>
                     {value}</Button>
               })}
            </Grid>
-           <Grid item container justify={"center"}>
-              <Button disableRipple onClick={() => {
+           <Grid item style={{padding: 16}}>
+              {selectedDb === DATABASES.UKR &&
+              <Typography align={"center"}>230k OTB games of ukrainian players from 1980 to 2020. Works <b>only</b> with
+                 filter
+                 (name,color). Use search.</Typography>}
+              {selectedDb === DATABASES.MASTERS &&
+              <Typography align={"center"}>Two million OTB games of 2200+ FIDE rated players from 1952 to
+                 2019</Typography>}
+              {selectedDb === DATABASES.LICHESS &&
+              <Typography align={"center"}>Lichess filters coming soon...</Typography>}
+           </Grid>
+           <Grid item container style={{marginTop: "0 16px"}} justify={"center"}>
+              <Button className={classes.active} disableRipple onClick={() => {
                  props.changeDB(selectedDb)
                  setShowSettings(false)
-              }}><DoneIcon/>Save</Button>
+              }}><DoneIcon/></Button>
            </Grid>
         </Grid> :
-        <>
-           <Table size={"small"} className={classes.movesTable}>
-              <TableHead>
-                 <TableRow>
-                    <StyledTableCell width={"15%"}>Moves</StyledTableCell>
-                    <StyledTableCell width={"14%"}>Games</StyledTableCell>
-                    <StyledTableCell width={"48%"}>White/Draw/Black</StyledTableCell>
-                    <StyledTableCell width={"12%"}>Year</StyledTableCell>
-                 </TableRow>
-              </TableHead>
-              <TableBody style={{opacity: opacity}}>
-                 {oldMoves && oldMoves.slice().sort((x, y) => (y.white + y.draw + y.black) - (x.white + x.draw + x.black))
-                   .map((row, i) => {
-                      const {total, white, draw, black} = getPercentage(row)
 
-                      return <TableRow key={i} hover style={{cursor: "pointer"}}
-                                       onClick={() => props.onMove(row.san)}>
-                         <StyledTableCell><strong>{row.san}</strong></StyledTableCell>
-                         <StyledTableCell>{total}</StyledTableCell>
-                         <StyledTableCell>
-                            <div className={classes.bar}>
-                               {!!white && <span className={classes.white} style={{width: `${white}%`}}>
+        !oldGames || !oldGames.length ? <Grid style={{height: "40vh"}} container justify={"center"}
+                                              direction={"column"}
+                                              alignItems={"center"}>
+             <Typography variant={"h6"} align={"center"}> No games found ({props.currentDB} db)</Typography>
+             <Typography align={"center"}>
+                <Button disableRipple style={{color: "#1b78d0"}} onClick={handleClose}><CloseIcon/>Close</Button>
+             </Typography>
+          </Grid> :
+          <>
+             <Table size={"small"} className={classes.movesTable}>
+                <TableHead>
+                   <TableRow>
+                      <StyledTableCell width={"15%"}>Moves</StyledTableCell>
+                      <StyledTableCell width={"14%"}>Games</StyledTableCell>
+                      <StyledTableCell width={"48%"}>White/Draw/Black</StyledTableCell>
+                      <StyledTableCell width={"12%"}>Year</StyledTableCell>
+                   </TableRow>
+                </TableHead>
+                <TableBody style={{opacity: opacity}}>
+                   {oldMoves && oldMoves.slice().sort((x, y) => (y.white + y.draw + y.black) - (x.white + x.draw + x.black))
+                     .map((row, i) => {
+                        const {total, white, draw, black} = getPercentage(row)
+
+                        return <TableRow key={i} hover style={{cursor: "pointer"}}
+                                         onClick={() => props.onMove(row.san)}>
+                           <StyledTableCell><strong>{row.san}</strong></StyledTableCell>
+                           <StyledTableCell>{total}</StyledTableCell>
+                           <StyledTableCell>
+                              <div className={classes.bar}>
+                                 {!!white && <span className={classes.white} style={{width: `${white}%`}}>
                              {`${white > 11 ? white.toFixed(0) : ''}${white > 20 ? '%' : ''}`}</span>}
-                               {!!draw && <span className={classes.draw} style={{width: `${draw}%`}}>
+                                 {!!draw && <span className={classes.draw} style={{width: `${draw}%`}}>
                            {`${draw > 11 ? draw.toFixed(0) : ''}${draw > 20 ? '%' : ''}`}</span>}
-                               {!!black && <span className={classes.black} style={{width: `${black}%`}}>
+                                 {!!black && <span className={classes.black} style={{width: `${black}%`}}>
                            {`${black > 11 ? black.toFixed(0) : ''}${black > 20 ? '%' : ''}`}</span>}
-                            </div>
-                         </StyledTableCell>
-                         <StyledTableCell>{row.date.split('-')[0]}</StyledTableCell>
-                      </TableRow>
-                   })}
-              </TableBody>
-           </Table>
-           <Table className={classes.gamesTable} size={"small"}>
-              <TableHead>
-                 <TableRow>
-                    <TableCell colSpan={4} align={"center"}>Games {!!props.games && props.games.length?`(${props.games.length})`: ''}</TableCell>
-                 </TableRow>
-              </TableHead>
-              <TableBody style={{opacity: opacity}}>{oldGames ? oldGames.map((game, i) => (
-                <TableRow selected={false} key={game.url} hover={true} onClick={() => handleRowClick(game.url)}>
-                   <TableCell width={'15%'}>
-                      <span>{game.whiteelo}</span>
-                      <span>{game.blackelo}</span>
-                   </TableCell>
-                   <TableCell>
-                      <span>{game.white}</span>
-                      <span>{game.black}</span>
-                   </TableCell>
-                   <TableCell width={'18%'}>
+                              </div>
+                           </StyledTableCell>
+                           <StyledTableCell>{row.date.split('-')[0]}</StyledTableCell>
+                        </TableRow>
+                     })}
+                </TableBody>
+             </Table>
+             <Table className={classes.gamesTable} size={"small"}>
+                <TableHead>
+                   <TableRow>
+                      <TableCell colSpan={4}
+                                 align={"center"}>Games {!!props.games && props.games.length ? `(${props.games.length})` : ''}</TableCell>
+                   </TableRow>
+                </TableHead>
+                <TableBody style={{opacity: opacity}}>{oldGames ? oldGames.map((game, i) => (
+                  <TableRow selected={false} key={game.url} hover={true} onClick={() => handleRowClick(game.url)}>
+                     <TableCell width={'15%'}>
+                        <span>{game.whiteelo}</span>
+                        <span>{game.blackelo}</span>
+                     </TableCell>
+                     <TableCell>
+                        <span>{game.white}</span>
+                        <span>{game.black}</span>
+                     </TableCell>
+                     <TableCell width={'18%'}>
                  <span className={`${result[game.result]['cls']} ${classes.result}`}>
                     {result[game.result]['res']}
                  </span>
-                   </TableCell>
-                   <TableCell width={'15%'}>{game.date.split('-')[0]}</TableCell>
-                </TableRow>)) : <TableCell colSpan={4}>No search Results...</TableCell>}
-              </TableBody>
-           </Table>
-        </>
+                     </TableCell>
+                     <TableCell width={'15%'}>{game.date.split('-')[0]}</TableCell>
+                  </TableRow>)) : <TableCell colSpan={4}>No search Results...</TableCell>}
+                </TableBody>
+             </Table>
+          </>
       }
-   </TableContainer>
+   </div>
 }
 
 export default memo(ExplorerBox)

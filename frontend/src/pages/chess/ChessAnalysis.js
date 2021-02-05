@@ -33,7 +33,7 @@ import withStore from "../../hocs/withStore";
 import {Helmet} from "react-helmet";
 import {useParams} from 'react-router-dom'
 
-const DATABASES = {UKR: 'ukr', MASTER: "master", LICHESS: 'lichess'}
+const DATABASES = {UKR: 'ukr', MASTERS: "masters", LICHESS: 'lichess'}
 
 const breakpointValues = {
    xs: 0,
@@ -281,7 +281,7 @@ const ChessAnalysis = (props) => {
                       onMove={notation.makeSanMove}
                       loading={chess.inProgress}
                       games={chess.explorerData.games}
-                      close={() => setShowBook(!showBook)}
+                      setShowBook={setShowBook}
                       currentDB={chess.currentDB}
                       changeDB={chess.setDatabase}
                     />

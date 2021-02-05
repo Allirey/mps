@@ -23,7 +23,7 @@ import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import GetAppIcon from '@material-ui/icons/GetApp';
 
 const ACTIONS = {FLIP: 'flip', RESET: 'reset', COPY: 'copy', DOWNLOAD: 'download'}
-const DATABASES = {UKR: 'ukr', MASTER: "master", LICHESS: 'lichess'}
+const DATABASES = {UKR: 'ukr', MASTERS: "masters", LICHESS: 'lichess'}
 
 const useStyles = makeStyles(theme => ({
    root: {
