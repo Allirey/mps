@@ -23,6 +23,7 @@ import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import GetAppIcon from '@material-ui/icons/GetApp';
 
 const ACTIONS = {FLIP: 'flip', RESET: 'reset', COPY: 'copy', DOWNLOAD: 'download'}
+const DATABASES = {UKR: 'ukr', MASTER: "master", LICHESS: 'lichess'}
 
 const useStyles = makeStyles(theme => ({
    root: {
@@ -131,10 +132,10 @@ export default function (props) {
                 size={"small"}
                 onClick={props.onBookClick}> <EqualizerIcon/></Button>
 
-        <Button className={`${!matchesSM ? classes.ffNavBtn : null} ${props.showSearch && classes.active}`}
+        {props.currentDB === DATABASES.UKR && <Button className={`${!matchesSM ? classes.ffNavBtn : null} ${props.showSearch && classes.active}`}
                 disableRipple size={"small"}
                 onClick={props.onSearchClick}
-        ><SearchIcon/></Button>
+        ><SearchIcon/></Button>}
 
 
         <Button className={!matchesSM ? classes.ffNavBtn : null} disableRipple size={"small"}

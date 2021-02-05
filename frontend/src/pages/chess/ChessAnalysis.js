@@ -33,6 +33,8 @@ import withStore from "../../hocs/withStore";
 import {Helmet} from "react-helmet";
 import {useParams} from 'react-router-dom'
 
+const DATABASES = {UKR: 'ukr', MASTER: "master", LICHESS: 'lichess'}
+
 const breakpointValues = {
    xs: 0,
    sm: 700,
@@ -65,7 +67,7 @@ const useStyles = makeStyles(theme => ({
 const ChessAnalysis = (props) => {
    const classes = useStyles();
    // const theme = useTheme();
-   const {id} = useParams()
+   const {db, id} = useParams()
    const matchesLG = useMediaQuery(theme.breakpoints.up('lg'));
    const matchesMD = useMediaQuery(theme.breakpoints.up('md'));
    const matchesSM = useMediaQuery(theme.breakpoints.up('sm'));
@@ -96,8 +98,8 @@ const ChessAnalysis = (props) => {
    useEffect(() => {
       if (refEl.hasOwnProperty('addEventListener')) refEl.addEventListener('wheel', e => e.preventDefault(), {passive: false});
       document.addEventListener('keydown', keyHandler)
-      if (id) {
-         chess.getGame(id).catch(() => {
+      if (db && id) {
+         chess.getGame(db, id).catch(() => {
             setNotFound(true)
          }).finally(() => {
             setLoading(false)
@@ -110,7 +112,14 @@ const ChessAnalysis = (props) => {
          notation.resetNode()
          document.removeEventListener('keydown', keyHandler)
       }
-   }, [id])
+   }, [db, id])
+
+   useEffect(() => {
+      if (chess.currentDB !== DATABASES.UKR) {
+         setShowSearch(false)
+      }
+
+   }, [chess.currentDB])
 
    const handleSearchSubmit = (name, color) => {
       notation.toFirst()
@@ -119,7 +128,7 @@ const ChessAnalysis = (props) => {
 
       chess.setName(name)
       chess.setColor(color)
-      chess.searchGames()
+      chess.getExplorerData()
    }
 
    const download = (filename, text) => {
@@ -224,6 +233,7 @@ const ChessAnalysis = (props) => {
                          onBookClick={() => setShowBook(!showBook)}
                          showBook={showBook}
                          showSearch={showSearch}
+                         currentDB={chess.currentDB}
                        />
                     </Grid>
                  </Grid>}
@@ -293,6 +303,7 @@ const ChessAnalysis = (props) => {
                       onBookClick={() => setShowBook(!showBook)}
                       showBook={showBook}
                       showSearch={showSearch}
+                      currentDB={chess.currentDB}
                     />
                  </Grid>
               </Grid>}

@@ -9,7 +9,7 @@ class ChessOpeningExplorerStore {
    }
 
    searchData = {name: '', color: "w", fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'};
-   lastSearchQuery = {};
+   // lastSearchQuery = {};
    inProgress = false;
    explorerCache = {[DATABASES.UKR]: {}, [DATABASES.LICHESS]: {}, [DATABASES.MASTER]: {}}
 
@@ -20,47 +20,47 @@ class ChessOpeningExplorerStore {
       if (!Object.values(DATABASES).includes(db)) return
 
       this.currentDB = db
-      this.lastSearchQuery = {}
+      // this.lastSearchQuery = {}
       this.getExplorerData()
       this.rootStore.storage.setItem('chessdb', db)
    }
 
-   getGame(url) {
-      if (this.currentDB === DATABASES.UKR) {
-         return this.rootStore.api.ChessExplorer.getGameByUrl(url).then((data) => {
+   getGame(db, url) {
+      if (db === 'u') {
+         return this.rootStore.api.ChessExplorer.getGameUkr(url).then((data) => {
             this.rootStore.chessNotation.loadGame(data.game);
          })
 
-      } else if ([DATABASES.MASTER, DATABASES.LICHESS].includes(this.currentDB)) {
+      } else if (db === 'lc') {
          return this.rootStore.api.ChessExplorer.getGameLichess(url).then((data) => {
             this.rootStore.chessNotation.loadGame(data.pgn);
          })
       }
+
+      return Promise.reject()
    }
 
    getExplorerData() {
-      const check = JSON.stringify(this.searchData);
-
-      // to prevent search spam on server api
-      if (this.searchData.name.length < 3 && this.currentDB === DATABASES.UKR ||
-        JSON.stringify(this.searchData) === JSON.stringify(this.lastSearchQuery) ||
-        check in this.explorerCache[this.currentDB]
-      ) return;
-      else this.lastSearchQuery = {...this.searchData};
-
-      const {name, color, fen} = this.searchData
-      this.inProgress = true
       if (this.currentDB === DATABASES.UKR) {
-         this.rootStore.api.ChessExplorer.getGamesAndMoves(name, color, fen).then(data => { // {moves, games}
+         const check = JSON.stringify(this.searchData);
+         if (this.searchData.name.length < 3 || check in this.explorerCache[DATABASES.UKR]) return;
+
+         this.inProgress = true
+         const {name, color, fen} = this.searchData
+         this.rootStore.api.ChessExplorer.explorerUkr(name, color, fen).then(data => { // {moves, games}
             this.explorerCache[this.currentDB][check] = data
          }).catch(console.log).finally(() => this.inProgress = false)
 
       } else if ([DATABASES.MASTER, DATABASES.LICHESS].includes(this.currentDB)) {
+         const {fen} = this.searchData
+         if (fen in this.explorerCache[this.currentDB]) return
+
          const API = {
             [DATABASES.MASTER]: this.rootStore.api.ChessExplorer.explorerLichessMaster,
             [DATABASES.LICHESS]: this.rootStore.api.ChessExplorer.explorerLichess,
          }
 
+         this.inProgress = true
          API[this.currentDB](fen).then(data => {
             const moves = data.moves.map(({san, white, draws, black}) => {
                return {white, draw: draws, black, san, date: '?'}
@@ -77,7 +77,7 @@ class ChessOpeningExplorerStore {
                   date: `${game.year}`
                }
             })
-            this.explorerCache[this.currentDB][check] = {games, moves}
+            this.explorerCache[this.currentDB][fen] = {games, moves}
 
          }).catch(console.log).finally(() => this.inProgress = false)
       }
@@ -94,8 +94,6 @@ decorate(ChessOpeningExplorerStore, {
      currentDB: observable,
      explorerCache: observable,
 
-     // setColor:action,
-     // setName:action,
      getGame: action,
      getExplorerData: action,
      setDatabase: action,

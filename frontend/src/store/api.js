@@ -65,9 +65,9 @@ class api {
    }
 
    ChessExplorer = {
-      getGameByUrl: (url) => this.requests.get(apiGame + '?' + new URLSearchParams({id: url})),
-      getGamesAndMoves: (name, color, fen) => (
-        this.requests.get(apiExplorer + '?' + new URLSearchParams({name, color, fen}), {}, true)
+      getGameUkr: (url) => this.requests.get(apiGame + '?' + new URLSearchParams({id: url})),
+      explorerUkr: (name, color, fen) => (
+        this.requests.get(apiExplorer + '?' + new URLSearchParams({name, color, fen}))
       ),
       playerSearchAutocomplete: (name) =>
         (this.requests.get(apiSearchAutocomplete + '?' + new URLSearchParams({name}))

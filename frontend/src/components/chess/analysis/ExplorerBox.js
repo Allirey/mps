@@ -178,7 +178,8 @@ const ExplorerBox = props => {
    }
 
    const handleRowClick = (url) => {
-      let link = '/chess/game/' + url
+      let db = props.currentDB === DATABASES.UKR? 'u':'lc'
+      let link = `/chess/${db}/${url}`
       window.open(link, '_blank', 'noopener')
    }
 
@@ -252,8 +253,7 @@ const ExplorerBox = props => {
            <Table className={classes.gamesTable} size={"small"}>
               <TableHead>
                  <TableRow>
-                    {/*<TableCell colSpan={4} align={"center"}>Games ({props.games.length})</TableCell>*/}
-                    <TableCell colSpan={4} align={"center"}>Games </TableCell>
+                    <TableCell colSpan={4} align={"center"}>Games {!!props.games && props.games.length?`(${props.games.length})`: ''}</TableCell>
                  </TableRow>
               </TableHead>
               <TableBody style={{opacity: opacity}}>{oldGames ? oldGames.map((game, i) => (
