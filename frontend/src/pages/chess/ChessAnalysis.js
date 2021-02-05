@@ -27,7 +27,7 @@ import {
    Dialog,
    DialogActions,
    Button,
-   createMuiTheme, Fade,
+   createMuiTheme, Fade, Typography,
 } from "@material-ui/core";
 import withStore from "../../hocs/withStore";
 import {Helmet} from "react-helmet";
@@ -251,7 +251,9 @@ const ChessAnalysis = (props) => {
                  </Grid>}
               </Grid>
            </Grid>
-
+           {matchesOnlyXS && <Grid item xs={12}>
+              <Grid item><GameInfo data={notation.gameHeaders}/></Grid>
+           </Grid>}
            <Grid container direction={"column"} sm md lg item style={{
               height: "92vh",
               padding: matchesSM ? "8px" : 0,
