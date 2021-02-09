@@ -23,6 +23,7 @@ INSTALLED_APPS = [
 
     'users.apps.UsersConfig',
     'chess_db.apps.ChessConfig',
+    'chess_openings.apps.ChessOpeningsConfig',
     'blog.apps.BlogConfig',
     'rest_framework',
 
