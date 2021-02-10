@@ -10,7 +10,7 @@ class ChessMoveLine {
    }
 
    append(moveData, currentNode = null) {
-      let move = new ChessMove(this, moveData.fen, moveData.san, moveData.from, moveData.to)
+      let move = new ChessMove(this, moveData.fen, moveData.san, moveData.from, moveData.to, moveData.nag)
 
       if (!this.first) {
          this.first = move
@@ -105,12 +105,13 @@ class ChessMoveLine {
 }
 
 class ChessMove {
-   constructor(moveLine, fen, san, from, to) {
+   constructor(moveLine, fen, san, from, to, nag) {
       this.moveLine = moveLine
       this.fen = fen
       this.san = san
       this.from = from
       this.to = to
+      this.nag = nag
 
       this.prev = null
       this.next = null
@@ -157,6 +158,33 @@ class NotationStore {
       this.toPrev()
    }
 
+   loadGameFromJSON = (jsonData) => {
+      this.resetNode()
+      this.gameHeaders = jsonData.data.headers
+
+      let moves = jsonData.data.moves
+
+      const processMoveLine = (line, currentNode = null) => {
+         let board = new Chess()
+         board.load(currentNode.fen)
+
+         line.reduce((current, move)=>{
+            if (move.san.includes('0')) move.san = move.san.replaceAll('0', 'O')
+
+            let m = board.move(move.san, {sloppy: true});
+            const {node} = current.moveLine.append({fen: board.fen(), san: m.san, from: m.from, to: m.to, nag: move.nag}, current)
+
+            move.variations && move.variations.forEach(variant => processMoveLine(variant, node.prev))
+            return node
+         }, currentNode)
+      }
+
+      processMoveLine(moves, this.rootLine.first)
+
+      this.currentNode = this.rootLine.first.next
+      this.toPrev()
+   }
+
    flipBoard = () => this.boardOrientation = this.boardOrientation === "white" ? "black" : "white";
 
    jumpToMove = (node) => {
@@ -165,7 +193,6 @@ class NotationStore {
       this.chessGame.load(node.fen)
 
       this.rootStore.chessOpeningExplorer.searchData.fen = node.fen
-      // this.rootStore.chessOpeningExplorer.searchGames();
       this.rootStore.chessOpeningExplorer.getExplorerData();
    };
 
@@ -176,7 +203,6 @@ class NotationStore {
       this.chessGame.load(node.fen)
 
       this.rootStore.chessOpeningExplorer.searchData.fen = node.fen
-      // this.rootStore.chessOpeningExplorer.searchGames();
       this.rootStore.chessOpeningExplorer.getExplorerData();
    };
 
@@ -189,7 +215,6 @@ class NotationStore {
       this.chessGame.load(node.fen)
 
       this.rootStore.chessOpeningExplorer.searchData.fen = node.fen
-      // this.rootStore.chessOpeningExplorer.searchGames();
       this.rootStore.chessOpeningExplorer.getExplorerData();
    };
 
@@ -199,7 +224,6 @@ class NotationStore {
       this.chessGame.load(this.rootLine.first.fen)
 
       this.rootStore.chessOpeningExplorer.searchData.fen = this.rootLine.first.fen
-      // this.rootStore.chessOpeningExplorer.searchGames();
       this.rootStore.chessOpeningExplorer.getExplorerData();
    };
 
@@ -209,7 +233,6 @@ class NotationStore {
       this.chessGame.load(this.rootLine.last.fen)
 
       this.rootStore.chessOpeningExplorer.searchData.fen = this.rootLine.last.fen
-      // this.rootStore.chessOpeningExplorer.searchGames();
       this.rootStore.chessOpeningExplorer.getExplorerData();
    };
 
@@ -229,7 +252,6 @@ class NotationStore {
       this.rootLine = line
 
       this.rootStore.chessOpeningExplorer.searchData.fen = node.fen
-      // this.rootStore.chessOpeningExplorer.searchGames();
       this.rootStore.chessOpeningExplorer.getExplorerData();
    }
 
@@ -261,8 +283,7 @@ class NotationStore {
          this.currentNode = node
 
          this.rootStore.chessOpeningExplorer.searchData.fen = node.fen
-      // this.rootStore.chessOpeningExplorer.searchGames();
-      this.rootStore.chessOpeningExplorer.getExplorerData();
+         this.rootStore.chessOpeningExplorer.getExplorerData();
       }
    }
 
@@ -277,8 +298,7 @@ class NotationStore {
          this.currentNode = node
 
          this.rootStore.chessOpeningExplorer.searchData.fen = node.fen
-      // this.rootStore.chessOpeningExplorer.searchGames();
-      this.rootStore.chessOpeningExplorer.getExplorerData();
+         this.rootStore.chessOpeningExplorer.getExplorerData();
       }
    }
 
