@@ -1,9 +1,5 @@
-#!/bin/python3
-
-import json
 import re
-import sys
-import argparse
+import chess
 
 
 def normalize_pgn(pgn: str) -> str:
@@ -17,18 +13,6 @@ def normalize_pgn(pgn: str) -> str:
 
 
 def pgn_to_json(pgn: str, comments: bool = True, raise_exception=False) -> list:
-    """
-    parse PGN, convert to JSON and returns list of converted games
-
-    Args:
-        pgn: PGN as string
-        comments: leave or not game comments
-        raise_exception: raise exception on first error during converting
-
-    Returns:
-        None
-    """
-
     res = []
     errors = []
 
@@ -80,6 +64,15 @@ def pgn_to_json(pgn: str, comments: bool = True, raise_exception=False) -> list:
 
                 else:
                     new_move = {'san': token}
+                    if last_move and last_move.get('fen'):
+                        position = chess.Board(last_move['fen'])
+                    else:
+                        position = chess.Board()
+                    move = str(position.push_san(token))
+
+                    new_move['from'] = move[:2]
+                    new_move['to'] = move[2:4]
+                    new_move['fen'] = position.fen()
 
                     last_move = new_move
                     current_move_stack.append(last_move)
@@ -98,29 +91,3 @@ def pgn_to_json(pgn: str, comments: bool = True, raise_exception=False) -> list:
         print('Successfully converted!')
 
     return res
-
-
-def process_pgn(path_to_file, ignore_comments=False):
-    with open(path_to_file, 'r') as f:
-        pgn_data = f.read()
-
-        result = pgn_to_json(pgn_data, comments=not ignore_comments, raise_exception=False)
-
-    with open(f'{path_to_file}.json', 'w') as dest:
-        json.dump(result, dest, indent=2)
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(add_help=True, description="Convert pgn to json")
-
-    parser.add_argument('filename', action='store', metavar="pathname",
-                        help='path to your pgn file')
-    parser.add_argument('-ic', action='store_true',
-                        help='ignore comments. Converts ignoring text commentaries')
-
-    if len(sys.argv) == 1:
-        parser.print_help()
-        sys.exit(1)
-
-    options = parser.parse_args()
-    process_pgn(options.filename, options.ic)
