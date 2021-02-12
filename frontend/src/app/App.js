@@ -18,6 +18,8 @@ const AccountActivation = lazy(() => import("../pages/Auth/AccountActivation"));
 const PasswordResetRequest = lazy(() => import("../pages/Auth/PasswordResetRequest"));
 const PasswordResetChange = lazy(() => import("../pages/Auth/PasswordResetChange"));
 const ChessAnalysis = lazy(() => import("../pages/chess/ChessAnalysis"));
+const Openings = lazy(() => import("../pages/chess/Openings"));
+const CreateOpening = lazy(() => import("../pages/chess/CreateOpening"));
 const Error404 = lazy(() => import("../errors/error404"));
 const HomePage = lazy(() => import("../pages/HomePage"));
 
@@ -60,6 +62,9 @@ function App(props) {
            <Suspense fallback={<div/>}>
               <Switch>
                  <Route path="/" exact={true} component={HomePage}/>
+                 <Route path="/chess/openings" exact={true} component={Openings}/>
+                 <Route path="/chess/openings/new" exact={true} component={CreateOpening}/>
+                 <Route path="/chess/openings/:slug" exact={true} component={ChessAnalysis}/>
                  <Route path="/chess/analysis" exact={true} component={ChessAnalysis}/>
                  <Route path="/chess/:db/:id" exact={true} component={ChessAnalysis}/>
                  <Route path="/login" exact={true} component={Login}/>

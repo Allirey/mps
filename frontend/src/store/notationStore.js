@@ -19,7 +19,7 @@ class ChessMoveLine {
       }
 
       if (currentNode && currentNode.next) {
-         if (currentNode.next.fen === move.fen && currentNode.next.san === move.san) {
+         if (currentNode.next.fen.split(' ')[0] === move.fen.split(' ')[0] && currentNode.next.san === move.san) {
             return {line: this, node: currentNode.next}
          }
 
@@ -165,14 +165,10 @@ class NotationStore {
       let moves = jsonData.data.moves
 
       const processMoveLine = (line, currentNode = null) => {
-         let board = new Chess()
-         board.load(currentNode.fen)
-
          line.reduce((current, move)=>{
             if (move.san.includes('0')) move.san = move.san.replaceAll('0', 'O')
 
-            let m = board.move(move.san, {sloppy: true});
-            const {node} = current.moveLine.append({fen: board.fen(), san: m.san, from: m.from, to: m.to, nag: move.nag}, current)
+            const {node} = current.moveLine.append({fen: move.fen, san: move.san, from: move.from, to: move.to, nag: move.nag}, current)
 
             move.variations && move.variations.forEach(variant => processMoveLine(variant, node.prev))
             return node

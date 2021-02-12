@@ -27,6 +27,8 @@ const lichessExplorerMasterApi = lichessExplorerBaseApi + '/master'
 const lichessExplorerApi = lichessExplorerBaseApi + '/lichess'
 const lichessGameApi = 'https://lichess.org/game/export/'
 
+const apiOpenings = apiBase + '/openings/'
+
 class api {
    constructor(rootStore) {
       this.rootStore = rootStore;
@@ -81,9 +83,9 @@ class api {
            "variant": "standard",
            "ratings[0]": 2200,
            "ratings[1]": 2500,
-           "speeds[0]":"blitz",
-           "speeds[1]":"rapid",
-           "speeds[2]":"classical",
+           "speeds[0]": "blitz",
+           "speeds[1]": "rapid",
+           "speeds[2]": "classical",
         })),
       getGameLichess: (url) => this.requests.get(`${lichessGameApi}${url}?${new URLSearchParams({pgnInJson: true})}`)
    }
@@ -96,6 +98,18 @@ class api {
       delete: (id) => this.requests.delete(`${apiArticles}${id}/`, {}, true),
       list: () => this.requests.get(apiArticles),
       listPage: (page) => this.requests.get(apiArticles + '?' + new URLSearchParams({page})),
+   }
+
+   Openings = {
+      create: (title, description, color, pgn) => this.requests.post(apiOpenings + 'create/', {
+         body: JSON.stringify({title, description, color, pgn})
+      }, true),
+      retrieve: (slug) => this.requests.get(`${apiOpenings}${slug}/`, {}, true),
+      update: (slug, data) => this.requests.put(`${apiOpenings}${slug}/`, {body: JSON.stringify({...data})}, true),
+      patch: (slug, data) => this.requests.patch(`${apiOpenings}${slug}/`, {body: JSON.stringify({...data})}, true),
+      delete: (slug) => this.requests.delete(`${apiOpenings}${slug}/`, {}, true),
+      list: () => this.requests.get(apiOpenings, {}, true),
+      chapter: (number) => this.requests.get(`${apiOpenings}chapters/${number}`),
    }
 
    // wrap on fetch: requests.METHOD_NAME(URL, OPTIONS, WITH_AUTH)

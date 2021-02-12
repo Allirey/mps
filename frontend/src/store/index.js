@@ -4,6 +4,7 @@ import authStore from './authStore';
 import api from "./api";
 import notification from "./notificationStore";
 import posts from "./postsStore";
+import openings from './chessOpeningStore';
 
 class RootStore{
     constructor(){
@@ -14,6 +15,7 @@ class RootStore{
         this.authStore = new authStore(this);
         this.notifications = new notification(this);
         this.posts = new posts(this);
+        this.openings = new openings(this);
     }
 }
 

@@ -6,7 +6,7 @@ class ChessOpeningExplorerStore {
    constructor(rootStore) {
       this.rootStore = rootStore;
       let db = this.rootStore.storage.getItem('chessdb')
-      this.currentDB = Object.values(DATABASES).includes(db)? db : DATABASES.UKR
+      this.currentDB = Object.values(DATABASES).includes(db)? db : DATABASES.MASTERS
    }
 
    searchData = {name: '', color: "w", fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'};

@@ -175,7 +175,6 @@ const ExplorerBox = props => {
       props.setShowBook(false)
    }
 
-   console.log('render');
    return <div className={classes.root}>
                 <span onClick={() => setShowSettings(!showSettings)} className={classes.settings}>
          {!showSettings ? <SettingsIcon/> : <CloseIcon/>}

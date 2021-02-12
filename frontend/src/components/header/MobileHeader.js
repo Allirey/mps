@@ -54,6 +54,13 @@ export default function SwipeableTemporaryDrawer(props) {
               <ListItemText primary={"Chess db"}/>
            </ListItem>
 
+           <ListItem disableRipple button component={Link} to={"/chess/openings"}>
+              <ListItemIcon>
+                 <Search/>
+              </ListItemIcon>
+              <ListItemText primary={"Chess openings"}/>
+           </ListItem>
+
            <ListItem disableRipple button component={Link} to={"/blog"}>
               <ListItemIcon>
                  <ChromeReaderMode/>
