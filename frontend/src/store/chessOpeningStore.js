@@ -1,6 +1,5 @@
 import {observable, computed, action, decorate} from 'mobx';
 
-
 class ChessOpeningsStore {
    constructor(rootStore) {
       this.rootStore = rootStore;
@@ -17,19 +16,19 @@ class ChessOpeningsStore {
       return this.rootStore.api.Openings.create(title, description, color, pgn)
    }
 
-   getOpenings = () => {
-      this.rootStore.api.Openings.list().then(data =>
-        this.openingList = data
-      )
-   }
+   getOpenings = () => this.rootStore.api.Openings.list().then(data => this.openingList = data)
 
    getOpening = (slug) => {
-      if (slug in this.openingsCache) return
-      this.rootStore.api.Openings.retrieve(slug).then(data => {
-         this.openingsCache[slug] = data
+      const processData = (data) => {
          this.currentOpening = data
          this.rootStore.chessNotation.boardOrientation = data.color === 'w' ? 'white' : 'black'
          this.getChapter(data.chapters[0].id)
+      }
+
+      if (slug in this.openingsCache) processData(this.openingsCache[slug])
+      else this.rootStore.api.Openings.retrieve(slug).then(data => {
+         this.openingsCache[slug] = data
+         processData(data)
       })
    }
 

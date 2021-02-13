@@ -104,6 +104,8 @@ const ChessAnalysis = (props) => {
          notation.chessGame.reset()
          notation.resetNode()
          document.removeEventListener('keydown', keyHandler)
+         openings.currentChapter = null
+         openings.currentOpening = null
       }
    }, [])
 

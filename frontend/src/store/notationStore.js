@@ -23,7 +23,8 @@ class ChessMoveLine {
             return {line: this, node: currentNode.next}
          }
 
-         let filteredSubLines = currentNode.next.subLines.filter(x => x.first.fen === move.fen && x.first.san === move.san)
+         let filteredSubLines = currentNode.next.subLines.filter(x => x.first.fen.split(' ')[0] === move.fen.split(' ')[0]
+           && x.first.san === move.san)
 
          if (!!filteredSubLines.length) {
             move.moveLine = filteredSubLines[0]
@@ -111,7 +112,7 @@ class ChessMove {
       this.san = san
       this.from = from
       this.to = to
-      this.nag = nag
+      this.nag = nag ? nag.sort((a, b) => +(a.slice(1, 5)) - +(b.slice(1, 5))) : null
 
       this.prev = null
       this.next = null
@@ -165,10 +166,12 @@ class NotationStore {
       let moves = jsonData.data.moves
 
       const processMoveLine = (line, currentNode = null) => {
-         line.reduce((current, move)=>{
+         line.reduce((current, move) => {
             if (move.san.includes('0')) move.san = move.san.replaceAll('0', 'O')
 
-            const {node} = current.moveLine.append({fen: move.fen, san: move.san, from: move.from, to: move.to, nag: move.nag}, current)
+            const {node} = current.moveLine.append({
+               fen: move.fen, san: move.san, from: move.from, to: move.to, nag: move.nag
+            }, current)
 
             move.variations && move.variations.forEach(variant => processMoveLine(variant, node.prev))
             return node

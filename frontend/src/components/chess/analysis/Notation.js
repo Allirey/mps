@@ -12,10 +12,10 @@ import {
 const initialState = {mouseX: null, mouseY: null,};
 const ACTIONS = {PROMOTE: 'promote', DELETE_LINE: 'deleteLine', DELETE_NEXT: 'deleteNext'}
 const NAG_TAGS = {
-   '$1': '!', '$2': '?', '$3': '!!', '$4': '??', '$5': '!?', '$6': '?!', '$7': '□',
-   '$10': '=', '$13': '∞', '$14': '+/=', '$15': '=/+', '$16': '±', '$17': '∓',
-   '$18': '+-', '$19': '-+', '$22': '⨀', '$23': '⨀', '$32': '↑↑', '$36': '↑', '$37': '↑', '$40': '→',
-   '$41': '→', '$45': '=/∞', '$46': '=/∞', '$132': '⇆', '$139': '⨁', '$140': '∆', '$146': 'N',
+   '$1': '!', '$2': '?', '$3': '!!', '$4': '??', '$5': '!?', '$6': '?!', '$7': '□', '$10': '=',
+   '$13': '∞', '$14': '+/=', '$15': '=/+', '$16': '±', '$17': '∓', '$18': '+-', '$19': '-+',
+   '$22': '⨀', '$23': '⨀', '$32': '↑↑', '$36': '↑', '$37': '↑', '$40': '→',  '$41': '→',
+   '$45': '=/∞', '$46': '=/∞', '$132': '⇆', '$139': '⨁', '$140': '∆', '$146': 'N',
 }
 
 const theme = createMuiTheme({
@@ -61,7 +61,6 @@ const useStyles = makeStyles({
          borderLeft: "2px solid #ccc",
          paddingLeft: "15px",
          paddingRight: "15px",
-         fontWeight: "400!important",
 
          marginRight: 5,
          marginLeft: "0px",
@@ -149,7 +148,7 @@ function Notation(props) {
                    onClick={() => props.jumpTo(node)}
                    className={props.currentNode === node && !!node.san ? "active" : null}>
                     {(i + appender) % 2 ? `${moveCount(i)}.` : !i && !!node.san && `${moveCount(i) - 1}...`}{node.san}
-                    {node.nag && node.nag.length ? `${node.nag.sort((a,b)=> +(a.slice(1,5)) - +(b.slice(1,5))).map(n => NAG_TAGS[n]).join(' ')}` : ''}
+                    {node.nag && node.nag.length ? `${node.nag.map(n => NAG_TAGS[n]).join(' ')}` : ''}
                  </Typography>{" "}{node.subLines.map((variation, j) =>
                 <blockquote key={`${variation.first.fen}${j + 100}`}>{renderTree(toArr(variation), i + appender)}
                 </blockquote>)}

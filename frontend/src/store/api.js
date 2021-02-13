@@ -104,11 +104,11 @@ class api {
       create: (title, description, color, pgn) => this.requests.post(apiOpenings + 'create/', {
          body: JSON.stringify({title, description, color, pgn})
       }, true),
-      retrieve: (slug) => this.requests.get(`${apiOpenings}${slug}/`, {}, true),
+      retrieve: (slug) => this.requests.get(`${apiOpenings}${slug}/`),
       update: (slug, data) => this.requests.put(`${apiOpenings}${slug}/`, {body: JSON.stringify({...data})}, true),
       patch: (slug, data) => this.requests.patch(`${apiOpenings}${slug}/`, {body: JSON.stringify({...data})}, true),
       delete: (slug) => this.requests.delete(`${apiOpenings}${slug}/`, {}, true),
-      list: () => this.requests.get(apiOpenings, {}, true),
+      list: () => this.requests.get(apiOpenings),
       chapter: (number) => this.requests.get(`${apiOpenings}chapters/${number}`),
    }
 
