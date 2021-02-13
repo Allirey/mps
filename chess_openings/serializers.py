@@ -14,9 +14,15 @@ class ChapterWithoutDataSerializer(serializers.ModelSerializer):
         exclude = 'data',
 
 
-class OpeningSerializer(serializers.ModelSerializer):
+class OpeningDetailSerializer(serializers.ModelSerializer):
     chapters = ChapterWithoutDataSerializer(many=True, read_only=True)
 
+    class Meta:
+        model = Opening
+        fields = '__all__'
+
+
+class OpeningSerializer(serializers.ModelSerializer):
     class Meta:
         model = Opening
         fields = '__all__'

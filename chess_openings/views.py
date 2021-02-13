@@ -1,10 +1,9 @@
 from rest_framework import viewsets, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status
 from .models import Opening, OpeningChapter
 from .utils import pgn_to_json
-from .serializers import OpeningSerializer, ChapterSerializer
+from .serializers import OpeningSerializer, ChapterSerializer, OpeningDetailSerializer
 from .permissions import IsAdminOrReadOnly
 from django.utils.text import slugify
 
@@ -38,15 +37,14 @@ class OpeningViewSet(viewsets.ModelViewSet):
     serializer_class = OpeningSerializer
     queryset = Opening.objects.all()
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = OpeningDetailSerializer(instance)
+        return Response(serializer.data)
 
 
 class ChapterDetailView(generics.RetrieveAPIView):
+    # todo retrieve by generated unpredictable ID
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = ChapterSerializer
     queryset = OpeningChapter.objects.all()
