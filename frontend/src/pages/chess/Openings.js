@@ -9,7 +9,7 @@ import {
    CardActionArea,
    Typography,
    CardContent,
-   Fab, Chip
+   Fab, Chip, Fade
 } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import {Helmet} from "react-helmet";
@@ -101,15 +101,17 @@ const Openings = (props) => {
                {props.stores.authStore.currentUser && props.stores.authStore.currentUser.is_staff && <Grid item xs={12}>
                </Grid>}
                {openings && openings.map(opening => <Grid item xs={12} sm={6} md={4} lg={4}>
-                  <Card className={classes.card}>
-                     <CardActionArea disableRipple component={Link} to={`/chess/openings/${opening.slug}`}
-                                     style={{padding: 8}}>
-                        <Typography variant={"h6"} align={"center"}>{opening.title}</Typography>
-                        <CardContent>
-                           <Typography color={"textSecondary"}>{opening.description}</Typography>
-                        </CardContent>
-                     </CardActionArea>
-                  </Card>
+                  <Fade in={true}>
+                     <Card className={classes.card}>
+                        <CardActionArea disableRipple component={Link} to={`/chess/openings/${opening.slug}`}
+                                        style={{padding: 8}}>
+                           <Typography variant={"h6"} align={"center"}>{opening.title}</Typography>
+                           <CardContent>
+                              <Typography color={"textSecondary"}>{opening.description}</Typography>
+                           </CardContent>
+                        </CardActionArea>
+                     </Card>
+                  </Fade>
                </Grid>)}
             </Grid>
          </Grid>
