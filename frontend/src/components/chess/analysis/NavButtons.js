@@ -76,7 +76,7 @@ export default function (props) {
                    disableRipple size={"small"}
                    onClick={props.onSearchClick}
            ><SearchIcon/></Button>}
-           {!matchesLG && <Button
+           {!matchesLG && props.showChaptersButton && <Button
              disableRipple
              onClick={props.onChaptersClick}
              className={`${!matchesSM ? classes.ffNavBtn : null} ${props.showChapters && classes.active}`}

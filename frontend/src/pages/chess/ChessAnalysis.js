@@ -18,7 +18,7 @@ import bQ from './pieces/bQ.svg'
 import bN from './pieces/bN.svg'
 import bB from './pieces/bB.svg'
 import Colobki from './undraw_elements_cipa.svg'
-import Error404 from "../../errors/error404";
+// import Error404 from "../../errors/error404";
 
 import {
    Grid,
@@ -27,7 +27,7 @@ import {
    Dialog,
    DialogActions,
    Button,
-   createMuiTheme, Fade, Typography
+   createMuiTheme, Fade
 } from "@material-ui/core";
 import withStore from "../../hocs/withStore";
 import {Helmet} from "react-helmet";
@@ -140,6 +140,7 @@ const ChessAnalysis = (props) => {
    useEffect(() => {
       slug && openings.getOpening(slug)
       !slug && notation.resetNode()
+      return () => setShowChapters(false)
 
    }, [slug])
 
@@ -251,8 +252,9 @@ const ChessAnalysis = (props) => {
                            onChaptersClick={() => setShowChapters(!showChapters)}
                            showBook={showBook}
                            showSearch={showSearch}
-                           showChapters={showChapters}
+                           showChapters={showChapters && slug}
                            currentDB={chess.currentDB}
+                           showChaptersButton={slug}
                          />
                       </Grid>
                    </Grid>}
@@ -331,8 +333,9 @@ const ChessAnalysis = (props) => {
                         onChaptersClick={() => setShowChapters(!showChapters)}
                         showBook={showBook}
                         showSearch={showSearch}
-                        showChapters={showChapters}
+                        showChapters={showChapters && slug}
                         currentDB={chess.currentDB}
+                        showChaptersButton={slug}
                       />
                    </Grid>
                 </Grid>}
