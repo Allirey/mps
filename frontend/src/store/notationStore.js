@@ -112,7 +112,7 @@ class ChessMove {
       this.san = san
       this.from = from
       this.to = to
-      this.nag = nag ? nag.sort((a, b) => +(a.slice(1, 5)) - +(b.slice(1, 5))) : null
+      this.nag = nag ? nag.slice().sort((a, b) => +(a.slice(1, 5)) - +(b.slice(1, 5))) : null
 
       this.prev = null
       this.next = null
