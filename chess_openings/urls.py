@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register('openings', views.OpeningViewSet)
-router.register('openings/tags', views.TagViewSet)
+router.register('tags', views.TagViewSet)
 
 urlpatterns = [
     path('openings/create/', views.CreateOpeningView.as_view(), name='opening-view'),
