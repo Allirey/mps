@@ -11,6 +11,7 @@ class ChessOpeningsStore {
 
    currentOpening = null
    currentChapter = null
+   tags = []
 
    createOpening = (title, description, color, pgn) => {
       return this.rootStore.api.Openings.create(title, description, color, pgn)
@@ -44,6 +45,10 @@ class ChessOpeningsStore {
          })
       }
    }
+
+   getTags = () => {
+      return this.rootStore.api.Openings.tags().then(data => this.tags = data.map(el=> el.name))
+   }
 }
 
 decorate(ChessOpeningsStore, {
@@ -52,10 +57,12 @@ decorate(ChessOpeningsStore, {
    currentChapter: observable,
    openingsCache: observable,
    chaptersCache: observable,
+   tags: observable,
 
    createOpening: action,
    getOpenings: action,
    getOpening: action,
+   getTags: action,
 });
 
 export default ChessOpeningsStore;

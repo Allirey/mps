@@ -28,6 +28,7 @@ const lichessExplorerApi = lichessExplorerBaseApi + '/lichess'
 const lichessGameApi = 'https://lichess.org/game/export/'
 
 const apiOpenings = apiBase + '/openings/'
+const apiTags = apiBase + '/tags/'
 
 class api {
    constructor(rootStore) {
@@ -110,6 +111,7 @@ class api {
       delete: (slug) => this.requests.delete(`${apiOpenings}${slug}/`, {}, true),
       list: () => this.requests.get(apiOpenings),
       chapter: (number) => this.requests.get(`${apiOpenings}chapters/${number}`),
+      tags: () => this.requests.get(apiTags),
    }
 
    // wrap on fetch: requests.METHOD_NAME(URL, OPTIONS, WITH_AUTH)
