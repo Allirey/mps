@@ -1,9 +1,9 @@
 from rest_framework import viewsets, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Opening, OpeningChapter
+from .models import Opening, OpeningChapter, Tag
 from .utils import pgn_to_json
-from .serializers import OpeningSerializer, ChapterSerializer, OpeningDetailSerializer
+from .serializers import OpeningSerializer, ChapterSerializer, OpeningDetailSerializer, TagSerializer
 from .permissions import IsAdminOrReadOnly
 from django.utils.text import slugify
 
@@ -48,3 +48,9 @@ class ChapterDetailView(generics.RetrieveAPIView):
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = ChapterSerializer
     queryset = OpeningChapter.objects.all()
+
+
+class TagViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAdminOrReadOnly,)
+    serializer_class = TagSerializer
+    queryset = Tag.objects.all()

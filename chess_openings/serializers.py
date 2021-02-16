@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Opening, OpeningChapter
+from .models import Opening, OpeningChapter, Tag
 
 
 class ChapterSerializer(serializers.ModelSerializer):
@@ -22,7 +22,18 @@ class OpeningDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        exclude = 'openings',
+
+
 class OpeningSerializer(serializers.ModelSerializer):
+    tags = TagSerializer(many=True, read_only=True)
+
     class Meta:
         model = Opening
         fields = '__all__'
+
+
+
