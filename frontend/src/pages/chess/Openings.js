@@ -40,7 +40,6 @@ const useStyles = makeStyles(theme => ({
    filter: {
       margin: "4px 2px",
    },
-   activeFilter: {backgroundColor: "lightgreen", "&:hover": {backgroundColor: "lightgreen"}},
    createBtn: {
       position: "fixed",
       bottom: 50,
