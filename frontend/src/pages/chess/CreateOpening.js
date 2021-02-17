@@ -1,11 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import withStore from '../../hocs/withStore'
-import {Container, Grid, makeStyles, TextField, Button} from "@material-ui/core";
+import {Container, Grid, makeStyles, TextField, Button, Chip} from "@material-ui/core";
+import DoneIcon from "@material-ui/icons/Done";
 
 const useStyles = makeStyles(theme => ({
    root: {},
    input: {
       display: 'none',
+   },
+   filter: {
+      margin: "4px 2px",
    },
    submit: {
       marginTop: theme.spacing(2)
@@ -20,6 +24,12 @@ const CreateOpening = (props) => {
    const [color, setColor] = useState('');
    const [selectedFile, setSelectedFile] = useState();
    const [isFilePicked, setIsFilePicked] = useState(false);
+   const [selectedTags, setSelectedTags] = useState([])
+   const tags = props.stores.openings.tags
+
+   useEffect(() => {
+      props.stores.openings.getTags()
+   }, [])
 
    const changeHandler = (event) => {
       setSelectedFile(event.target.files[0]);
@@ -28,11 +38,12 @@ const CreateOpening = (props) => {
 
    const handleSubmission = () => {
       selectedFile && selectedFile.text().then(pgn => {
-         props.stores.openings.createOpening(title, description, color, pgn).then(() => {
+         props.stores.openings.createOpening(title, description, color, selectedTags, pgn).then(() => {
             props.stores.notifications.notify('Successfully uploaded')
             setTitle('')
             setDescription('')
             setColor('')
+            setSelectedTags([])
 
          }).catch(() => {
             props.stores.notifications.notify('Upload failed', 3)
@@ -58,6 +69,8 @@ const CreateOpening = (props) => {
           onChange={e => setDescription(e.target.value)}
           size={"small"}
           fullWidth
+          multiline
+          rows={3}
           variant="outlined"
           margin={"normal"}
           placeholder={'description'}
@@ -88,7 +101,20 @@ const CreateOpening = (props) => {
            </Button>
         </label>
 
-        <Button className={classes.submit} fullWidth onClick={handleSubmission} disableRipple variant={"outlined"}>Submit</Button>
+        <Grid item direction={'row'}>
+           {tags.map((el, i) => <Chip
+             key={el + '' + i}
+             disableRipple
+             className={`${classes.filter}`}
+             variant={"outlined"}
+             label={el}
+             avatar={selectedTags.includes(el) && <DoneIcon/>}
+             onClick={() => setSelectedTags(selectedTags.includes(el) ? selectedTags.filter(elem => elem !== el) : [el, ...selectedTags])}
+           />)}
+        </Grid>
+
+        <Button className={classes.submit} fullWidth onClick={handleSubmission} disableRipple
+                variant={"outlined"}>Submit</Button>
 
      </Grid>
    )

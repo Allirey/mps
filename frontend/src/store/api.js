@@ -102,8 +102,8 @@ class api {
    }
 
    Openings = {
-      create: (title, description, color, pgn) => this.requests.post(apiOpenings + 'create/', {
-         body: JSON.stringify({title, description, color, pgn})
+      create: (title, description, color, tags, pgn) => this.requests.post(apiOpenings + 'create/', {
+         body: JSON.stringify({title, description, color, tags, pgn})
       }, true),
       retrieve: (slug) => this.requests.get(`${apiOpenings}${slug}/`),
       update: (slug, data) => this.requests.put(`${apiOpenings}${slug}/`, {body: JSON.stringify({...data})}, true),

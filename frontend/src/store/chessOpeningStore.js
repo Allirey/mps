@@ -13,8 +13,8 @@ class ChessOpeningsStore {
    currentChapter = null
    tags = []
 
-   createOpening = (title, description, color, pgn) => {
-      return this.rootStore.api.Openings.create(title, description, color, pgn)
+   createOpening = (title, description, color, tags, pgn) => {
+      return this.rootStore.api.Openings.create(title, description, color, tags, pgn)
    }
 
    getOpenings = () => this.rootStore.api.Openings.list().then(data => this.openingList = data)
@@ -47,7 +47,7 @@ class ChessOpeningsStore {
    }
 
    getTags = () => {
-      return this.rootStore.api.Openings.tags().then(data => this.tags = data.map(el=> el.name))
+      return this.rootStore.api.Openings.tags().then(data => this.tags = data.map(el => el.name))
    }
 }
 
