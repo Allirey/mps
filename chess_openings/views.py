@@ -9,6 +9,7 @@ from django.utils.text import slugify
 
 
 class CreateOpeningView(APIView):
+    permission_classes = (IsAdminOrReadOnly,)
     def post(self, request):
         data = request.data
 
@@ -25,6 +26,14 @@ class CreateOpeningView(APIView):
                     f"{(game['headers'].get('Black')) if game['headers'].get('Black') else ''}"
             description = f"{game['headers'].get('Event')}"
             OpeningChapter(title=title, description=description, chapter_number=i, opening=opening, data=game).save()
+
+        for tag in data.get('tags', []):
+            try:
+                tag = Tag.objects.get(name=tag)
+                opening.tags.add(tag)
+
+            except:
+                pass
 
         opening.save()
 
