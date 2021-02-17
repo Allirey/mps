@@ -39,7 +39,7 @@ class api {
 
    Auth = {
       register: (username, email, password) =>
-        this.requests.post(apiRegister, {body: JSON.stringify({username, password, email})}),
+        this.requests.post(apiRegister, {body: JSON.stringify({username, password, email})}, true),
       getUser: (username) => this.requests.get(`${apiPublicUser}${username}/`),
       editUserData: (username, data) => this.requests.patch(`${apiPublicUser}${username}/`,
         {body: JSON.stringify(data)}, true),
