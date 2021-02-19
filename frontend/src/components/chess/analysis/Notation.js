@@ -14,7 +14,7 @@ const ACTIONS = {PROMOTE: 'promote', DELETE_LINE: 'deleteLine', DELETE_NEXT: 'de
 const NAG_TAGS = {
    '$1': '!', '$2': '?', '$3': '!!', '$4': '??', '$5': '!?', '$6': '?!', '$7': '□', '$10': '=',
    '$13': '∞', '$14': '+/=', '$15': '=/+', '$16': '±', '$17': '∓', '$18': '+-', '$19': '-+',
-   '$22': '⨀', '$23': '⨀', '$32': '↑↑', '$36': '↑', '$37': '↑', '$40': '→',  '$41': '→',
+   '$22': '⨀', '$23': '⨀', '$32': '↑↑', '$36': '↑', '$37': '↑', '$40': '→', '$41': '→',
    '$45': '=/∞', '$46': '=/∞', '$132': '⇆', '$139': '⨁', '$140': '∆', '$146': 'N',
 }
 
@@ -42,21 +42,7 @@ const useStyles = makeStyles({
       cursor: "default",
       padding: 8,
       lineHeight: "1.3",
-      position:"relative",
-
-
-      "& $span": {
-         cursor: "pointer",
-         whiteSpace: 'nowrap',
-         padding: 1,
-         borderRadius: 4,
-         fontSize: "0.9em",
-         fontWeight: 500,
-      },
-      "& span.active": {
-         backgroundColor: "#435866",
-         color: "#FFFFFF",
-      },
+      position: "relative",
       "& blockquote": {
          borderLeft: "2px solid #ccc",
          paddingLeft: "15px",
@@ -72,6 +58,28 @@ const useStyles = makeStyles({
          padding: 0,
       }
    },
+   move: {
+      cursor: "pointer",
+      whiteSpace: 'nowrap',
+      padding: 1,
+      borderRadius: 4,
+      fontSize: "0.9em",
+   },
+   index: {
+      color: "#787878",
+      fontSize: "90%",
+   },
+   active: {
+      backgroundColor: "#435866",
+      color: "#FFFFFF",
+      "& $span": {
+         backgroundColor: "#435866",
+         color: "#FFFFFF",
+      }
+   },
+   mainline:{
+      fontWeight: 500
+   }
 });
 
 function Notation(props) {
@@ -82,12 +90,11 @@ function Notation(props) {
 
    const refs = {}
 
-
    useEffect(() => {
       refs[props.currentNode] && refs[props.currentNode].scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-        })
+         behavior: 'smooth',
+         block: 'nearest',
+      })
 
    }, [props.currentNode])
 
@@ -136,6 +143,7 @@ function Notation(props) {
       return (
         <Fragment>
            {data.map((node, i) => {
+              const index = (i + appender) % 2 ? `${moveCount(i)}.` : !i && !!node.san && `${moveCount(i) - 1}...`
               return <Fragment key={i}>
                  <Typography
                    component={"span"}
@@ -146,11 +154,12 @@ function Notation(props) {
                    }}
                    key={`${node.san}${node.fen}`}
                    onClick={() => props.jumpTo(node)}
-                   className={props.currentNode === node && !!node.san ? "active" : null}>
-                    {(i + appender) % 2 ? `${moveCount(i)}.` : !i && !!node.san && `${moveCount(i) - 1}...`}{node.san}
+                   className={`${classes.move} ${props.currentNode === node && !!node.san ? classes.active : null} ${classes.mainline}`}>
+                    {index && <span className={classes.index}>{index}</span>}{node.san}
                     {node.nag && node.nag.length ? `${node.nag.map(n => NAG_TAGS[n]).join(' ')}` : ''}
                  </Typography>{" "}{node.subLines.map((variation, j) =>
-                <blockquote key={`${variation.first.fen}${j + 100}`}>{renderTree(toArr(variation), i + appender)}
+                <blockquote key={`${variation.first.fen}${j + 100}`}>
+                   {renderTree(toArr(variation), i + appender)}
                 </blockquote>)}
               </Fragment>
            })}
