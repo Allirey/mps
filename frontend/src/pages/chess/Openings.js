@@ -24,6 +24,7 @@ const useStyles = makeStyles(theme => ({
       // marginTop: theme.spacing(1),
    },
    card: {
+      backgroundColor: "#e6f6fd",
       "& $a": {
          textDecoration: "none",
          color: "black",
@@ -38,7 +39,7 @@ const useStyles = makeStyles(theme => ({
       },
    },
    filter: {
-      margin: "4px 2px",
+      margin: "10px 2px",
    },
    createBtn: {
       position: "fixed",
@@ -104,8 +105,6 @@ const Openings = (props) => {
             </Grid>
 
             <Grid item container direction={'row'} spacing={2} className={classes.cardContainer}>
-               {props.stores.authStore.currentUser && props.stores.authStore.currentUser.is_staff && <Grid item xs={12}>
-               </Grid>}
                {openings?.length ?
                  <Grid item xs={12}><Typography
                    align={"left"}><strong>{!filters.length ? openings.length : openings.filter(el => filters.every(e => el.tags.map(elem => elem.name).indexOf(e) !== -1)).length}</strong> openings
@@ -123,8 +122,8 @@ const Openings = (props) => {
                                 {opening.tags.map((tag, i) => <Chip
                                   key={i + '' + tag}
                                   style={{
-                                     backgroundColor: opening.color === 'w' ? 'white' : 'black',
-                                     color: opening.color === 'w' ? 'black' : 'white',
+                                     backgroundColor: opening.color === 'w' ? 'white' : '#333',
+                                     color: opening.color === 'w' ? '#000' : 'white',
                                      margin: "2px",
                                   }}
                                   label={tag.name}
