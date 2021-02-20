@@ -66,7 +66,7 @@ const useStyles = makeStyles({
       fontSize: "0.9em",
    },
    index: {
-      color: "#787878",
+      color: "#a5a5a5",
       fontSize: "90%",
    },
    active: {
@@ -79,6 +79,9 @@ const useStyles = makeStyles({
    },
    mainline:{
       fontWeight: 500
+   },
+   mobileMove:{
+      fontSize: "0.8em",
    }
 });
 
@@ -154,7 +157,7 @@ function Notation(props) {
                    }}
                    key={`${node.san}${node.fen}`}
                    onClick={() => props.jumpTo(node)}
-                   className={`${classes.move} ${props.currentNode === node && !!node.san ? classes.active : null} ${classes.mainline}`}>
+                   className={`${classes.move} ${props.currentNode === node && !!node.san ? classes.active : null} ${classes.mainline} ${matchesOnlyXS? classes.mobileMove: null}`}>
                     {index && <span className={classes.index}>{index}</span>}{node.san}
                     {node.nag && node.nag.length ? `${node.nag.map(n => NAG_TAGS[n]).join(' ')}` : ''}
                  </Typography>{" "}{node.subLines.map((variation, j) =>
