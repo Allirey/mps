@@ -92,14 +92,14 @@ const Openings = (props) => {
 
          <Grid container direction={"column"}>
 
-            <Grid item direction={'row'}>
+            <Grid item>
                {tags.map((el, i) => <Chip
                  key={el + '' + i}
                  disableRipple
                  className={`${classes.filter}`}
                  variant={"outlined"}
                  label={el}
-                 avatar={filters.includes(el) && <DoneIcon/>}
+                 avatar={filters.includes(el) ? <DoneIcon/> : null}
                  onClick={() => setFilters(filters.includes(el) ? filters.filter(elem => elem !== el) : [el, ...filters])}
                />)}
             </Grid>
@@ -110,7 +110,7 @@ const Openings = (props) => {
                    align={"left"}><strong>{!filters.length ? openings.length : openings.filter(el => filters.every(e => el.tags.map(elem => elem.name).indexOf(e) !== -1)).length}</strong> openings
                     found</Typography></Grid> : ''}
                {openings?.map(opening => (!filters?.length || filters.every(el => opening.tags.map(el => el.name).indexOf(el) !== -1)) &&
-                 <Grid item xs={12} sm={6} md={4} lg={4}>
+                 <Grid item xs={12} sm={6} md={4} lg={4} key={opening.slug}>
                     <Fade in={true}>
                        <Card className={classes.card}>
                           <CardActionArea disableRipple component={Link} to={`/chess/openings/${opening.slug}`}

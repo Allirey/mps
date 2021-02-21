@@ -4,6 +4,7 @@ import Notation from "../../components/chess/analysis/Notation";
 import NavButtons from "../../components/chess/analysis/NavButtons";
 import GameInfo from "../../components/chess/analysis/GameInfo";
 import ExplorerBox from "../../components/chess/analysis/ExplorerBox";
+import EngineBox from "../../components/chess/analysis/EngineBox";
 
 import ChessBoard from 'react-chessground'
 import "react-chessground/dist/styles/chessground.css"
@@ -27,7 +28,7 @@ import {
    Dialog,
    DialogActions,
    Button,
-   createMuiTheme, Fade
+   createMuiTheme, Fade, Paper
 } from "@material-ui/core";
 import withStore from "../../hocs/withStore";
 import {Helmet} from "react-helmet";
@@ -221,7 +222,7 @@ const ChessAnalysis = (props) => {
                    {matchesSM && !matchesLG && <Grid item style={{maxHeight: "17vh"}}>
                       <GameInfo data={notation.gameHeaders}/>
                    </Grid>}
-                   <div ref={elem => refEl = elem} className={classes.chessField}
+                   <Paper elevation={2} ref={elem => refEl = elem} className={classes.chessField}
                         onWheel={e => e.deltaY < 0 ? notation.toPrev() : notation.toNext()}>
                       <ChessBoard
                         width={matchesLG ? "544px" : matchesOnlyXS ? "100vmin" : matchesMD ? "448px" : "384px"}
@@ -237,7 +238,7 @@ const ChessAnalysis = (props) => {
                         coordinates={false}
                         onMove={notation.onMove}
                       />
-                   </div>
+                   </Paper>
 
                    {!matchesLG && <Grid item>
                       <Grid container justify={"center"}>
@@ -282,6 +283,10 @@ const ChessAnalysis = (props) => {
                 minHeight: matchesOnlyXS ? "calc(20vh + 100px)" : "none",
 
              }}>
+                   {/*<EngineBox*/}
+                   {/*  fen={notation.currentNode.fen}*/}
+                   {/*  onMove={notation.makeSanMove}*/}
+                   {/*/>*/}
                 {!showChapters || matchesLG ? <>{(matchesSM || !showBook) && <Grid sm md item style={{
                    overflow: "auto",
                 }}>
