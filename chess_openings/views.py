@@ -10,6 +10,7 @@ from django.utils.text import slugify
 
 class CreateOpeningView(APIView):
     permission_classes = (IsAdminOrReadOnly,)
+
     def post(self, request):
         data = request.data
 
@@ -18,6 +19,7 @@ class CreateOpeningView(APIView):
         opening = Opening(title=data['title'],
                           description=data['description'],
                           color=data['color'],
+                          image=data['image'],
                           slug=slugify(data['title']))
         opening.save()
 

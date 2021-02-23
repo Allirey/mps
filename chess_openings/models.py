@@ -14,6 +14,7 @@ class Opening(models.Model):
     description = models.CharField(max_length=255, blank=True, default='')
     color = models.CharField(max_length=32, choices=Color.choices, default=Color.BOTH)
     created = models.DateTimeField(auto_now_add=True)
+    image = models.TextField()
     slug = models.SlugField(max_length=96, unique=True)
 
 
