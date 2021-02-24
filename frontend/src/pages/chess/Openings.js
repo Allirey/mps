@@ -9,15 +9,13 @@ import {
    CardActionArea,
    Typography,
    CardContent,
-   Fab, Chip, Fade
+   Fab, Chip, Fade, CardMedia, Divider
 } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import {Helmet} from "react-helmet";
-import DoneIcon from '@material-ui/icons/Done';
 
 const useStyles = makeStyles(theme => ({
    root: {
-      padding: 8,
       marginBottom: theme.spacing(3)
    },
    cardContainer: {
@@ -52,11 +50,22 @@ const useStyles = makeStyles(theme => ({
    }
 }));
 
+const COLOR = {ANY: 'Any', WHITE: 'White', BLACK: 'Black'}
+
 const Openings = (props) => {
    const classes = useStyles()
-   const [filters, setFilters] = useState([])
+   const [colorFilter, setColorFilter] = useState(COLOR.ANY)
+   const [filter, setFilter] = useState('')
+
    const openings = props.stores.openings.openingList
+     .filter(o =>
+       colorFilter === COLOR.ANY ||
+       colorFilter === COLOR.BLACK && o.color === 'b' ||
+       colorFilter === COLOR.WHITE && o.color === 'w'
+     ).filter(o => filter === '' || o.tags.map(el => el.name).includes(filter))
+
    const tags = props.stores.openings.tags
+
    useEffect(() => {
       props.stores.openings.getOpenings()
       props.stores.openings.getTags()
@@ -89,34 +98,47 @@ const Openings = (props) => {
          <Grid container direction={"column"}>
 
             <Grid item>
+               {Object.values(COLOR).map(value =>
+                 <Chip
+                   disableRipple
+                   variant={"outlined"}
+                   style={{backgroundColor: value === colorFilter ? 'lightblue' : 'white'}}
+                   key={value}
+                   label={value}
+                   className={classes.filter}
+                   onClick={() => setColorFilter(value)}
+                 />
+               )}
+            </Grid>
+            <Divider/>
+            <Grid item>
                {tags.map((el, i) => <Chip
                  key={el + '' + i}
                  disableRipple
-                 className={`${classes.filter}`}
+                 className={classes.filter}
                  variant={"outlined"}
                  label={el}
-                 avatar={filters.includes(el) ? <DoneIcon/> : null}
-                 onClick={() => setFilters(filters.includes(el) ? filters.filter(elem => elem !== el) : [el, ...filters])}
+                 style={{backgroundColor: el === filter ? 'lightgreen' : 'white'}}
+                 onClick={() => setFilter(filter === el ? '' : el)}
                />)}
             </Grid>
 
             <Grid item container direction={'row'} spacing={3} className={classes.cardContainer}>
-               {openings?.length ?
-                 <Grid item xs={12}><Typography
-                   align={"left"}><strong>{!filters.length ? openings.length : openings.filter(el => filters.every(e => el.tags.map(elem => elem.name).indexOf(e) !== -1)).length}</strong> openings
-                    found</Typography></Grid> : ''}
-               {openings?.map(opening => (!filters?.length || filters.every(el => opening.tags.map(el => el.name).indexOf(el) !== -1)) &&
+               {(openings.length || filter) && <Grid item xs={12}><Typography
+                 align={"left"}><strong>{openings.length}</strong> openings found</Typography></Grid>}
+               {openings?.map(opening =>
                  <Grid item xs={12} sm={6} md={4} lg={3} key={opening.slug}>
                     <Fade in={true}>
                        <Card className={classes.card}>
                           <CardActionArea disableRipple component={Link} to={`/chess/openings/${opening.slug}`}
                                           style={{height: "100%"}}>
 
-                             <img width={'100%'} height={"auto"} src={'data:image/png;base64,' + opening.image}
-                                  alt={''}/>
-                             <Typography style={{padding: 8}} variant={"h6"} align={"center"}>{opening.title}</Typography>
+                             <CardMedia component={"img"} image={'data:image/png;base64,' + opening.image} alt={''}/>
                              <CardContent>
-                                <Typography color={"textSecondary"}>{opening.description}</Typography>
+                                <Typography gutterBottom variant={"h5"} component={"h2"}
+                                            align={"center"}>{opening.title}</Typography>
+                                <Typography variant="body2" color="textSecondary"
+                                            component="p">{opening.description}</Typography>
                                 {opening.tags.map((tag, i) => <Chip
                                   key={i + '' + tag}
                                   style={{
@@ -128,7 +150,6 @@ const Openings = (props) => {
                                   size={"small"}
                                   variant={"outlined"}
                                 />)}
-
                              </CardContent>
                           </CardActionArea>
                        </Card>
