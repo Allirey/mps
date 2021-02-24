@@ -4,7 +4,6 @@ import Notation from "../../components/chess/analysis/Notation";
 import NavButtons from "../../components/chess/analysis/NavButtons";
 import GameInfo from "../../components/chess/analysis/GameInfo";
 import ExplorerBox from "../../components/chess/analysis/ExplorerBox";
-import EngineBox from "../../components/chess/analysis/EngineBox";
 
 import ChessBoard from 'react-chessground'
 import "react-chessground/dist/styles/chessground.css"
@@ -283,10 +282,6 @@ const ChessAnalysis = (props) => {
                 minHeight: matchesOnlyXS ? "calc(20vh + 100px)" : "none",
 
              }}>
-                   {/*<EngineBox*/}
-                   {/*  fen={notation.currentNode.fen}*/}
-                   {/*  onMove={notation.makeSanMove}*/}
-                   {/*/>*/}
                 {!showChapters || matchesLG ? <>{(matchesSM || !showBook) && <Grid sm md item style={{
                    overflow: "auto",
                 }}>
