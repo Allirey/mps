@@ -33,10 +33,6 @@ const useStyles = makeStyles(theme => ({
          }
       },
       height: "100%",
-      "&:hover": {
-         boxShadow: "0 0 5px #431335, 0 0 20px #431335",
-         backgroundColor: "inherit",
-      },
    },
    filter: {
       margin: "10px 2px",
@@ -104,19 +100,21 @@ const Openings = (props) => {
                />)}
             </Grid>
 
-            <Grid item container direction={'row'} spacing={2} className={classes.cardContainer}>
+            <Grid item container direction={'row'} spacing={3} className={classes.cardContainer}>
                {openings?.length ?
                  <Grid item xs={12}><Typography
                    align={"left"}><strong>{!filters.length ? openings.length : openings.filter(el => filters.every(e => el.tags.map(elem => elem.name).indexOf(e) !== -1)).length}</strong> openings
                     found</Typography></Grid> : ''}
                {openings?.map(opening => (!filters?.length || filters.every(el => opening.tags.map(el => el.name).indexOf(el) !== -1)) &&
-                 <Grid item xs={12} sm={6} md={4} lg={4} key={opening.slug}>
+                 <Grid item xs={12} sm={6} md={4} lg={3} key={opening.slug}>
                     <Fade in={true}>
                        <Card className={classes.card}>
                           <CardActionArea disableRipple component={Link} to={`/chess/openings/${opening.slug}`}
-                                          style={{padding: 8, height: "100%"}}>
-                             <Typography variant={"h6"} align={"center"}>{opening.title}</Typography>
+                                          style={{height: "100%"}}>
 
+                             <img width={'100%'} height={"auto"} src={'data:image/png;base64,' + opening.image}
+                                  alt={''}/>
+                             <Typography style={{padding: 8}} variant={"h6"} align={"center"}>{opening.title}</Typography>
                              <CardContent>
                                 <Typography color={"textSecondary"}>{opening.description}</Typography>
                                 {opening.tags.map((tag, i) => <Chip
