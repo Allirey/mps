@@ -13,8 +13,8 @@ class ChessOpeningsStore {
    currentChapter = null
    tags = []
 
-   createOpening = (title, description, color, tags, pgn) => {
-      return this.rootStore.api.Openings.create(title, description, color, tags, pgn)
+   createOpening = (title, description, color, tags, image, pgn) => {
+      return this.rootStore.api.Openings.create(title, description, color, tags, image, pgn)
    }
 
    getOpenings = () => this.rootStore.api.Openings.list().then(data => this.openingList = data)

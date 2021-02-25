@@ -19,40 +19,51 @@ const useStyles = makeStyles(theme => ({
 
 const CreateOpening = (props) => {
    const classes = useStyles();
+
    const [title, setTitle] = useState('');
    const [description, setDescription] = useState('');
    const [color, setColor] = useState('');
-   const [selectedFile, setSelectedFile] = useState();
-   const [isFilePicked, setIsFilePicked] = useState(false);
    const [selectedTags, setSelectedTags] = useState([])
+
+   const [pgnData, setPgnData] = useState('')
+   const [imageData, setImageData] = useState('')
+
    const tags = props.stores.openings.tags
 
    useEffect(() => {
       props.stores.openings.getTags()
    }, [])
 
-   const changeHandler = (event) => {
-      setSelectedFile(event.target.files[0]);
-      setIsFilePicked(true);
-   };
-
    const handleSubmission = () => {
-      selectedFile && selectedFile.text().then(pgn => {
-         props.stores.openings.createOpening(title, description, color, selectedTags, pgn).then(() => {
-            props.stores.notifications.notify('Successfully uploaded')
-            setTitle('')
-            setDescription('')
-            setColor('')
-            setSelectedTags([])
-
-         }).catch(() => {
-            props.stores.notifications.notify('Upload failed', 3)
-         })
+      props.stores.openings.createOpening(title, description, color, selectedTags, imageData, pgnData).then(() => {
+         props.stores.notifications.notify('Successfully uploaded')
+         setTitle('')
+         setDescription('')
+         setColor('')
+         setSelectedTags([])
+         setImageData('')
+         setPgnData('')
+      }).catch(() => {
+         props.stores.notifications.notify('Upload failed', 3)
       })
    };
 
+   const onImageChoose = e => {
+      let file = e.target.files[0];
+      let reader = new FileReader();
+      reader.onloadend = () => setImageData(reader.result.substring('data:image/jpeg;base64,'.length))
+      reader.readAsDataURL(file);
+   }
+
+   const onPgnChoose = e => {
+      let file = e.target.files[0];
+      let reader = new FileReader();
+      reader.onloadend = () => setPgnData(reader.result)
+      reader.readAsText(file);
+   }
+
    return (
-     <Grid component={Container} maxWidth={'xs'} className={classes.root}>
+     <Grid component={Container} maxWidth={'xs'} className={classes.root} spacing={1}>
         <TextField
           value={title}
           onChange={e => setTitle(e.target.value)}
@@ -87,19 +98,38 @@ const CreateOpening = (props) => {
           placeholder={'color'}
           autoComplete="off"
         />
-        <input
-          accept=".pgn"
-          name="file"
-          className={classes.input}
-          id="contained-button-file"
-          type="file"
-          onChange={changeHandler}
-        />
-        <label htmlFor="contained-button-file">
-           <Button variant="contained" color="primary" component="span">
-              Upload
-           </Button>
-        </label>
+
+        <Grid item>
+           <input
+             accept=".pgn"
+             name="file"
+             className={classes.input}
+             id="pgn"
+             type="file"
+             onChange={onPgnChoose}
+           />
+           <label htmlFor="pgn">
+              <Button variant="contained" color="primary" component="span">
+                 Upload pgn
+              </Button>
+           </label>
+        </Grid>
+
+        <Grid item>
+           <input
+             accept=".jpg"
+             name="file"
+             className={classes.input}
+             id="image"
+             type="file"
+             onChange={onImageChoose}
+           />
+           <label htmlFor="image">
+              <Button variant="contained" color="primary" component="span">
+                 Upload image
+              </Button>
+           </label>
+        </Grid>
 
         <Grid item direction={'row'}>
            {tags.map((el, i) => <Chip
