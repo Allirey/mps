@@ -9,7 +9,7 @@ import {
    CardActionArea,
    Typography,
    CardContent,
-   Fab, Chip, Fade, CardMedia, Divider
+   Fab, Chip, Fade, CardMedia, Divider, Badge
 } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import {Helmet} from "react-helmet";
@@ -86,6 +86,7 @@ const Openings = (props) => {
          <meta name="twitter:description"
                content="Section is designed for experienced chess players, includes heavy-theory openings, and is constantly improving. New openings coming soon."/>
          <meta name="twitter:site:id" content="741164490"/>
+         <style type="text/css">{`html { overflow-y: scroll;}`}</style>
       </Helmet>
       <Container className={classes.root}>
          {props.stores.authStore.currentUser && props.stores.authStore.currentUser.is_staff && <Fab
@@ -125,7 +126,8 @@ const Openings = (props) => {
 
             <Grid item container direction={'row'} spacing={3} className={classes.cardContainer}>
                {(openings.length || filter) && <Grid item xs={12}><Typography
-                 align={"left"}><strong>{openings.length}</strong> openings found</Typography></Grid>}
+                 align={"center"} variant={"h5"} component={"h2"}><strong>{openings.length}</strong> openings
+                  found</Typography></Grid>}
                {openings?.map(opening =>
                  <Grid item xs={12} sm={6} md={4} lg={3} key={opening.slug}>
                     <Fade in={true}>
