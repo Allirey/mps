@@ -135,7 +135,7 @@ const Openings = (props) => {
                           <CardActionArea disableRipple component={Link} to={`/chess/openings/${opening.slug}`}
                                           style={{height: "100%"}}>
 
-                             <CardMedia component={"img"} image={'data:image/png;base64,' + opening.image} alt={''}/>
+                             <CardMedia component={"img"} image={opening.image} alt={''}/>
                              <CardContent>
                                 <Typography gutterBottom variant={"h5"} component={"h2"}
                                             align={"center"}>{opening.title}</Typography>
