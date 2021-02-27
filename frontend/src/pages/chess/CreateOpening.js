@@ -25,13 +25,34 @@ const useStyles = makeStyles(theme => ({
    submit: {
       marginTop: theme.spacing(2),
       marginBottom: theme.spacing(5),
-
+      backgroundColor: "lightgreen",
+      "&:hover": {
+         backgroundColor: "lightgreen",
+      }
+   },
+   browseBtn: {
+      textTransform: "none",
+      border: "none",
+      "&:hover":{
+         backgroundColor:"transparent",
+      }
+   },
+   uploadContainer: {
+      backgroundColor: "#c8dadf",
+      height: 100,
+      marginBottom: 8,
+      outline: "2px dashed #92b0b3",
+      outlineOffset: "-8px",
+      transition: ".15s",
+   },
+   dragover: {
+      backgroundColor: "#fff",
+      outlineOffset: "-16px",
    }
 }));
 
 const CreateOpening = (props) => {
    const classes = useStyles();
-   const [drag, setDrag] = useState(false)
 
    let imageRef = useRef()
    let pgnRef = useRef()
@@ -41,8 +62,10 @@ const CreateOpening = (props) => {
    const [color, setColor] = useState('w');
    const [selectedTags, setSelectedTags] = useState([])
 
-
+   const [pgnFileName, setPgnFileName] = useState('')
    const [pgnData, setPgnData] = useState('')
+
+   const [imageFileName, setImageFileName] = useState('')
    const [imageData, setImageData] = useState('')
 
    const tags = props.stores.openings.tags
@@ -54,23 +77,23 @@ const CreateOpening = (props) => {
       let pgnDiv = pgnRef.current
       imageDiv.addEventListener('dragenter', handleDragIn)
       imageDiv.addEventListener('dragleave', handleDragOut)
-      imageDiv.addEventListener('dragover', handleDrag)
+      imageDiv.addEventListener('dragover', handleDragImage)
       imageDiv.addEventListener('drop', handleImageDrop)
 
       pgnDiv.addEventListener('dragenter', handleDragIn)
       pgnDiv.addEventListener('dragleave', handleDragOut)
-      pgnDiv.addEventListener('dragover', handleDrag)
+      pgnDiv.addEventListener('dragover', handleDragPgn)
       pgnDiv.addEventListener('drop', handlePgnDrop)
 
       return () => {
          imageDiv.removeEventListener('dragenter', handleDragIn)
          imageDiv.removeEventListener('dragleave', handleDragOut)
-         imageDiv.removeEventListener('dragover', handleDrag)
+         imageDiv.removeEventListener('dragover', handleDragImage)
          imageDiv.removeEventListener('drop', handleImageDrop)
 
          pgnDiv.addEventListener('dragenter', handleDragIn)
          pgnDiv.addEventListener('dragleave', handleDragOut)
-         pgnDiv.addEventListener('dragover', handleDrag)
+         pgnDiv.addEventListener('dragover', handleDragPgn)
          pgnDiv.addEventListener('drop', handlePgnDrop)
       }
    }, [])
@@ -84,6 +107,8 @@ const CreateOpening = (props) => {
          setSelectedTags([])
          setImageData('')
          setPgnData('')
+         setPgnFileName('')
+         setImageFileName('')
       }).catch(() => {
          props.stores.notifications.notify('Upload failed', 3)
       })
@@ -92,8 +117,9 @@ const CreateOpening = (props) => {
    const onImageChoose = e => {
       let file = e.target.files[0];
       let reader = new FileReader();
-      reader.onloadend = () => setImageData(reader.result.replace('data:image/jpeg;base64,', ''))
+      reader.onloadend = () => setImageData(reader.result)
       reader.readAsDataURL(file);
+      setImageFileName(file.name)
    }
 
    const onPgnChoose = e => {
@@ -101,25 +127,35 @@ const CreateOpening = (props) => {
       let reader = new FileReader();
       reader.onloadend = () => setPgnData(reader.result)
       reader.readAsText(file);
+      setPgnFileName(file.name)
    }
 
-   const handleDrag = e => {
+   const handleDragImage = e => {
       e.preventDefault()
       e.stopPropagation()
+      imageRef.current.classList.add(classes.dragover)
    }
+
+   const handleDragPgn = e => {
+      e.preventDefault()
+      e.stopPropagation()
+      pgnRef.current.classList.add(classes.dragover)
+   }
+
    const handleDragIn = e => {
       e.preventDefault()
       e.stopPropagation()
-      setDrag(true)
    }
    const handleDragOut = e => {
       e.preventDefault()
       e.stopPropagation()
-      setDrag(false)
+      imageRef.current.classList.remove(classes.dragover)
+      pgnRef.current.classList.remove(classes.dragover)
    }
    const handleImageDrop = e => {
       e.preventDefault()
       e.stopPropagation()
+      imageRef.current.classList.remove(classes.dragover)
 
       let file = e.dataTransfer.files[0];
       if (!['image/jpeg', "image/png"].includes(file.type)) return
@@ -127,13 +163,13 @@ const CreateOpening = (props) => {
       let reader = new FileReader();
       reader.onloadend = () => setImageData(reader.result)
       reader.readAsDataURL(file);
-
-      setDrag(false)
+      setImageFileName(file.name)
    }
 
    const handlePgnDrop = e => {
       e.preventDefault()
       e.stopPropagation()
+      pgnRef.current.classList.remove(classes.dragover)
 
       let file = e.dataTransfer.files[0];
       if (!['application/vnd.chess-pgn',].includes(file.type)) return
@@ -141,11 +177,8 @@ const CreateOpening = (props) => {
       let reader = new FileReader();
       reader.onloadend = () => setPgnData(reader.result)
       reader.readAsText(file);
-
-      setDrag(false)
+      setPgnFileName(file.name)
    }
-
-   console.log(pgnData);
 
    return (
      <Grid component={Container} maxWidth={'xs'} className={classes.root}>
@@ -186,15 +219,11 @@ const CreateOpening = (props) => {
            </Select>
         </FormControl>
 
-        <Grid ref={imageRef} item style={{height: 100, border: "2px dashed #000", marginBottom: 8}}>
-           {imageData &&
-           <img style={{height: 94, width: "auto"}} src={imageData} alt={''}/>}
-
-           <Typography>Drag & Drop to upload image</Typography>
-           <Typography>or</Typography>
+        <Grid ref={imageRef} className={classes.uploadContainer} item container justify={"center"}
+              alignItems={"center"}>
 
            <input
-             accept=".jpg"
+             accept=".jpg,.png"
              name="file"
              className={classes.input}
              id="image"
@@ -202,17 +231,15 @@ const CreateOpening = (props) => {
              onChange={onImageChoose}
            />
            <label htmlFor="image">
-              <Button variant="outlined" component="span">
-                 Browse Image
+              <Button disableRipple className={classes.browseBtn} variant="outlined" component="span">
+                 <Typography color={imageFileName ? 'textPrimary' : "textSecondary"}>{imageFileName || <><strong>Choose
+                    image</strong> or drag it here.</>}</Typography>
               </Button>
            </label>
 
         </Grid>
 
-        <Grid ref={pgnRef} item style={{height: 100, border: "2px dashed #000", marginBottom: 8}}>
-           <Typography>Drag & Drop to upload pgn</Typography>
-           <Typography>or</Typography>
-
+        <Grid ref={pgnRef} className={classes.uploadContainer} item container justify={"center"} alignItems={"center"}>
            <input
              accept=".pgn"
              name="file"
@@ -222,9 +249,9 @@ const CreateOpening = (props) => {
              onChange={onPgnChoose}
            />
            <label htmlFor="pgn">
-              <Button variant="outlined" component="span">
-                 Browse Pgn
-              </Button>
+              <Button disableRipple className={classes.browseBtn} variant="outlined" component="span">
+                 <Typography color={pgnFileName ? 'textPrimary' : "textSecondary"}>{pgnFileName || <><strong>Choose
+                    pgn</strong> or drag it here.</>}</Typography></Button>
            </label>
         </Grid>
 
