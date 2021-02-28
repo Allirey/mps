@@ -138,7 +138,7 @@ const ChessAnalysis = (props) => {
    }, [chess.currentDB])
 
    useEffect(() => {
-      props.history.replace(`/chess/openings/${slug}/${slug && !chapter_id? 1: chapter_id}`)
+      slug && props.history.replace(`/chess/openings/${slug}/${slug && !chapter_id ? 1 : chapter_id}`)
       slug && openings.getOpening(slug, chapter_id)
       !slug && notation.resetNode()
       return () => setShowChapters(false)
@@ -215,7 +215,7 @@ const ChessAnalysis = (props) => {
                       <GameInfo data={notation.gameHeaders}/>
                    </Grid>}
                    <Paper elevation={2} ref={elem => refEl = elem} className={classes.chessField}
-                        onWheel={e => e.deltaY < 0 ? notation.toPrev() : notation.toNext()}>
+                          onWheel={e => e.deltaY < 0 ? notation.toPrev() : notation.toNext()}>
                       <ChessBoard
                         width={matchesLG ? "544px" : matchesOnlyXS ? "100vmin" : matchesMD ? "448px" : "384px"}
                         height={matchesLG ? "544px" : matchesOnlyXS ? "100vmin" : matchesMD ? "448px" : "384px"}
