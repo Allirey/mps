@@ -19,11 +19,11 @@ class ChessOpeningsStore {
 
    getOpenings = () => this.rootStore.api.Openings.list().then(data => this.openingList = data)
 
-   getOpening = (slug) => {
+   getOpening = (slug, chapter_id=1) => {
       const processData = (data) => {
          this.currentOpening = data
          this.rootStore.chessNotation.boardOrientation = data.color === 'w' ? 'white' : 'black'
-         this.getChapter(data.chapters[0].url)
+         this.getChapter(data.chapters[Math.max(0, Math.min(chapter_id-1, data.chapters.length - 1))].url)
       }
 
       if (slug in this.openingsCache) processData(this.openingsCache[slug])

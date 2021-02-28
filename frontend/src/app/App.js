@@ -65,8 +65,9 @@ function App(props) {
                  <Route path="/chess/openings" exact={true} component={Openings}/>
                  <Route path="/chess/openings/new" exact={true} component={CreateOpening}/>
                  <Route path="/chess/openings/:slug" exact={true} component={ChessAnalysis}/>
+                 <Route path="/chess/openings/:slug/:chapter_id" exact={true} component={ChessAnalysis}/>
                  <Route path="/chess/analysis" exact={true} component={ChessAnalysis}/>
-                 <Route path="/chess/:db/:id" exact={true} component={ChessAnalysis}/>
+                 <Route path="/chess/:db/:game_id" exact={true} component={ChessAnalysis}/>
                  <Route path="/login" exact={true} component={Login}/>
                  <Route path="/signup" exact={true} component={Register}/>
                  <Route path="/blog" exact={true} component={Articles}/>

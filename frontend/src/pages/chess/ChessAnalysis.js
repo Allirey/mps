@@ -69,7 +69,7 @@ const useStyles = makeStyles(theme => ({
 const ChessAnalysis = (props) => {
    const classes = useStyles();
    // const theme = useTheme();
-   const {db, id, slug} = useParams()
+   const {db, game_id, slug, chapter_id} = useParams()
    const matchesLG = useMediaQuery(theme.breakpoints.up('lg'));
    const matchesMD = useMediaQuery(theme.breakpoints.up('md'));
    const matchesSM = useMediaQuery(theme.breakpoints.up('sm'));
@@ -115,8 +115,8 @@ const ChessAnalysis = (props) => {
 
    useEffect(() => {
       if (refEl.hasOwnProperty('addEventListener')) refEl.addEventListener('wheel', e => e.preventDefault(), {passive: false});
-      if (db && id) {
-         chess.getGame(db, id).catch(() => {
+      if (db && game_id) {
+         chess.getGame(db, game_id).catch(() => {
             setNotFound(true)
          }).finally(() => {
             setLoading(false)
@@ -128,7 +128,7 @@ const ChessAnalysis = (props) => {
          notation.chessGame.reset()
          notation.resetNode()
       }
-   }, [db, id])
+   }, [db, game_id])
 
    useEffect(() => {
       if (chess.currentDB !== DATABASES.UKR) {
@@ -138,11 +138,12 @@ const ChessAnalysis = (props) => {
    }, [chess.currentDB])
 
    useEffect(() => {
-      slug && openings.getOpening(slug)
+      props.history.replace(`/chess/openings/${slug}/${slug && !chapter_id? 1: chapter_id}`)
+      slug && openings.getOpening(slug, chapter_id)
       !slug && notation.resetNode()
       return () => setShowChapters(false)
 
-   }, [slug])
+   }, [slug, chapter_id])
 
    const handleSearchSubmit = (name, color) => {
       notation.toFirst()
@@ -188,10 +189,6 @@ const ChessAnalysis = (props) => {
         {matchesOnlyXS && showChapters ? <OpeningChapters
             currentOpening={openings.currentOpening}
             onClose={() => setShowChapters(false)}
-            getChapter={(id) => {
-               setShowChapters(false);
-               openings.getChapter(id)
-            }}
             currentChapter={openings.currentChapter}
           />
           :
@@ -205,10 +202,6 @@ const ChessAnalysis = (props) => {
                    {!slug ? <img src={Colobki} alt={''} width={"100%"} height={"auto"}/> :
                      <StudyChapters
                        currentOpening={openings.currentOpening}
-                       getChapter={(id) => {
-                          setShowChapters(false);
-                          openings.getChapter(id)
-                       }}
                        currentChapter={openings.currentChapter}
                      />}
                 </Grid>
@@ -313,10 +306,6 @@ const ChessAnalysis = (props) => {
                 </> : <Grid item style={{overflow: "auto",}}>
                    <StudyChapters
                      currentOpening={openings.currentOpening}
-                     getChapter={(id) => {
-                        setShowChapters(false);
-                        openings.getChapter(id)
-                     }}
                      currentChapter={openings.currentChapter}
                    /></Grid>}
 

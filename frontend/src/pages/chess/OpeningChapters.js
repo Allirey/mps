@@ -25,7 +25,6 @@ const Opening = (props) => {
         <Fab className={classes.close} size={"small"} disableRipple onClick={onClose}><CloseIcon/></Fab>
         <StudyChapters
           currentOpening={currentOpening}
-          getChapter={getChapter}
           currentChapter={currentChapter}
         />
      </>
