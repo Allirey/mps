@@ -23,6 +23,7 @@ class OpeningChapter(models.Model):
     chapter_number = models.IntegerField()
     description = models.CharField(max_length=255, blank=True, default='')
     opening = models.ForeignKey(Opening, on_delete=models.CASCADE, related_name='chapters')
+    url = models.CharField(max_length=16)
     data = models.JSONField()
 
     class Meta:

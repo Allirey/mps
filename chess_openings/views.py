@@ -6,6 +6,7 @@ from .utils import pgn_to_json
 from .serializers import OpeningSerializer, ChapterSerializer, OpeningDetailSerializer, TagSerializer
 from .permissions import IsAdminOrReadOnly
 from django.utils.text import slugify
+from nanoid import generate
 
 
 class CreateOpeningView(APIView):
@@ -27,7 +28,12 @@ class CreateOpeningView(APIView):
             title = f"{game['headers'].get('White')}. " \
                     f"{(game['headers'].get('Black')) if game['headers'].get('Black') else ''}"
             description = f"{game['headers'].get('Event')}"
-            OpeningChapter(title=title, description=description, chapter_number=i, opening=opening, data=game).save()
+            OpeningChapter(title=title,
+                           description=description,
+                           chapter_number=i,
+                           opening=opening,
+                           url=generate('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 8),
+                           data=game).save()
 
         for tag in data.get('tags', []):
             try:
@@ -55,7 +61,7 @@ class OpeningViewSet(viewsets.ModelViewSet):
 
 
 class ChapterDetailView(generics.RetrieveAPIView):
-    # todo retrieve by generated unpredictable ID
+    lookup_field = 'url'
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = ChapterSerializer
     queryset = OpeningChapter.objects.all()

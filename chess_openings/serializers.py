@@ -5,13 +5,13 @@ from .models import Opening, OpeningChapter, Tag
 class ChapterSerializer(serializers.ModelSerializer):
     class Meta:
         model = OpeningChapter
-        fields = '__all__'
+        exclude = 'id', 'opening'
 
 
 class ChapterWithoutDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = OpeningChapter
-        exclude = 'data',
+        exclude = 'data', 'id', 'opening'
 
 
 class OpeningDetailSerializer(serializers.ModelSerializer):
@@ -19,7 +19,7 @@ class OpeningDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Opening
-        fields = '__all__'
+        exclude = 'id', 'created'
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -33,7 +33,7 @@ class OpeningSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Opening
-        fields = '__all__'
+        exclude = 'id', 'created'
 
 
 
