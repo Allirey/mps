@@ -110,7 +110,7 @@ class api {
       patch: (slug, data) => this.requests.patch(`${apiOpenings}${slug}/`, {body: JSON.stringify({...data})}, true),
       delete: (slug) => this.requests.delete(`${apiOpenings}${slug}/`, {}, true),
       list: () => this.requests.get(apiOpenings),
-      chapter: (number) => this.requests.get(`${apiOpenings}chapters/${number}`),
+      chapter: url => this.requests.get(`${apiOpenings}chapters/${url}`),
       tags: () => this.requests.get(apiTags),
    }
 

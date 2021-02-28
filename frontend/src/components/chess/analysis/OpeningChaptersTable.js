@@ -23,8 +23,8 @@ const ChaptersTable = (props) => {
       <Table size={"small"} >
       <TableBody>
          {props.currentOpening && props.currentOpening.chapters.map(chapter =>
-           <TableRow className={props.currentChapter && props.currentChapter.id === chapter.id && classes.active}
-                     key={chapter.id} style={{cursor: "pointer"}} onClick={() => props.getChapter(chapter.id)}>
+           <TableRow className={props.currentChapter && props.currentChapter.url === chapter.url && classes.active}
+                     key={chapter.id} style={{cursor: "pointer"}} onClick={() => props.getChapter(chapter.url)}>
               <TableCell>
                  <Typography component={"span"} variant={"h6"} style={{display: "block"}}>{chapter.title}</Typography>
                  <Typography component={"span"} style={{display: "block"}}>{chapter.description}</Typography>

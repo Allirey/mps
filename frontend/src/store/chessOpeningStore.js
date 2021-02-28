@@ -23,7 +23,7 @@ class ChessOpeningsStore {
       const processData = (data) => {
          this.currentOpening = data
          this.rootStore.chessNotation.boardOrientation = data.color === 'w' ? 'white' : 'black'
-         this.getChapter(data.chapters[0].id)
+         this.getChapter(data.chapters[0].url)
       }
 
       if (slug in this.openingsCache) processData(this.openingsCache[slug])
