@@ -9,10 +9,14 @@ import {
    CardActionArea,
    Typography,
    CardContent,
-   Fab, Chip, Fade, CardMedia, Divider, Badge
+   Fab, Chip, Fade, CardMedia, Divider, Button, MenuItem, Menu, ListItemIcon, ListItemText
 } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import {Helmet} from "react-helmet";
+import InfoIcon from '@material-ui/icons/Info';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import FeedbackIcon from '@material-ui/icons/Feedback';
+import LiveHelpIcon from '@material-ui/icons/LiveHelp';
 
 const useStyles = makeStyles(theme => ({
    root: {
@@ -71,6 +75,16 @@ const Openings = (props) => {
       props.stores.openings.getTags()
    }, [])
 
+   const [anchorEl, setAnchorEl] = React.useState(null);
+
+   const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+   };
+
+   const handleClose = () => {
+      setAnchorEl(null);
+   };
+
    return <>
       <Helmet
         title={"Advanced chess openings theory"}
@@ -110,7 +124,48 @@ const Openings = (props) => {
                    onClick={() => setColorFilter(value)}
                  />
                )}
+
+               <Button size={"small"} style={{marginLeft: "40px"}} disableRipple aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                  <InfoIcon/>
+               </Button>
+               <Menu
+                 id="simple-menu"
+                 anchorEl={anchorEl}
+                 keepMounted
+                 open={Boolean(anchorEl)}
+                 onClose={handleClose}
+               >
+                  <MenuItem disableRipple target={'noopener'} component={Link} to={'/blog/faq-chess-openings'}
+                            onClick={handleClose}>
+                     <ListItemIcon>
+                        <LiveHelpIcon  style={{color: "black"}}/>
+                     </ListItemIcon>
+                     <ListItemText>
+                        FAQ
+                     </ListItemText>
+                  </MenuItem>
+                  <MenuItem target={'noopener'} component={Link} to={'//t.me/inf13'} disableRipple
+                            onClick={handleClose}>
+                     <ListItemIcon>
+                        <FeedbackIcon style={{color: "black"}}/>
+                     </ListItemIcon>
+                     <ListItemText>
+                        Feedback
+                     </ListItemText>
+                  </MenuItem>
+                  <MenuItem disableRipple target={'noopener'} component={Link}
+                            to={'/blog/contribute-to-chess-opening-theory'} onClick={handleClose}>
+                     <ListItemIcon>
+                        <FavoriteIcon color={"secondary"}/>
+                     </ListItemIcon>
+                     <ListItemText>
+                        Contribute
+                     </ListItemText>
+                  </MenuItem>
+               </Menu>
             </Grid>
+
+
             <Divider/>
             <Grid item>
                {tags.map((el, i) => <Chip
