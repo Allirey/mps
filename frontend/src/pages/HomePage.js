@@ -1,34 +1,35 @@
 import React from "react";
-import {Container, makeStyles, Typography} from "@material-ui/core";
+import {Container, List, ListItem, makeStyles, Typography} from "@material-ui/core";
 import withStore from '../hocs/withStore';
-import logo from "./undraw_development_ouy3.svg";
+import {Link} from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        marginTop: theme.spacing(3),
-        paddingBottom: theme.spacing(3),
-    },
-    logo: {
-        width: "21em",
-        "& img": {width: "100%", height: "100%"}
-    },
-    todos: {
-        marginTop: theme.spacing(2)
-    }
+   root: {
+      marginTop: theme.spacing(3),
+      paddingBottom: theme.spacing(3),
+      "& $a": {
+         background: "linear-gradient(0deg,#fce62e 35%,transparent 0)",
+         textDecoration: "none",
+         color: 'black',
+      }
+   },
 }))
 
 function HomePage(props) {
-    const classes = useStyles();
+   const classes = useStyles();
 
-    return (
-        <Container className={classes.root}>
-            <Typography variant={"h3"}>Development in progress....</Typography>
-
-            <div className={classes.logo}>
-                <img src={logo} alt={''}/>
-            </div>
-        </Container>
-    )
+   return (
+     <Container className={classes.root}>
+        <List>
+           <ListItem><Typography variant={"h5"} component={'h2'}><Link to={'/blog'}>Blog</Link></Typography></ListItem>
+           <ListItem> <Typography variant={"h5"} component={'h2'}><Link to={'/chess/analysis'}>Chess opening explorer, 3
+              databases: ukrainian,
+              lichess.org, masters</Link></Typography></ListItem>
+           <ListItem> <Typography variant={"h5"} component={'h2'}><Link to={'/chess/openings'}>Advanced chess opening
+              theory</Link></Typography></ListItem>
+        </List>
+     </Container>
+   )
 }
 
 export default withStore(HomePage)

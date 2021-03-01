@@ -1,4 +1,4 @@
-# Pet project
+# [https://glitcher.org](https://glitcher.org)
 
-Main goal of this project is to use as much Django/React features as possible. \
-Also, I want to build useful services for myself :)
+##### My "pet" project: 
+JWT Auth, blog, chess dbs (ukrainian, masters, lichess.org), chess opening theory
