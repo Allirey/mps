@@ -9,7 +9,7 @@ import {
    CardActionArea,
    Typography,
    CardContent,
-   Fab, Chip, Fade, CardMedia, Divider, Button, MenuItem, Menu, ListItemIcon, ListItemText
+   Fab, Chip, Fade, CardMedia, Divider, Button, MenuItem, Menu, ListItemIcon, ListItemText, CardHeader
 } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import {Helmet} from "react-helmet";
@@ -125,7 +125,8 @@ const Openings = (props) => {
                  />
                )}
 
-               <Button size={"small"} style={{marginLeft: "40px"}} disableRipple aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+               <Button size={"small"} style={{marginLeft: "40px"}} disableRipple aria-controls="simple-menu"
+                       aria-haspopup="true" onClick={handleClick}>
                   <InfoIcon/>
                </Button>
                <Menu
@@ -138,7 +139,7 @@ const Openings = (props) => {
                   <MenuItem disableRipple target={'noopener'} component={Link} to={'/blog/faq-chess-openings'}
                             onClick={handleClose}>
                      <ListItemIcon>
-                        <LiveHelpIcon  style={{color: "black"}}/>
+                        <LiveHelpIcon style={{color: "black"}}/>
                      </ListItemIcon>
                      <ListItemText>
                         FAQ
@@ -187,6 +188,11 @@ const Openings = (props) => {
                  <Grid item xs={12} sm={6} md={4} lg={3} key={opening.slug}>
                     <Fade in={true}>
                        <Card className={classes.card}>
+                          {props.stores.authStore.currentUser?.is_staff &&
+                          <CardHeader component={Link}
+                                      to={`/chess/openings/${opening.slug}/edit`}
+                                      subheader={'Edit'}
+                          />}
                           <CardActionArea disableRipple component={Link} to={`/chess/openings/${opening.slug}`}
                                           style={{height: "100%"}}>
 

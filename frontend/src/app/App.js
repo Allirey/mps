@@ -22,6 +22,7 @@ const Openings = lazy(() => import("../pages/chess/Openings"));
 const CreateOpening = lazy(() => import("../pages/chess/CreateOpening"));
 const Error404 = lazy(() => import("../errors/error404"));
 const HomePage = lazy(() => import("../pages/HomePage"));
+const EditOpening = lazy(() => import("../pages/chess/EditOpening"));
 
 function App(props) {
    const [appLoading, setAppLoading] = useState(true)
@@ -65,6 +66,7 @@ function App(props) {
                  <Route path="/chess/openings" exact={true} component={Openings}/>
                  <Route path="/chess/openings/new" exact={true} component={CreateOpening}/>
                  <Route path="/chess/openings/:slug" exact={true} component={ChessAnalysis}/>
+                 <Route path="/chess/openings/:slug/edit" exact={true} component={EditOpening}/>
                  <Route path="/chess/openings/:slug/:chapter_id" exact={true} component={ChessAnalysis}/>
                  <Route path="/chess/analysis" exact={true} component={ChessAnalysis}/>
                  <Route path="/chess/:db/:game_id" exact={true} component={ChessAnalysis}/>
