@@ -4,8 +4,10 @@ import {Link} from "react-router-dom";
 import Menu from '../Menu';
 import {Skeleton} from '@material-ui/lab';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
    root: {
+      position: 'relative',
+      zIndex: theme.zIndex.drawer + 1,
       color: "black",
       background: "white",
       flexGrow: 1,

@@ -10,11 +10,19 @@ import {Search, Home, Info, ChromeReaderMode} from '@material-ui/icons';
 import Menu from '../Menu';
 import {Skeleton} from '@material-ui/lab';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
+   root: {},
+   appBar: {
+      zIndex: theme.zIndex.drawer + 1,
+      color: "black",
+      background: "#ffffff",
+      flexGrow: 1,
+      position: "relative",
+   },
    list: {
       width: 250,
    },
-});
+}));
 
 export default function SwipeableTemporaryDrawer(props) {
    const classes = useStyles();
@@ -80,8 +88,8 @@ export default function SwipeableTemporaryDrawer(props) {
    );
 
    return (
-     <div>
-        <AppBar position="static" style={{color: "black", background: "#ffffff", flexGrow: 1}}>
+     <div className={classes.root}>
+        <AppBar position="static" className={classes.appBar}>
            <Toolbar variant={"dense"}>
               <IconButton
                 onClick={toggleDrawer('left', true)}
