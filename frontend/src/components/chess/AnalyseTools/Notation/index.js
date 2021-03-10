@@ -33,6 +33,7 @@ const theme = createMuiTheme({
 
 const useStyles = makeStyles({
    root: {
+      height: "100%",
       touchAction: "manipulation",
       userSelect: "none",
       overflow: "auto",
@@ -136,11 +137,11 @@ function Notation(props) {
 
    return (
      <ThemeProvider theme={theme}>
-        <Paper component={"div"} className={classes.root}>
+        <div className={classes.root}>
            {nodes.length > 1 ? renderTree(nodes) :
              <Typography variant="h4" color="textSecondary"
                          style={{opacity: 0.2}}>{!matchesOnlyXS && "Notation"}</Typography>}
-        </Paper>
+        </div>
         <Menu
           transitionDuration={0}
           className={classes.menu}

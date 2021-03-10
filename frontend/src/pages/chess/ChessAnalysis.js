@@ -1,26 +1,16 @@
 import React, {useState, useEffect} from "react";
-import GamesSearch from "../../components/chess/analysis/GamesSearch";
-import Notation from "../../components/chess/analysis/Notation";
-import NavButtons from "../../components/chess/analysis/NavButtons";
-import GameInfo from "../../components/chess/analysis/GameInfo";
-import ExplorerBox from "../../components/chess/analysis/ExplorerBox";
-
-import ChessBoard from "../../components/chess/ChessBoard";
-
-import Colobki from './undraw_elements_cipa.svg'
-// import Error404 from "../../errors/error404";
-
-import {Grid, makeStyles, useMediaQuery, createMuiTheme, Fade} from "@material-ui/core";
+import {Grid, makeStyles} from "@material-ui/core";
 import withStore from "../../hocs/withStore";
 import {Helmet} from "react-helmet";
 import {useParams} from 'react-router-dom'
-import StudyChapters from "../../components/chess/analysis/OpeningChaptersTable";
-import OpeningChapters from "./OpeningChapters";
+import AnalyseControls from "../../components/chess/AnalyseControls";
+import OpeningChapters from "../../components/chess/OpeningChapters";
+import AnalyseTools from "../../components/chess/AnalyseTools";
+import ChessBoard from "../../components/chess/ChessBoard";
+import GameMeta from "../../components/chess/GameMeta";
+// import Error404 from "../../errors/error404";
 
 const DATABASES = {UKR: 'ukr', MASTERS: "masters", LICHESS: 'lichess'}
-
-const breakpointValues = {xs: 0, sm: 700, md: 960, lg: 1280, xl: 1920,};
-const theme = createMuiTheme({breakpoints: {values: breakpointValues}});
 
 const useStyles = makeStyles(theme => ({
    root: {
@@ -28,26 +18,25 @@ const useStyles = makeStyles(theme => ({
       touchAction: "manipulation",
    },
    content: {
-      // flexGrow: 1,
       [theme.breakpoints.up('md')]: {
          padding: theme.spacing(3),
       },
       [theme.breakpoints.only('sm')]: {
          paddingTop: theme.spacing(3),
+         paddingLeft: theme.spacing(1),
+      },
+   },
+   analyseTools: {order: 1},
+   analyseControls: {
+      order: 2,
+      [theme.breakpoints.only('xs')]: {
+         order: 0,
       },
    },
 }))
 
 const ChessAnalysis = (props) => {
    const classes = useStyles();
-   // const theme = useTheme();
-   const {db, game_id, slug, chapter_id} = useParams()
-   const matchesLG = useMediaQuery(theme.breakpoints.up('lg'));
-   const matchesMD = useMediaQuery(theme.breakpoints.up('md'));
-   const matchesSM = useMediaQuery(theme.breakpoints.up('sm'));
-   const matchesOnlyXS = useMediaQuery(theme.breakpoints.only('xs'));
-   const matchesOnlySM = useMediaQuery(theme.breakpoints.only('sm'));
-   const matchesOnlyMD = useMediaQuery(theme.breakpoints.only('md'));
 
    const [showBook, setShowBook] = useState(false);
    const [showSearch, setShowSearch] = useState(false);
@@ -58,6 +47,7 @@ const ChessAnalysis = (props) => {
    const [notFound, setNotFound] = useState(false)
 
    const {chessNotation: notation, chessOpeningExplorer: chess, openings} = props.stores
+   const {db, game_id, slug, chapter_id} = useParams()
 
    const toggleBook = () => setShowBook(!showBook)
    const toggleSearch = () => setShowSearch(!showSearch)
@@ -75,8 +65,8 @@ const ChessAnalysis = (props) => {
 
    useEffect(() => {
       document.addEventListener('keydown', keyHandler)
+
       return () => {
-         notation.chessGame.reset()
          notation.resetNode()
          document.removeEventListener('keydown', keyHandler)
          openings.currentChapter = null
@@ -84,36 +74,27 @@ const ChessAnalysis = (props) => {
       }
    }, [])
 
-
    useEffect(() => {
       if (db && game_id) {
-         chess.getGame(db, game_id).catch(() => {
-            setNotFound(true)
-         }).finally(() => {
-            setLoading(false)
-         })
+         chess.getGame(db, game_id)
+           .catch(() => setNotFound(true))
+           .finally(() => setLoading(false))
       }
       chess.getExplorerData()
 
-      return () => {
-         notation.chessGame.reset()
-         notation.resetNode()
-      }
+      return () => notation.resetNode()
    }, [db, game_id])
 
    useEffect(() => {
-      if (chess.currentDB !== DATABASES.UKR) {
-         setShowSearch(false)
-      }
-
+      if (chess.currentDB !== DATABASES.UKR) setShowSearch(false)
    }, [chess.currentDB])
 
    useEffect(() => {
       slug && props.history.replace(`/chess/openings/${slug}/${slug && !chapter_id ? 1 : chapter_id}`)
-      slug && openings.getOpening(slug, chapter_id)
+      slug && chapter_id && openings.getOpening(slug, chapter_id)
       !slug && notation.resetNode()
-      return () => setShowChapters(false)
 
+      return () => setShowChapters(false)
    }, [slug, chapter_id])
 
    const handleSearchSubmit = () => {
@@ -124,19 +105,6 @@ const ChessAnalysis = (props) => {
       chess.setName(name)
       chess.setColor(color)
       chess.getExplorerData()
-   }
-
-   const download = (filename, text) => {
-      let element = document.createElement('a');
-      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-      element.setAttribute('download', filename);
-
-      element.style.display = 'none';
-      document.body.appendChild(element);
-
-      element.click();
-
-      document.body.removeChild(element);
    }
 
    // if (id && loading) return <div/>
@@ -157,7 +125,7 @@ const ChessAnalysis = (props) => {
            <meta name="twitter:site:id" content="741164490"/>
         </Helmet>
 
-        {slug && <StudyChapters
+        {slug && <OpeningChapters
           currentOpening={openings.currentOpening}
           currentChapter={openings.currentChapter}
           showChapters={showChapters}
@@ -165,117 +133,38 @@ const ChessAnalysis = (props) => {
         />}
 
         <Grid container direction={"row"} className={classes.content}>
-
-           {/*{matchesLG && <Grid item container direction={"column"} lg>*/}
-
-           {/*   {!slug && <Grid item xs style={{maxHeight: "17vh"}}>*/}
-           {/*      <GameInfo data={notation.gameHeaders}/>*/}
-           {/*   </Grid>}*/}
-           {/*   <Grid item xs sm md lg style={{height: '73vh', overflowY: "auto"}}>*/}
-           {/*      {!slug && <img src={Colobki} alt={''} width={"100%"} height={"auto"}/>}*/}
-           {/*   </Grid>*/}
+           {!slug && <Grid item xs={12} lg><GameMeta/></Grid>}
+           <Grid item><ChessBoard/></Grid>
+           {/*{showSearch &&*/}
+           {/*<Grid item>*/}
+           {/*   <Fade in={showSearch}>*/}
+           {/*      <GamesSearch*/}
+           {/*        name={name}*/}
+           {/*        color={color !== 'w'}*/}
+           {/*        onSubmit={handleSearchSubmit}*/}
+           {/*        onChangeColor={setColor}*/}
+           {/*        onChangeName={setName}*/}
+           {/*      /></Fade>*/}
            {/*</Grid>}*/}
 
-
-           <Grid item container justify={"center"}
-                 style={{padding: matchesSM ? "8px" : 0}}
-                 sm md lg>
-              <Grid item>
-
-                 {matchesSM && !matchesLG && <Grid item style={{maxHeight: "17vh"}}>
-                    <GameInfo data={notation.gameHeaders}/>
-                 </Grid>}
-
-                 <ChessBoard/>
-
-                 {!matchesLG && <Grid item>
-                    <Grid container justify={"center"}>
-                       <NavButtons
-                         toFirst={notation.toFirst}
-                         toLast={notation.toLast}
-                         toNext={notation.toNext}
-                         toPrev={notation.toPrev}
-                         onFlip={notation.flipBoard}
-                         onSearchClick={toggleSearch}
-                         onBookClick={toggleBook}
-                         onChaptersClick={toggleChapters}
-                         showBook={showBook}
-                         showSearch={showSearch}
-                         showChapters={showChapters && slug}
-                         currentDB={chess.currentDB}
-                         showChaptersButton={slug}
-                       />
-                    </Grid>
-                 </Grid>}
-
-                 {showSearch &&
-                 <Grid item>
-                    <Fade in={showSearch}>
-                       <GamesSearch
-                         name={name}
-                         color={color !== 'w'}
-                         onSubmit={handleSearchSubmit}
-                         onChangeColor={setColor}
-                         onChangeName={setName}
-                       /></Fade>
-                 </Grid>}
-              </Grid>
-
-           </Grid>
-
-           {matchesOnlyXS && !slug && <Grid item xs={12}>
-              <Grid item><GameInfo data={notation.gameHeaders}/></Grid>
-           </Grid>}
-
            <Grid container direction={"column"} sm md lg item>
-              <>{(matchesSM || !showBook) && <Grid sm md item>
-                 <Notation
-                   notation={notation.rootLine}
-                   currentNode={notation.currentNode}
-                   jumpTo={notation.jumpToMove}
-                   promoteLine={notation.promoteLine}
-                   deleteRemaining={notation.deleteRemaining}
-                   deleteLine={notation.deleteLine}
+              <Grid item className={classes.analyseTools}>
+                 <AnalyseTools showBook={showBook} setShowBook={setShowBook}/>
+              </Grid>
+              <Grid item className={classes.analyseControls}>
+                 <AnalyseControls
+                   onSearchClick={toggleSearch}
+                   onBookClick={toggleBook}
+                   onChaptersClick={toggleChapters}
+                   showBook={showBook}
+                   showSearch={showSearch}
+                   showChapters={showChapters && slug}
+                   showChaptersButton={slug}
                  />
-              </Grid>}
-
-                 {showBook && <Grid item sm md>
-                    <Fade in={showBook}>
-                       <ExplorerBox
-                         explorerData={chess.explorerData.moves}
-                         onMove={notation.makeSanMove}
-                         loading={chess.inProgress}
-                         games={chess.explorerData.games}
-                         setShowBook={setShowBook}
-                         currentDB={chess.currentDB}
-                         changeDB={chess.setDatabase}
-                       />
-                    </Fade>
-                 </Grid>}
-              </>
-
-              {matchesLG && <Grid item>
-                 <Grid container justify={"center"}>
-                    <NavButtons
-                      toFirst={notation.toFirst}
-                      toLast={notation.toLast}
-                      toNext={notation.toNext}
-                      toPrev={notation.toPrev}
-                      onFlip={notation.flipBoard}
-                      onSearchClick={toggleSearch}
-                      onBookClick={toggleBook}
-                      onChaptersClick={toggleChapters}
-                      showBook={showBook}
-                      showSearch={showSearch}
-                      showChapters={showChapters && slug}
-                      currentDB={chess.currentDB}
-                      showChaptersButton={slug}
-                    />
-                 </Grid>
-              </Grid>}
+              </Grid>
            </Grid>
-        </Grid>
 
+        </Grid>
      </div>
    )
 }

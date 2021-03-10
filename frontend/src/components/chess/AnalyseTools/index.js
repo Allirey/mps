@@ -32,12 +32,12 @@ const useStyles = makeStyles(theme => ({
 const AnalyseTools = ({stores, showBook, setShowBook}) => {
    const classes = useStyles()
    const theme = useTheme()
-   const {chessNotation: notation, chessOpeningExplorer: chess} = stores
+   const {chessNotation: notation, chessOpeningExplorer: chess, openings} = stores
    let explorerBox = createRef()
 
    useEffect(() => {
       if (explorerBox.current) explorerBox.current.scrollTop = 0
-   }, [chess.explorerData])
+   }, [chess.explorerData, openings.currentChapter])
 
    return <Grid component={Paper} container className={classes.root} sm md lg xs direction={"column"}>
       {(useMediaQuery(theme.breakpoints.up("sm")) || !showBook) && <Grid item xs sm md lg style={{overflowY: "auto"}}>

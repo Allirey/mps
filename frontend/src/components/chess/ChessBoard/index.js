@@ -46,8 +46,9 @@ const ChessBoard = ({stores}) => {
    let refEl = React.createRef();
 
    useEffect(() => {
-      refEl && refEl.addEventListener('wheel', e => e.preventDefault(), {passive: false});
-      return () => refEl && refEl.removeEventListener('wheel', e => e.preventDefault(), {passive: false});
+      let el = refEl.current
+      el && el.addEventListener('wheel', e => e.preventDefault(), {passive: false});
+      return () => el && el.removeEventListener('wheel', e => e.preventDefault(), {passive: false});
    }, [refEl])
 
    const {chessNotation: notation} = stores
@@ -55,11 +56,10 @@ const ChessBoard = ({stores}) => {
       return e.deltaY < 0 ? notation.toPrev() : notation.toNext()
    }
 
-   return <><Paper elevation={2} ref={elem => refEl = elem} className={classes.chessField}
-                   onWheel={onBoardWheel}>
+   return <><Paper elevation={2} ref={refEl} className={classes.chessField} onWheel={onBoardWheel}>
       <ChessGround
-        width={matchesLG ? "544px" : matchesOnlyXS ? "100vmin" : matchesMD ? "448px" : "384px"}
-        height={matchesLG ? "544px" : matchesOnlyXS ? "100vmin" : matchesMD ? "448px" : "384px"}
+        width={matchesLG ? "544px" : matchesOnlyXS ? "100vmin" : matchesMD ? "512px" : "384px"}
+        height={matchesLG ? "544px" : matchesOnlyXS ? "100vmin" : matchesMD ? "512px" : "384px"}
         orientation={notation.boardOrientation}
         viewOnly={false}
         turnColor={notation.turnColor()}
@@ -72,7 +72,7 @@ const ChessBoard = ({stores}) => {
         onMove={notation.onMove}
       />
    </Paper>
-      <Dialog open={notation.showPieceSelectMenu} onClose={() => {
+      <Dialog transitionDuration={0} open={notation.showPieceSelectMenu} onClose={() => {
          notation.showPieceSelectMenu = false;
          notation.pendingMove = null;
       }}>

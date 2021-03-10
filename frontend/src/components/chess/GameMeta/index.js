@@ -1,5 +1,6 @@
 import React from "react";
 import {Grid, makeStyles, Paper, Typography, useMediaQuery, useTheme} from "@material-ui/core";
+import withStore from "../../../hocs/withStore";
 
 const useStyles = makeStyles((theme) => ({
    root: {
@@ -15,11 +16,12 @@ const useStyles = makeStyles((theme) => ({
    },
 }));
 
-export const GameInfo = props => {
+export const GameMeta = props => {
    const classes = useStyles();
    const theme = useTheme();
    const matchesOnlyXS = useMediaQuery(theme.breakpoints.only('xs'))
-   const data = props.data
+
+   const data = props.stores.chessNotation.gameHeaders
    const isDefaultHeader = data.White === '?' && data.Black === '?'
 
    return <>{(!matchesOnlyXS || !isDefaultHeader) && <Grid component={matchesOnlyXS? "div": Paper}>
@@ -58,4 +60,4 @@ export const GameInfo = props => {
 
 }
 
-export default GameInfo
+export default withStore(GameMeta)

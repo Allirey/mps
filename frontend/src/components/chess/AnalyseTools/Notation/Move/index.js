@@ -16,15 +16,20 @@ const useStyles = makeStyles({
       borderRadius: "3px",
       // fontSize: "0.9em",
       display: "inline-block",
-      "&:hover": {
-         color: "#fff",
-         backgroundColor: "#1b78d0",
-      },
+      // "&:hover": {
+      //    color: "#fff",
+      //    backgroundColor: "#1b78d0",
+      // },
+      fontWeight: "bold",
    },
    index: {
       color: "#a5a5a5",
       fontSize: "90%",
       paddingRight: "0.2em",
+      // "&:hover": {
+      //    color: "#fff",
+      //    backgroundColor: "#1b78d0",
+      // },
    },
    active: {
       backgroundColor: "#d1e4f6",
@@ -34,15 +39,16 @@ const useStyles = makeStyles({
          // color: "#FFFFFF",
       }
    },
-   mainline: {
-      fontWeight: 500
-   },
    mobileMove: {
       fontSize: "0.8em",
    },
-   mistake: {color: "#e69f00"},
-   blunder: {color: "#df5353"},
-   inaccuracy: {color: "#56b4e9"},
+   // move glyphs color
+   brilliant: {color: "#dd9c38"}, // #e69f00
+   good: {color: "#33b333"}, // 5A8D03
+   interesting: {color: "#56b4e9"},
+   inaccuracy: {color: "#e28aa0"},
+   mistake: {color: "#ee5f5b"},
+   blunder: {color: "#ff0000"},
 });
 
 const Move = ({node, isActive, refs, index, jumpTo, onMenuClick}) => {
@@ -51,10 +57,14 @@ const Move = ({node, isActive, refs, index, jumpTo, onMenuClick}) => {
    const onlyXS = useMediaQuery(theme.breakpoints.only('xs'))
 
    const classByNag = () => {
-      const badMoves = {'$2': classes.mistake, '$4': classes.blunder, '$6': classes.inaccuracy}
-      if (!node.nag?.some(el => Object.keys(badMoves).includes((el)))) return null
+      const moveClasses = {
+         '$1': classes.good, '$3': classes.brilliant, '$5': classes.interesting,
+         '$2': classes.mistake, '$4': classes.blunder, '$6': classes.inaccuracy
+      }
+      if (!node.nag?.some(el => Object.keys(moveClasses).includes((el)))) return null
 
-      return badMoves[node.nag[0]]
+      // return moveClasses[node.nag[0]]
+      return classes.brilliant
    }
 
    return <Typography
@@ -64,8 +74,8 @@ const Move = ({node, isActive, refs, index, jumpTo, onMenuClick}) => {
         if (isActive) refs[node] = el
      }}
      onClick={() => jumpTo(node)}
-     className={`${classes.move} ${isActive ? classes.active : null} \
-     ${classes.mainline} ${onlyXS ? classes.mobileMove : null} ${classByNag()}`}>
+     className={`${isActive ? classes.active : null} ${classes.move} \
+     ${onlyXS ? classes.mobileMove : null} ${classByNag()}`}>
       {index && <span className={classes.index}>{index}</span>}{node.san}
       {node.nag && node.nag.length ? `${node.nag.map(n => NAG_TAGS[n]).join(' ')}` : ''}
    </Typography>
