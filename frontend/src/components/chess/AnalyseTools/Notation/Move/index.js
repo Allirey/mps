@@ -1,4 +1,3 @@
-import React from "react";
 import {makeStyles, Typography, useMediaQuery, useTheme} from "@material-ui/core";
 
 const NAG_TAGS = {
@@ -63,8 +62,7 @@ const Move = ({node, isActive, refs, index, jumpTo, onMenuClick}) => {
       }
       if (!node.nag?.some(el => Object.keys(moveClasses).includes((el)))) return null
 
-      // return moveClasses[node.nag[0]]
-      return classes.brilliant
+      return moveClasses[node.nag[0]]
    }
 
    return <Typography

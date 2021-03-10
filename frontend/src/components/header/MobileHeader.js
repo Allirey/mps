@@ -1,4 +1,3 @@
-import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import {
    SwipeableDrawer, List, Divider, ListItem, ListItemIcon, ListItemText,
@@ -9,6 +8,7 @@ import {Link} from "react-router-dom";
 import {Search, Home, Info, ChromeReaderMode} from '@material-ui/icons';
 import Menu from '../Menu';
 import {Skeleton} from '@material-ui/lab';
+import {useState} from "react";
 
 const useStyles = makeStyles(theme => ({
    root: {},
@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function SwipeableTemporaryDrawer(props) {
    const classes = useStyles();
-   const [state, setState] = React.useState({
+   const [state, setState] = useState({
       left: false,
    });
 

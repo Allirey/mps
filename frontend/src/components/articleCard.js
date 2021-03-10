@@ -1,4 +1,3 @@
-import React from 'react';
 import {makeStyles, Card, CardActionArea, CardActions, CardContent, Typography} from '@material-ui/core';
 import {Link} from "react-router-dom";
 import VisibilityIcon from '@material-ui/icons/Visibility';

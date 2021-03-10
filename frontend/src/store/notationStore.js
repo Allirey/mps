@@ -1,4 +1,4 @@
-import {observable, computed, action, decorate} from 'mobx';
+import {makeAutoObservable} from 'mobx';
 import Chess from 'chess.js'
 
 
@@ -131,6 +131,7 @@ class NotationStore {
 
       this.currentNode = node
       this.currentLine = line
+      makeAutoObservable(this)
    }
 
    chessGame = new Chess();
@@ -385,34 +386,5 @@ class NotationStore {
       return headers + moves.slice(1)
    }
 }
-
-decorate(NotationStore, {
-     boardOrientation: observable,
-     chessGame: observable,
-     rootLine: observable,
-     currentNode: observable,
-     currentLine: observable,
-     showPieceSelectMenu: observable,
-     pendingMove: observable,
-     gameHeaders: observable,
-
-     makeSanMove: action,
-     promoteLine: action,
-     deleteLine: action,
-     deleteRemaining: action,
-     loadGame: action,
-     flipBoard: action,
-     jumpToMove: action,
-     toNext: action,
-     toPrev: action,
-     toFirst: action,
-     toLast: action,
-     resetNode: action,
-     onMove: action,
-
-     calcMovable: computed,
-     lastMove: computed,
-  }
-);
 
 export default NotationStore;

@@ -1,4 +1,3 @@
-import React from 'react';
 import MuiAlert from '@material-ui/lab/Alert';
 import {makeStyles, Snackbar} from "@material-ui/core";
 

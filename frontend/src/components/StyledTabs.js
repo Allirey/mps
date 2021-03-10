@@ -1,9 +1,9 @@
-import React from 'react';
 import {makeStyles, withStyles} from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from "@material-ui/core/Box";
 import PropTypes from "prop-types";
+import {useState} from "react";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CustomizedTabs(props) {
     const classes = useStyles();
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = useState(0);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);

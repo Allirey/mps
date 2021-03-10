@@ -1,4 +1,4 @@
-import React, {createRef, useEffect, useState} from 'react';
+import {createRef, useEffect, useState} from 'react';
 import Notation from "./Notation";
 import ExplorerBox from "./ExplorerBox";
 import withStore from "../../../hocs/withStore";

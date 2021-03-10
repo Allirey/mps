@@ -1,4 +1,3 @@
-import React from "react";
 import {AppBar, Button, Container, makeStyles, Toolbar, Box} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import Menu from '../Menu';

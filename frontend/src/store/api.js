@@ -1,4 +1,4 @@
-import {observable, computed, action, decorate} from 'mobx';
+import {makeAutoObservable} from 'mobx';
 
 const dev_api = '';
 // const dev_api = 'http://10.10.86.217:8000';
@@ -33,6 +33,7 @@ const apiTags = apiBase + '/tags/'
 class api {
    constructor(rootStore) {
       this.rootStore = rootStore;
+      makeAutoObservable(this)
    }
 
    token = null;
@@ -194,12 +195,5 @@ class api {
       }
    }
 }
-
-decorate(api, {
-     token: observable,
-     refreshPromise: observable,
-     request: action,
-  }
-);
 
 export default api;

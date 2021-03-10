@@ -1,7 +1,7 @@
-import React from 'react';
 import {Button, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList, makeStyles} from "@material-ui/core";
 import AccountCircleRoundedIcon from '@material-ui/icons/AccountCircleRounded';
 import {Link} from 'react-router-dom';
+import {useEffect, useRef, useState} from "react";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,8 +22,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MenuListComposition(props) {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
-    const anchorRef = React.useRef(null);
+    const [open, setOpen] = useState(false);
+    const anchorRef = useRef(null);
 
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
@@ -44,8 +44,8 @@ export default function MenuListComposition(props) {
     }
 
     // return focus to the button when we transitioned from !open -> open
-    const prevOpen = React.useRef(open);
-    React.useEffect(() => {
+    const prevOpen = useRef(open);
+    useEffect(() => {
         if (prevOpen.current === true && open === false) {
             anchorRef.current.focus();
         }

@@ -1,4 +1,4 @@
-import {observable, computed, action, decorate} from 'mobx';
+import {makeAutoObservable} from 'mobx';
 
 const DATABASES = {UKR: 'ukr', MASTERS: "masters", LICHESS: 'lichess'}
 
@@ -7,6 +7,7 @@ class ChessOpeningExplorerStore {
       this.rootStore = rootStore;
       let db = this.rootStore.storage.getItem('chessdb')
       this.currentDB = Object.values(DATABASES).includes(db)? db : DATABASES.MASTERS
+      makeAutoObservable(this)
    }
 
    searchData = {name: '', color: "w", fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'};
@@ -86,19 +87,5 @@ class ChessOpeningExplorerStore {
       return this.explorerCache[this.currentDB][filter] || {games: [], moves: []}
    }
 }
-
-decorate(ChessOpeningExplorerStore, {
-     searchData: observable,
-     inProgress: observable,
-     currentDB: observable,
-     explorerCache: observable,
-
-     getGame: action,
-     getExplorerData: action,
-     setDatabase: action,
-
-     explorerData: computed,
-  }
-);
 
 export default ChessOpeningExplorerStore;

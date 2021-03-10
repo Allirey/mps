@@ -1,4 +1,3 @@
-import React from "react";
 import {Container, List, ListItem, makeStyles, Typography} from "@material-ui/core";
 import withStore from '../hocs/withStore';
 import {Link} from 'react-router-dom'

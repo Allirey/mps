@@ -1,4 +1,4 @@
-import React, {Fragment, memo, useEffect} from "react";
+import {Fragment, memo, useEffect, useState} from "react";
 import {
    makeStyles,
    Menu,
@@ -56,8 +56,8 @@ const useStyles = makeStyles({
 
 function Notation(props) {
    const classes = useStyles();
-   const [menuState, setMenuState] = React.useState(initialState);
-   const [contextMove, setContextMove] = React.useState(null);
+   const [menuState, setMenuState] = useState(initialState);
+   const [contextMove, setContextMove] = useState(null);
    const matchesOnlyXS = useMediaQuery(theme.breakpoints.only('xs'))
 
    const refs = {}

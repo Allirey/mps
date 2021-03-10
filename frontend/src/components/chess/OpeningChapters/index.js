@@ -10,7 +10,6 @@ import {
    Typography, Toolbar,
    useMediaQuery, useTheme
 } from "@material-ui/core";
-import React from "react";
 import {Link} from 'react-router-dom'
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";

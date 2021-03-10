@@ -1,8 +1,9 @@
-import {observable, computed, action, decorate} from 'mobx';
+import {makeAutoObservable} from 'mobx';
 
 class ChessOpeningsStore {
    constructor(rootStore) {
       this.rootStore = rootStore;
+      makeAutoObservable(this)
    }
 
    openingList = []
@@ -19,11 +20,11 @@ class ChessOpeningsStore {
 
    getOpenings = () => this.rootStore.api.Openings.list().then(data => this.openingList = data)
 
-   getOpening = (slug, chapter_id=1) => {
+   getOpening = (slug, chapter_id = 1) => {
       const processData = (data) => {
          this.currentOpening = data
          this.rootStore.chessNotation.boardOrientation = data.color === 'w' ? 'white' : 'black'
-         this.getChapter(data.chapters[Math.max(0, Math.min(chapter_id-1, data.chapters.length - 1))].url)
+         this.getChapter(data.chapters[Math.max(0, Math.min(chapter_id - 1, data.chapters.length - 1))].url)
       }
 
       if (slug in this.openingsCache) processData(this.openingsCache[slug])
@@ -50,19 +51,5 @@ class ChessOpeningsStore {
       return this.rootStore.api.Openings.tags().then(data => this.tags = data.map(el => el.name))
    }
 }
-
-decorate(ChessOpeningsStore, {
-   openingList: observable,
-   currentOpening: observable,
-   currentChapter: observable,
-   openingsCache: observable,
-   chaptersCache: observable,
-   tags: observable,
-
-   createOpening: action,
-   getOpenings: action,
-   getOpening: action,
-   getTags: action,
-});
 
 export default ChessOpeningsStore;

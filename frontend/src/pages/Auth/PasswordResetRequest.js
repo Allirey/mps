@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Link, Redirect} from "react-router-dom";
-import {Button, CssBaseline, TextField, Grid, Box, Typography, makeStyles, Container} from '@material-ui/core';
+import {Button, CssBaseline, TextField, Grid, Typography, makeStyles, Container} from '@material-ui/core';
 import withStore from '../../hocs/withStore';
 import forgotImg from "./imgs/auth.png";
 import {Helmet} from "react-helmet";

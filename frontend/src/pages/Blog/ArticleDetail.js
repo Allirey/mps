@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {
    Container,
    makeStyles,
@@ -136,7 +136,7 @@ function ArticleDetail(props) {
    const [title, setTitle] = useState('')
    const [body, setBody] = useState('')
 
-   const [open, setOpen] = React.useState(false);
+   const [open, setOpen] = useState(false);
 
    const translateMap = {
       'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'jo', 'ж': 'zh', 'з': 'z', 'и': 'i',

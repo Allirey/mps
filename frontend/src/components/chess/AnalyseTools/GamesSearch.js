@@ -1,4 +1,4 @@
-import React, {memo} from "react";
+import {memo} from "react";
 import {Button, Grid, TextField, Switch, Typography, withStyles, makeStyles} from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
 

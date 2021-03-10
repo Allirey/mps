@@ -1,4 +1,3 @@
-import React from "react";
 import {Container, Link, ListItem, makeStyles, List, Typography} from "@material-ui/core";
 import {Helmet} from "react-helmet";
 

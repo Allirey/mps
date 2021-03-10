@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import withStore from '../../hocs/withStore'
 import {Link} from 'react-router-dom';
 import {
@@ -75,7 +75,7 @@ const Openings = (props) => {
       props.stores.openings.getTags()
    }, [])
 
-   const [anchorEl, setAnchorEl] = React.useState(null);
+   const [anchorEl, setAnchorEl] = useState(null);
 
    const handleClick = (event) => {
       setAnchorEl(event.currentTarget);

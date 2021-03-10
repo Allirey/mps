@@ -1,8 +1,9 @@
-import {observable, computed, action, decorate} from 'mobx';
+import {makeAutoObservable} from 'mobx';
 
 class PostsStore {
    constructor(rootStore) {
       this.rootStore = rootStore;
+      makeAutoObservable(this)
    }
 
    async all(page=1) {
@@ -25,9 +26,5 @@ class PostsStore {
       return await this.rootStore.api.Posts.delete(slug)
    }
 }
-
-decorate(PostsStore, {
-  }
-);
 
 export default PostsStore;

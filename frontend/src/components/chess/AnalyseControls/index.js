@@ -1,4 +1,3 @@
-import React from "react";
 import {Button, Grid, makeStyles, useMediaQuery, useTheme} from "@material-ui/core";
 import FastRewindTwoToneIcon from "@material-ui/icons/FastRewindTwoTone";
 import SkipPreviousTwoToneIcon from "@material-ui/icons/SkipPreviousTwoTone";

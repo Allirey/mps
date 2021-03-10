@@ -1,4 +1,3 @@
-import React from "react";
 import {Grid, makeStyles, Paper, Typography, useMediaQuery, useTheme} from "@material-ui/core";
 import withStore from "../../../hocs/withStore";
 

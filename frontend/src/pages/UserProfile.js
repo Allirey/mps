@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {Container, makeStyles, Link, Typography, Fade, Paper, useTheme, useMediaQuery} from "@material-ui/core";
 import withStore from '../hocs/withStore';
 import {useParams} from "react-router-dom";

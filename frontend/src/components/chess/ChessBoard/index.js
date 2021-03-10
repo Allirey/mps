@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import {createRef, useEffect} from 'react';
 import withStore from "../../../hocs/withStore";
 import ChessGround from "react-chessground";
 import {Button, Dialog, DialogActions, Paper, useMediaQuery, useTheme} from "@material-ui/core";
@@ -26,6 +26,9 @@ const useStyles = makeStyles(theme => ({
       "& .cg-wrap": {
          backgroundImage: `url(${ChessBoardBlueTheme})`
       },
+      "& .cg-custom-svgs":{
+        height: 0,
+      },
       "& cg-board square.last-move": {
          backgroundColor: "lightgreen",
          opacity: "0.41"
@@ -43,7 +46,7 @@ const ChessBoard = ({stores}) => {
    const matchesMD = useMediaQuery(theme.breakpoints.up('md'));
    const matchesOnlyXS = useMediaQuery(theme.breakpoints.only('xs'));
 
-   let refEl = React.createRef();
+   let refEl = createRef();
 
    useEffect(() => {
       let el = refEl.current
@@ -67,7 +70,7 @@ const ChessBoard = ({stores}) => {
         lastMove={notation.lastMove}
         fen={notation.currentNode.fen}
         check={notation.inCheck}
-        style={{margin: "auto"}}
+        // style={{margin: "auto"}}
         coordinates={false}
         onMove={notation.onMove}
       />

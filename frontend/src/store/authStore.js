@@ -1,8 +1,9 @@
-import {observable, computed, action, decorate} from 'mobx';
+import {makeAutoObservable} from 'mobx';
 
 class AuthStore {
    constructor(rootStore) {
       this.rootStore = rootStore;
+      makeAutoObservable(this)
    }
 
    inProgress = false;
@@ -141,22 +142,5 @@ class AuthStore {
       this.currentUser = JSON.parse(atob(data.access.split('.')[1]));
    }
 }
-
-decorate(AuthStore, {
-     inProgress: observable,
-     values: observable,
-     currentUser: observable,
-     isAuthenticated: observable,
-
-     setUsername: action,
-     setEmail: action,
-     setPassword: action,
-     login: action,
-     register: action,
-     logout: action,
-     refresh: action,
-     changePassword: action,
-  }
-);
 
 export default AuthStore;

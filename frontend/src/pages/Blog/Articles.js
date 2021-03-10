@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState, Fragment} from "react";
 import {Link, useParams} from 'react-router-dom';
 import {
    Container,
@@ -178,7 +178,7 @@ function Articles(props) {
                  <Grid container component={matchesMD ? Container : "div"} maxWidth={"md"} justify={"center"}>
                     <Grid item>
                        {pagination(pages, +currentPage || 1).map((x, i) => {
-                          return <React.Fragment key={i}>{x}</React.Fragment>
+                          return <Fragment key={i}>{x}</Fragment>
                        })}
                     </Grid>
 
@@ -192,7 +192,7 @@ function Articles(props) {
 
                     <Grid item>
                        {(articles.length > 1) && pagination(pages, +currentPage || 1).map((x, i) => {
-                          return <React.Fragment key={i}>{x}</React.Fragment>
+                          return <Fragment key={i}>{x}</Fragment>
                        })}
                     </Grid>
                  </Grid>

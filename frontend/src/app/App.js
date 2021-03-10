@@ -1,4 +1,4 @@
-import React, {useEffect, useState, Suspense, lazy} from 'react';
+import {useEffect, useState, Suspense, lazy} from 'react';
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import withStore from '../hocs/withStore';
 import Header from '../components/header';
