@@ -145,7 +145,7 @@ const Openings = (props) => {
                         FAQ
                      </ListItemText>
                   </MenuItem>
-                  <MenuItem target={'noopener'} component={Link} to={'//t.me/inf13'} disableRipple
+                  <MenuItem target={'noopener'} component={Link} to={'//t.me/glitchat'} disableRipple
                             onClick={handleClose}>
                      <ListItemIcon>
                         <FeedbackIcon style={{color: "black"}}/>
@@ -165,7 +165,6 @@ const Openings = (props) => {
                   </MenuItem>
                </Menu>
             </Grid>
-
 
             <Divider/>
             <Grid item>
