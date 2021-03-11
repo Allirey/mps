@@ -23,29 +23,15 @@ const useStyles = makeStyles(theme => ({
       "& $li": {
          borderBottom: "1px solid #e3e3e3",
          color: "black",
-         "&:hover": {backgroundColor: "#e8f2fa",},
+         "&:hover": {backgroundColor: "#f1f1f1",},
          padding: "3px 8px 3px 16px",
-      },
-      "& $h3": {
-         display: "block",
-         flex: "1 1 100%",
-         fontSize: "1em",
-         fontWeight: "normal",
-         lineHeight: "1",
-         margin: "0.5em 0",
-         wordBreak: 'break-word',
-         alignSelf: "center",
-
-         // marginBlockStart: "1em",
-         // marginBlockEnd: "1em",
-         marginInlineStart: "0px",
-         marginInlineEnd: "0px",
       },
       "& $span": {fontWeight: 'bold', fontSize: "90%",},
    },
    active: {
-      backgroundColor: '#e8f2fa',
-      "&:hover": {backgroundColor: '#e8f2fa',},
+      backgroundColor: '#419fd9 !important',
+      "& $span": {color: "white !important"},
+      "&:hover": {backgroundColor: '#419fd9', color: "white"},
    },
    drawer: {
       maxWidth: drawerWidth,
@@ -87,7 +73,7 @@ const OpeningChapters = (props) => {
                 className={`${props.currentChapter && props.currentChapter.url === chapter.url ? classes.active : null}`}
                 key={chapter.url}
               >
-                 <ListItemIcon component={Typography}><b>{i + 1}</b></ListItemIcon>
+                 <ListItemIcon component={Typography}><span><b>{i + 1}</b></span></ListItemIcon>
                  <ListItemText>{`${chapter.title.replace('Chapter ', '').replace(/\d+\. /, '')}: ${chapter.description}`}</ListItemText>
               </ListItem>
             )}
