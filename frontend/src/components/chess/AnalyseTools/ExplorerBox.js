@@ -1,10 +1,11 @@
 import {memo, useEffect, useState} from "react";
 import {
-   Table, TableBody, TableCell, TableHead, TableRow, withStyles, makeStyles, Typography, Button, Grid
+   Table, TableBody, TableCell, TableHead, TableRow, withStyles, makeStyles, Typography, Button, Grid, Dialog
 } from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DoneIcon from '@material-ui/icons/Done';
+import GamesSearch from "./GamesSearch";
 
 const DATABASES = {UKR: 'ukr', MASTERS: "masters", LICHESS: 'lichess'}
 
@@ -144,7 +145,7 @@ const ExplorerBox = props => {
 
    useEffect(() => {
       if (!props.loading) {
-          setOldGames(props.games)
+         setOldGames(props.games)
          setOldMoves(props.explorerData)
          setOpacity(1)
       } else setOpacity(0.4)
@@ -172,7 +173,7 @@ const ExplorerBox = props => {
    }
 
    const handleClose = () => {
-      props.setShowBook(false)
+      props.toggleBook()
    }
 
    return <div className={classes.root}>
@@ -181,7 +182,7 @@ const ExplorerBox = props => {
       </span>
 
       {showSettings ?
-        <Grid container style={{height: "40vh"}} direction={"column"}>
+        <Grid container direction={"column"}>
            <div style={{backgroundColor: '#d5f3e3'}}>Opening explorer</div>
            <br/>
            <div><b>Database</b></div>
@@ -212,7 +213,7 @@ const ExplorerBox = props => {
            </Grid>
         </Grid> :
 
-        !oldGames || !oldGames.length ? <Grid style={{height: "40vh"}} container justify={"center"}
+        !oldGames || !oldGames.length ? <Grid style={{height: "250px"}} container justify={"center"}
                                               direction={"column"}
                                               alignItems={"center"}>
              <Typography variant={"h6"} align={"center"}> No games found ({props.currentDB} db)</Typography>
@@ -282,6 +283,15 @@ const ExplorerBox = props => {
              </Table>
           </>
       }
+      <Dialog transitionDuration={0} open={props.showSearch} onClose={props.closeSearch} >
+         <GamesSearch
+           name={props.name}
+           color={props.color}
+           onSubmit={props.onSubmit}
+           onChangeColor={props.onChangeColor}
+           onChangeName={props.onChangeName}
+         />
+      </Dialog>
    </div>
 }
 

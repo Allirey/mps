@@ -15,32 +15,21 @@ const useStyles = makeStyles({
       borderRadius: "3px",
       // fontSize: "0.9em",
       display: "inline-block",
-      // "&:hover": {
-      //    color: "#fff",
-      //    backgroundColor: "#1b78d0",
-      // },
+      "&:hover": {
+         backgroundColor: "#d1e4f6",
+      },
       fontWeight: "bold",
    },
    index: {
       color: "#a5a5a5",
       fontSize: "90%",
       paddingRight: "0.2em",
-      // "&:hover": {
-      //    color: "#fff",
-      //    backgroundColor: "#1b78d0",
-      // },
    },
    active: {
       backgroundColor: "#d1e4f6",
-      // color: "#FFFFFF",
-      "& $span": {
-         backgroundColor: "#d1e4f6",
-         // color: "#FFFFFF",
-      }
+      "& $span": {backgroundColor: "#d1e4f6",}
    },
-   mobileMove: {
-      fontSize: "0.8em",
-   },
+   mobileMove: {fontSize: "0.8em",},
    // move glyphs color
    brilliant: {color: "#dd9c38"}, // #e69f00
    good: {color: "#33b333"}, // 5A8D03

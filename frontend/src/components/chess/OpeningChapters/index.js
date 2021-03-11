@@ -10,35 +10,22 @@ import {
    Typography, Toolbar,
    useMediaQuery, useTheme
 } from "@material-ui/core";
-import {Link} from 'react-router-dom'
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
+import {Link, useHistory} from 'react-router-dom'
 
-const drawerWidth = 300;
+const drawerWidth = 'calc(280px + 6vw)';
 
 const useStyles = makeStyles(theme => ({
-   drawerPaper: {
-      width: drawerWidth,
-   },
+   drawerPaper: {width: drawerWidth,},
    root: {
-      // position:"static",
       overflowY: "auto",
-      // maxHeight: '544px',
-      // padding: "8px",
-      // margin: "16px",
-      // overflow: "auto",
       userSelect: "none",
-      // flexFlow: 'row nowrap',
       cursor: "pointer",
-      "& $a": {
-         textDecoration: "none",
+      "& $li": {
+         borderBottom: "1px solid #e3e3e3",
          color: "black",
-         "&:hover": {
-            backgroundColor: "#e8f2fa",
-         },
-         padding: 0,
+         "&:hover": {backgroundColor: "#e8f2fa",},
+         padding: "3px 8px 3px 16px",
       },
-
       "& $h3": {
          display: "block",
          flex: "1 1 100%",
@@ -54,31 +41,11 @@ const useStyles = makeStyles(theme => ({
          marginInlineStart: "0px",
          marginInlineEnd: "0px",
       },
-      "& $span": {
-         display: "flex",
-         flex: '0 0 1.7em',
-         fontWeight: 'bold',
-         color: '#1b78d0',
-         opacity: 0.8,
-         marginRight: "0.4em",
-         height: "auto",
-         alignContent: "center",
-      },
-      // "& a": {
-      //    flexFlow: 'row nowrap',
-      //    display: "flex",
-      // },
-
+      "& $span": {fontWeight: 'bold', fontSize: "90%",},
    },
    active: {
-      "& $span": {
-         color: '#fff',
-         backgroundColor: '#1b78d0',
-      },
       backgroundColor: '#e8f2fa',
-      "&:hover": {
-         backgroundColor: '#e8f2fa',
-      }
+      "&:hover": {backgroundColor: '#e8f2fa',},
    },
    drawer: {
       maxWidth: drawerWidth,
@@ -92,12 +59,15 @@ const OpeningChapters = (props) => {
    const classes = useStyles()
    const theme = useTheme();
    const container = window !== undefined ? () => window().document.body : undefined;
+   const history = useHistory();
+
+   const matchesLG = useMediaQuery(theme.breakpoints.only('lg'))
 
    return <Drawer
      className={classes.drawer}
      container={container}
-     anchor={useMediaQuery(theme.breakpoints.up('lg')) ? 'left':'right'}
-     open={useMediaQuery(theme.breakpoints.up('lg')) || props.showChapters}
+     anchor={matchesLG ? 'left' : 'right'}
+     open={matchesLG || props.showChapters}
      onClose={props.toggleChapters}
 
      ModalProps={{
@@ -106,29 +76,24 @@ const OpeningChapters = (props) => {
      classes={{
         paper: classes.drawerPaper,
      }}
-     variant={useMediaQuery(theme.breakpoints.only('lg')) ? "permanent" : "temporary"}
+     variant={matchesLG ? "permanent" : "temporary"}
    >
-      {useMediaQuery(theme.breakpoints.only('lg')) && <Toolbar/>}
-
+      {matchesLG && <Toolbar/>}
       <div className={classes.root}>
          <List>
             {props.currentOpening && props.currentOpening.chapters.map((chapter, i) =>
-              <ListItem container direction={"row"}
-                        component={Link}
-                        to={`/chess/openings/${props.currentOpening.slug}/${i + 1}`}
-                        className={props.currentChapter && props.currentChapter.url === chapter.url ? classes.active : null}
-                        key={chapter.url}
+              <ListItem
+                onClick={() => history.push(`/chess/openings/${props.currentOpening.slug}/${i + 1}`)}
+                className={`${props.currentChapter && props.currentChapter.url === chapter.url ? classes.active : null}`}
+                key={chapter.url}
               >
-                 <Grid component={"span"} container alignItems={"stretch"} justify={"center"}>{i + 1}</Grid>
-                 <Grid item component={Typography}>
-                    {`${chapter.title.replace('Chapter ', '').replace(/\d+\. /, '')}: ${chapter.description}`}
-                 </Grid>
+                 <ListItemIcon component={Typography}><b>{i + 1}</b></ListItemIcon>
+                 <ListItemText>{`${chapter.title.replace('Chapter ', '').replace(/\d+\. /, '')}: ${chapter.description}`}</ListItemText>
               </ListItem>
             )}
          </List>
       </div>
    </Drawer>
-
 }
 
 export default OpeningChapters

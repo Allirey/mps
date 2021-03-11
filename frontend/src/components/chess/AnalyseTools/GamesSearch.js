@@ -1,13 +1,13 @@
 import {memo} from "react";
-import {Button, Grid, TextField, Switch, Typography, withStyles, makeStyles} from "@material-ui/core";
+import {Button, Grid, TextField, Switch, Typography, withStyles, makeStyles, Container} from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
 
 const useStyles = makeStyles(theme => ({
    root: {
-      padding: "4px 10px",
-      // border: "1px solid #000"
+      padding: "10px",
+      margin: "16px",
+      width: "75vw",
    },
-
 }))
 
 const StyledSwitch = withStyles((theme) => ({
@@ -33,49 +33,51 @@ const StyledSwitch = withStyles((theme) => ({
 const SearchBox = props => {
    const classes = useStyles();
 
-   return (
-     <Grid className={classes.root} container direction={"row"} alignItems={"center"} justify={"space-evenly"}>
-        <Grid item>
-           <Typography component="div">
-              <Grid component="label" container alignItems="center" spacing={1}>
-                 <Grid item>w</Grid>
-                 <Grid item>
-                    <StyledSwitch
-                      disableRipple
-                      checked={props.color}
-                      onChange={e => props.onChangeColor(e.target.checked ? 'b' : 'w')}
-                      size={"small"}
-                    />
-                 </Grid>
-                 <Grid item>b</Grid>
-              </Grid>
-           </Typography>
-        </Grid>
-        <Grid item>
-           <TextField
-             style={{width: 110}}
-             autoFocus
-             margin={"normal"}
-             size={"small"}
-             label={""}
-             placeholder={"Player name"}
-             InputProps={{disableUnderline: true}}
-             value={props.name}
-             onChange={e => props.onChangeName(e.target.value)}
-             onKeyDown={e => e.keyCode === 13 && props.onSubmit()}
-             spellCheck={false}
-           />
-        </Grid>
-        <Grid item>
-           <Button
-             size={"small"}
-             disableRipple
-             style={{maxWidth: 45, minWidth: 45}}
-             onClick={props.onSubmit}
-           ><SearchIcon/></Button>
-        </Grid>
-     </Grid>
-   )
+   return <Container
+     component={Grid}
+     container
+     className={classes.root}
+     maxWidth={"xs"}
+     spacing={2}
+     direction={'column'}
+   >
+
+      <Grid item>
+         <TextField
+           autoFocus
+           fullWidth
+           label={""}
+           placeholder={"Player name"}
+           variant={"outlined"}
+           value={props.name}
+           onChange={e => props.onChangeName(e.target.value)}
+           onKeyDown={e =>  e.keyCode === 13 && props.onSubmit()}
+           spellCheck={false}
+         />
+      </Grid>
+
+      <Grid item component={Typography} container alignItems="center" spacing={1}>
+         <Grid item>white</Grid>
+         <Grid item>
+            <StyledSwitch
+              disableRipple
+              checked={props.color}
+              onChange={e => props.onChangeColor(e.target.checked ? 'b' : 'w')}
+              size={"small"}
+            />
+         </Grid>
+         <Grid item>black</Grid>
+      </Grid>
+
+      <Grid item>
+         <Button
+           variant={"outlined"}
+           fullWidth
+           disableRipple
+           onClick={props.onSubmit}
+         >search</Button>
+      </Grid>
+   </Container>
 }
 
 export default memo(SearchBox)

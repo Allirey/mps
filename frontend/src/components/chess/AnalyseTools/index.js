@@ -10,17 +10,14 @@ const useStyles = makeStyles(theme => ({
       [theme.breakpoints.only('lg')]: {
          minHeight: "544px",
          maxHeight: "544px",
-
       },
       [theme.breakpoints.only('md')]: {
          minHeight: "512px",
          maxHeight: "512px",
-
       },
       [theme.breakpoints.only('sm')]: {
          minHeight: "384px",
          maxHeight: "384px",
-
       },
       [theme.breakpoints.only('xs')]: {
          minHeight: "calc(18vh + 100px)",
@@ -29,18 +26,40 @@ const useStyles = makeStyles(theme => ({
    },
 }))
 
-const AnalyseTools = ({stores, showBook, setShowBook}) => {
+const AnalyseTools = ({stores, showBook, toggleBook, showSearch, closeSearch}) => {
    const classes = useStyles()
    const theme = useTheme()
+
+   const [name, setName] = useState('')
+   const [color, setColor] = useState('w')
+
    const {chessNotation: notation, chessOpeningExplorer: chess, openings} = stores
    let explorerBox = createRef()
+   let notationBox = createRef()
 
    useEffect(() => {
       if (explorerBox.current) explorerBox.current.scrollTop = 0
-   }, [chess.explorerData, openings.currentChapter])
+   }, [chess.explorerData])
 
-   return <Grid component={Paper} container className={classes.root} sm md lg xs direction={"column"}>
-      {(useMediaQuery(theme.breakpoints.up("sm")) || !showBook) && <Grid item xs sm md lg style={{overflowY: "auto"}}>
+   useEffect(() => {
+      if (notationBox.current) notationBox.current.scrollTop = 0
+   }, [openings.currentChapter])
+
+   const handleSearchSubmit = () => {
+      notation.toFirst()
+      closeSearch()
+      console.log(1)
+      !showBook && toggleBook()
+
+      chess.setName(name)
+      chess.setColor(color)
+      chess.getExplorerData()
+   }
+
+   return <Grid component={Paper} container className={classes.root} direction={"column"}>
+      {(useMediaQuery(theme.breakpoints.up("sm")) || !showBook) && <Grid item xs sm md lg
+                                                                         style={{overflowY: "auto"}}
+                                                                         ref={notationBox}>
          <Notation
            notation={notation.rootLine}
            currentNode={notation.currentNode}
@@ -57,12 +76,20 @@ const AnalyseTools = ({stores, showBook, setShowBook}) => {
            onMove={notation.makeSanMove}
            loading={chess.inProgress}
            games={chess.explorerData.games}
-           setShowBook={setShowBook}
            currentDB={chess.currentDB}
            changeDB={chess.setDatabase}
+           showBook={showBook}
+           toggleBook={toggleBook}
+           showSearch={showSearch}
+           closeSearch={closeSearch}
+
+           name={name}
+           color={color !== 'w'}
+           onSubmit={handleSearchSubmit}
+           onChangeColor={setColor}
+           onChangeName={setName}
          />
       </Grid>}
-
    </Grid>
 }
 

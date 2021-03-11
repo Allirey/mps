@@ -11,7 +11,6 @@ import GameMeta from "../../components/chess/GameMeta";
 // import Error404 from "../../errors/error404";
 
 const DATABASES = {UKR: 'ukr', MASTERS: "masters", LICHESS: 'lichess'}
-
 const useStyles = makeStyles(theme => ({
    root: {
       display: "flex",
@@ -19,10 +18,10 @@ const useStyles = makeStyles(theme => ({
    },
    content: {
       [theme.breakpoints.up('md')]: {
-         padding: theme.spacing(3),
+         padding: theme.spacing(2),
       },
       [theme.breakpoints.only('sm')]: {
-         paddingTop: theme.spacing(3),
+         paddingTop: theme.spacing(2),
          paddingLeft: theme.spacing(1),
       },
    },
@@ -41,8 +40,6 @@ const ChessAnalysis = (props) => {
    const [showBook, setShowBook] = useState(false);
    const [showSearch, setShowSearch] = useState(false);
    const [showChapters, setShowChapters] = useState(false);
-   const [name, setName] = useState('')
-   const [color, setColor] = useState('w')
    const [loading, setLoading] = useState(true)
    const [notFound, setNotFound] = useState(false)
 
@@ -50,7 +47,11 @@ const ChessAnalysis = (props) => {
    const {db, game_id, slug, chapter_id} = useParams()
 
    const toggleBook = () => setShowBook(!showBook)
-   const toggleSearch = () => setShowSearch(!showSearch)
+   const toggleSearch = () => {
+      !showSearch && !showBook && toggleBook()
+      setShowSearch(!showSearch)
+   }
+   const closeSearch = () => setShowSearch(false)
    const toggleChapters = () => setShowChapters(!showChapters)
 
    const keyHandler = e => {
@@ -97,76 +98,60 @@ const ChessAnalysis = (props) => {
       return () => setShowChapters(false)
    }, [slug, chapter_id])
 
-   const handleSearchSubmit = () => {
-      notation.toFirst()
-      setShowSearch(false)
-      setShowBook(true)
-
-      chess.setName(name)
-      chess.setColor(color)
-      chess.getExplorerData()
-   }
-
    // if (id && loading) return <div/>
    // if (id && notFound && !loading) return <Error404/>
 
-   return (
-     <div className={classes.root}>
-        <Helmet
-          title={"Chess analysis board"}
-        >
-           <meta name={"description"} content={"Search and analyse with 3 databases: Ukraine, Masters, Lichess."}/>
-           <meta property={"og:title"} content={"Chess analysis board"}/>
-           <meta property={"og:description"} content={"Search and analyse."}/>
-           <meta property={"og:type"} content={"website"}/>
-           <meta name="twitter:card" content="summary"/>
-           <meta name="twitter:title" content="Chess analysis board"/>
-           <meta name="twitter:description" content="Search and analyse with 3 databases: Ukraine, Masters, Lichess."/>
-           <meta name="twitter:site:id" content="741164490"/>
-        </Helmet>
+   return <div className={classes.root}>
+      <Helmet
+        title={"Chess analysis board"}
+      >
+         <meta name={"description"} content={"Search and analyse with 3 databases: Ukraine, Masters, Lichess."}/>
+         <meta property={"og:title"} content={"Chess analysis board"}/>
+         <meta property={"og:description"} content={"Search and analyse."}/>
+         <meta property={"og:type"} content={"website"}/>
+         <meta name="twitter:card" content="summary"/>
+         <meta name="twitter:title" content="Chess analysis board"/>
+         <meta name="twitter:description" content="Search and analyse with 3 databases: Ukraine, Masters, Lichess."/>
+         <meta name="twitter:site:id" content="741164490"/>
+      </Helmet>
 
-        {slug && <OpeningChapters
-          currentOpening={openings.currentOpening}
-          currentChapter={openings.currentChapter}
-          showChapters={showChapters}
-          toggleChapters={toggleChapters}
-        />}
+      {slug && <OpeningChapters
+        currentOpening={openings.currentOpening}
+        currentChapter={openings.currentChapter}
+        showChapters={showChapters}
+        toggleChapters={toggleChapters}
+      />}
 
-        <Grid container direction={"row"} className={classes.content}>
-           {!slug && <Grid item xs={12} lg><GameMeta/></Grid>}
-           <Grid item><ChessBoard/></Grid>
-           {/*{showSearch &&*/}
-           {/*<Grid item>*/}
-           {/*   <Fade in={showSearch}>*/}
-           {/*      <GamesSearch*/}
-           {/*        name={name}*/}
-           {/*        color={color !== 'w'}*/}
-           {/*        onSubmit={handleSearchSubmit}*/}
-           {/*        onChangeColor={setColor}*/}
-           {/*        onChangeName={setName}*/}
-           {/*      /></Fade>*/}
-           {/*</Grid>}*/}
+      <Grid container direction={"row"} className={classes.content}>
+         {!slug && <Grid item xs={12} lg><GameMeta/></Grid>}
+         <Grid item><ChessBoard/></Grid>
 
-           <Grid container direction={"column"} sm md lg item>
-              <Grid item className={classes.analyseTools}>
-                 <AnalyseTools showBook={showBook} setShowBook={setShowBook}/>
-              </Grid>
-              <Grid item className={classes.analyseControls}>
-                 <AnalyseControls
-                   onSearchClick={toggleSearch}
-                   onBookClick={toggleBook}
-                   onChaptersClick={toggleChapters}
-                   showBook={showBook}
-                   showSearch={showSearch}
-                   showChapters={showChapters && slug}
-                   showChaptersButton={slug}
-                 />
-              </Grid>
-           </Grid>
+         <Grid container direction={"column"} sm md lg item>
+            <Grid item className={classes.analyseTools}>
+               <AnalyseTools
+                 showBook={showBook}
+                 toggleBook={toggleBook}
+                 showSearch={showSearch}
+                 // toggleSearch={toggleSearch}
+                 closeSearch={closeSearch}
+               />
+            </Grid>
 
-        </Grid>
-     </div>
-   )
+            <Grid item className={classes.analyseControls}>
+               <AnalyseControls
+                 onSearchClick={toggleSearch}
+                 onBookClick={toggleBook}
+                 onChaptersClick={toggleChapters}
+                 showBook={showBook}
+                 showSearch={showSearch}
+                 showChapters={showChapters && slug}
+                 showChaptersButton={slug}
+               />
+            </Grid>
+         </Grid>
+
+      </Grid>
+   </div>
 }
 
 export default withStore(ChessAnalysis)
