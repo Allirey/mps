@@ -3,7 +3,18 @@ import {makeAutoObservable} from 'mobx';
 class AuthStore {
    constructor(rootStore) {
       this.rootStore = rootStore;
+      this.theme = this.rootStore.storage.getItem('theme') || 'dark'
       makeAutoObservable(this)
+   }
+
+   toggleTheme = () => {
+      if (this.theme === 'dark') {
+         this.theme = 'light'
+         this.rootStore.storage.setItem('theme', 'light')
+      } else {
+         this.theme = 'dark'
+         this.rootStore.storage.setItem('theme', 'dark')
+      }
    }
 
    inProgress = false;

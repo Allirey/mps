@@ -3,21 +3,18 @@ import AccountCircleRoundedIcon from '@material-ui/icons/AccountCircleRounded';
 import {Link} from 'react-router-dom';
 import {useEffect, useRef, useState} from "react";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
         "& a": {
             textDecoration: "none",
-            color: "black"
+            color: theme.palette.text.primary
         }
     },
     paper: {
         marginRight: theme.spacing(2),
     },
-    icon: {
-        color: "grey",
-        "&:hover": {color: "black"}
-    }
+    icon: {}
 }));
 
 export default function MenuListComposition(props) {
@@ -29,8 +26,8 @@ export default function MenuListComposition(props) {
         setOpen((prevOpen) => !prevOpen);
     };
 
-    const handleClose = (event) => {
-        if (anchorRef.current && anchorRef.current.contains(event.target)) {
+    const handleClose = e => {
+        if (anchorRef.current && anchorRef.current.contains(e.target)) {
             return;
         }
         setOpen(false);
@@ -81,10 +78,8 @@ export default function MenuListComposition(props) {
                             <Paper>
                                 <ClickAwayListener onClickAway={handleClose}>
                                     <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                                        <Link to={`/users/${props.username}`}><MenuItem disableRipple
-                                                                                        onClick={handleClose}>{props.username}</MenuItem></Link>
-                                        <Link to={"/settings"}><MenuItem disableRipple
-                                                                         onClick={handleClose}>Settings</MenuItem></Link>
+                                        <MenuItem disableRipple component={Link} to={`/users/${props.username}`} onClick={handleClose}>{props.username}</MenuItem>
+                                        <MenuItem disableRipple component={Link} to={"/settings"} onClick={handleClose}>Settings</MenuItem>
                                         <MenuItem disableRipple onClick={props.logout}>Sign out</MenuItem>
                                     </MenuList>
                                 </ClickAwayListener>

@@ -14,12 +14,12 @@ const useStyles = makeStyles((theme) => ({
       position: "relative",
       fontSize: "0.9em",
       userSelect: "none",
-      '&:hover table > tbody > tr:hover': {backgroundColor: '#fff9d6'},
+      '&:hover table > tbody > tr:hover': {backgroundColor: `${theme.palette.action.selected}`},
    },
    movesTable: {
       // "& $td": {padding : 0},
-      '& tbody > tr:nth-child(even)': {backgroundColor: '#f7f6f4'},
-      "& $th": {backgroundColor: "#d5f3e3"},
+      '& tbody > tr:nth-child(even)': {backgroundColor: `${theme.palette.background.default}`},
+      "& $th": {backgroundColor: `${theme.palette.secondary.light}`},
       "& tbody > tr > td:first-child": {
          lineHeight: "30px",
          paddingLeft: "7px",
@@ -36,10 +36,9 @@ const useStyles = makeStyles((theme) => ({
    gamesTable: {
       borderBottom: "1px solid #ccc",
       "& tbody > tr": {cursor: "pointer"},
-      '& tbody > tr:nth-child(even)': {backgroundColor: '#f7f6f4'},
+      '& tbody > tr:nth-child(even)': {backgroundColor: `${theme.palette.background.default}`},
       "& thead > tr > th": {
-         backgroundColor: "#ebebeb",
-         color: "black",
+         backgroundColor: `${theme.palette.secondary.light}`,
          border: "none",
       },
       "& tbody > tr > td": {
@@ -86,7 +85,8 @@ const useStyles = makeStyles((theme) => ({
       "& $span": {
          height: "16px",
          // lineHeight: "14px",
-         border: '0 solid #d9d9d9',
+         // border: '0 solid #d9d9d9',
+         border: `0 solid ${theme.palette.divider}`,
          borderWidth: '1px 0',
          verticalAlign: "middle",
          padding: "1px 0",
@@ -95,10 +95,10 @@ const useStyles = makeStyles((theme) => ({
          fontSize: "0.9em",
       }
    },
-   settings: {
+   settingsBtn: {
       position: "absolute",
       top: 0,
-      right: 0,
+      right: 4,
       cursor: "pointer",
       display: "block",
       fontSize: "1.2em",
@@ -110,19 +110,20 @@ const useStyles = makeStyles((theme) => ({
          opacity: 1
       }
    },
+   settings:{
+      backgroundColor: `${theme.palette.secondary.light}`,
+   },
    active: {
-      backgroundColor: '#629924',
-      color: "white",
+      backgroundColor: `${theme.palette.primary.light}`,
       "&:hover": {
-         backgroundColor: '#629924',
+         backgroundColor: `${theme.palette.primary.main}`,
       },
    }
 }));
 
-const StyledTableCell = withStyles((theme) => ({
+const StyledTableCell = withStyles(theme => ({
    head: {
       backgroundColor: "#ebebeb",
-      color: "black",
       border: "none",
       textAlign: "center",
       padding: "0px 3px",
@@ -177,13 +178,13 @@ const ExplorerBox = props => {
    }
 
    return <div className={classes.root}>
-                <span onClick={() => setShowSettings(!showSettings)} className={classes.settings}>
+                <span onClick={() => setShowSettings(!showSettings)} className={classes.settingsBtn}>
          {!showSettings ? <SettingsIcon/> : <CloseIcon/>}
       </span>
 
       {showSettings ?
         <Grid container direction={"column"}>
-           <div style={{backgroundColor: '#d5f3e3'}}>Opening explorer</div>
+           <div className={classes.settings}>Opening explorer</div>
            <br/>
            <div><b>Database</b></div>
            <Grid item container direction={'row'} justify={"center"}>

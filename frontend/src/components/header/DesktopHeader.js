@@ -2,59 +2,48 @@ import {AppBar, Button, Container, makeStyles, Toolbar, Box} from "@material-ui/
 import {Link} from "react-router-dom";
 import Menu from '../Menu';
 import {Skeleton} from '@material-ui/lab';
+import Brightness7Icon from '@material-ui/icons/Brightness7';
+import Brightness4Icon from '@material-ui/icons/Brightness4';
 
 const useStyles = makeStyles(theme => ({
    root: {
       position: 'relative',
       zIndex: theme.zIndex.drawer + 1,
-      color: "black",
-      background: "white",
       flexGrow: 1,
-      "& div": {
-         display: "flex",
-      },
-      "& div > button":
-        {
-           maxWidth: "200px",
-           backgroundColor: "white",
-           "&:hover": {
-              backgroundColor: "white",
-           }
-        },
-      "& div > button > span > a":
-        {
-           color: "grey",
-           textDecoration: "none",
-           "&:hover": {
-              color: "black"
-           }
-        },
-      "& $button": {
+      "& div": {display: "flex",},
+      "& $a": {
          textTransform: "none",
-      }
+         textDecoration: "none",
+      },
+      "& div > button": {maxWidth: "200px",},
+      "& $button": {textTransform: "none",}
    },
    skeleton: {
       width: 25, height: 25, marginRight: 19
    }
 }));
 
-export default function (props) {
+const DesktopHeader = props => {
    const classes = useStyles();
 
-   return (
-     <AppBar position="static" className={classes.root}>
-        <Toolbar component={Container} variant={"dense"}>
-           <Button disableRipple> <Link to="/">glitcher.org</Link> </Button>
-           <Button disableRipple> <Link to="/chess/analysis">Chess db</Link> </Button>
-           <Button disableRipple> <Link to="/chess/openings">Chess openings</Link> </Button>
-           <Button disableRipple> <Link to="/blog">Blog</Link> </Button>
-           <Button disableRipple> <Link to="/about">About</Link> </Button>
-           <Box style={{flexGrow: 1}}/>
-           {props.isLoading ? <Skeleton variant={"circle"} className={classes.skeleton}/> :
-             !props.currentUser ? <Button disableRipple><Link to="/login">Sign in</Link></Button>
-               : <Menu logout={props.logout} username={props.currentUser.username}/>
-           }
-        </Toolbar>
-     </AppBar>
-   )
+   return <AppBar position="static" className={classes.root}>
+      <Toolbar component={Container} variant={"dense"}>
+         <Button disableRipple component={Link} to="/"> glitcher.org</Button>
+         <Button disableRipple component={Link} to="/chess/analysis"> Chess db </Button>
+         <Button disableRipple component={Link} to="/chess/openings"> Chess openings </Button>
+         <Button disableRipple component={Link} to="/blog"> Blog </Button>
+         <Button disableRipple component={Link} to="/about"> About </Button>
+         <Box style={{flexGrow: 1}}/>
+
+         <Button size={"small"} disableRipple onClick={props.toggleTheme}>{props.theme === 'dark' ? <Brightness7Icon/> :
+           <Brightness4Icon/>}</Button>
+
+         {props.isLoading ? <Skeleton variant={"circle"} className={classes.skeleton}/> :
+           !props.currentUser ? <Button disableRipple component={Link} to="/login">Sign in</Button>
+             : <Menu logout={props.logout} username={props.currentUser.username}/>
+         }
+      </Toolbar>
+   </AppBar>
 }
+
+export default DesktopHeader

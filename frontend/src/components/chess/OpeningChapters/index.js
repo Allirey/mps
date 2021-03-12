@@ -21,17 +21,19 @@ const useStyles = makeStyles(theme => ({
       userSelect: "none",
       cursor: "pointer",
       "& $li": {
-         borderBottom: "1px solid #e3e3e3",
-         color: "black",
-         "&:hover": {backgroundColor: "#f1f1f1",},
+         borderBottom: `1px solid ${theme.palette.divider}`,
+         "&:hover": {backgroundColor: `${theme.palette.action.hover}`,},
          padding: "3px 8px 3px 16px",
       },
       "& $span": {fontWeight: 'bold', fontSize: "90%",},
    },
    active: {
-      backgroundColor: '#419fd9 !important',
-      "& $span": {color: "white !important"},
-      "&:hover": {backgroundColor: '#419fd9', color: "white"},
+      backgroundColor: `${theme.palette.action.selected} !important`,
+      "& $span": {color: `${theme.palette.text.primary} !important`},
+      "&:hover": {
+         backgroundColor: `${theme.palette.action.active}`,
+         color: `${theme.palette.action.selected}`
+      },
    },
    drawer: {
       maxWidth: drawerWidth,
@@ -73,7 +75,7 @@ const OpeningChapters = (props) => {
                 className={`${props.currentChapter && props.currentChapter.url === chapter.url ? classes.active : null}`}
                 key={chapter.url}
               >
-                 <ListItemIcon component={Typography}><span><b>{i + 1}</b></span></ListItemIcon>
+                 <ListItemIcon><span><b>{i + 1}</b></span></ListItemIcon>
                  <ListItemText>{`${chapter.title.replace('Chapter ', '').replace(/\d+\. /, '')}: ${chapter.description}`}</ListItemText>
               </ListItem>
             )}

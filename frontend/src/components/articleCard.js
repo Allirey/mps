@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
       },
       "& $a": {
          textDecoration:"none",
-         color: "black"
+         color: theme.palette.text.primary
       },
    },
    clickArea:{

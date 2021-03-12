@@ -5,24 +5,36 @@ import withStore from "../../hocs/withStore";
 import {useHistory} from 'react-router-dom';
 
 function Header(props) {
-    const store = props.stores.authStore;
-    const history = useHistory()
+   const store = props.stores.authStore;
+   const history = useHistory()
 
-    const logout = () => {
-        store.logout().then(()=>{
-            history.push("/login")
-        })
-    }
-    return (
-        <>
-            <Box display={{xs: "none", md: "block"}}>
-                <DesktopHeader currentUser={store.currentUser} isLoading={props.isLoading} logout={logout}/>
-            </Box>
-            <Box display={{xs: "block", md: "none"}}>
-                <MobileHeader currentUser={store.currentUser} isLoading={props.isLoading} logout={logout}/>
-            </Box>
-        </>
-    )
+   const logout = () => {
+      store.logout().then(() => {
+         history.push("/login")
+      })
+   }
+
+   return <>
+      <Box display={{xs: "none", md: "block"}}>
+         <DesktopHeader
+           currentUser={store.currentUser}
+           isLoading={props.isLoading}
+           logout={logout}
+           theme={store.theme}
+           toggleTheme={store.toggleTheme}
+         />
+      </Box>
+      <Box display={{xs: "block", md: "none"}}>
+         <MobileHeader
+           currentUser={store.currentUser}
+           isLoading={props.isLoading}
+           logout={logout}
+           theme={store.theme}
+           toggleTheme={store.toggleTheme}
+         />
+      </Box>
+   </>
+
 }
 
 export default withStore(Header)

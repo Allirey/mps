@@ -15,7 +15,6 @@ const useStyles = makeStyles(theme => ({
             backgroundColor: "cyan",
          },
       },
-      backgroundColor: "#f5f5f5",
       [theme.breakpoints.down("xs")]: {
          margin: theme.spacing(0),
          marginTop: theme.spacing(1),
@@ -70,7 +69,6 @@ function UserProfile(props) {
                  {currentUser.web_site.split("//").reverse()[0]}</Link>
               </Typography>
            </Container>
-
         </Fade>
       )
 }

@@ -9,13 +9,15 @@ import {Search, Home, Info, ChromeReaderMode} from '@material-ui/icons';
 import Menu from '../Menu';
 import {Skeleton} from '@material-ui/lab';
 import {useState} from "react";
+import Brightness7Icon from "@material-ui/icons/Brightness7";
+import Brightness4Icon from "@material-ui/icons/Brightness4";
 
 const useStyles = makeStyles(theme => ({
    root: {},
    appBar: {
       zIndex: theme.zIndex.drawer + 1,
       color: "black",
-      background: "#ffffff",
+      background: theme.palette.secondary.dark,
       flexGrow: 1,
       position: "relative",
    },
@@ -94,13 +96,16 @@ export default function SwipeableTemporaryDrawer(props) {
               <IconButton
                 onClick={toggleDrawer('left', true)}
                 aria-label="menu"
-                style={{marginRight: 10, color: "grey"}}
+                style={{marginRight: 10}}
               ><MenuIcon/></IconButton>
 
               {/*<Typography variant="h6" style={{flexGrow: 1}}>*/}
               {/*    Glitcher*/}
               {/*</Typography>*/}
               <Box flexGrow={1}/>
+
+                       <Button size={"small"} disableRipple onClick={props.toggleTheme}>{props.theme === 'dark' ? <Brightness7Icon/> :
+           <Brightness4Icon/>}</Button>
 
               {props.isLoading ? <Skeleton variant={"circle"} width={25} height={25} style={{marginRight: 19}}/> :
 

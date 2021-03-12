@@ -7,9 +7,9 @@ const useStyles = makeStyles(theme => ({
       marginTop: theme.spacing(3),
       paddingBottom: theme.spacing(3),
       "& $a": {
-         background: "linear-gradient(0deg,#fce62e 35%,transparent 0)",
-         textDecoration: "none",
-         color: 'black',
+      //    background: `linear-gradient(0deg, ${theme.palette.warning.light} 35%,transparent 0)`,
+      //    textDecoration: "none",
+         color: theme.palette.text.primary,
       }
    },
 }))

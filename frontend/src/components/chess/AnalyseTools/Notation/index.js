@@ -1,35 +1,9 @@
 import {Fragment, memo, useEffect, useState} from "react";
-import {
-   makeStyles,
-   Menu,
-   MenuItem,
-   Typography,
-   useMediaQuery,
-   ThemeProvider,
-   createMuiTheme, Paper
-} from "@material-ui/core";
-
+import {makeStyles, Menu, MenuItem, Typography, useMediaQuery, useTheme} from "@material-ui/core";
 import Move from './Move'
 
 const initialState = {mouseX: null, mouseY: null,};
 const ACTIONS = {PROMOTE: 'promote', DELETE_LINE: 'deleteLine', DELETE_NEXT: 'deleteNext'}
-
-const theme = createMuiTheme({
-   typography: {
-      fontFamily: [
-         '-apple-system',
-         'BlinkMacSystemFont',
-         '"Segoe UI"',
-         'Roboto',
-         '"Helvetica Neue"',
-         'Arial',
-         'sans-serif',
-         '"Apple Color Emoji"',
-         '"Segoe UI Emoji"',
-         '"Segoe UI Symbol"',
-      ].join(','),
-   },
-});
 
 const useStyles = makeStyles({
    root: {
@@ -40,12 +14,10 @@ const useStyles = makeStyles({
       cursor: "default",
       padding: "7px 3px 7px 7px",
       lineHeight: "1.4",
-      // position: "relative",
       "& blockquote": {
          borderLeft: "2px solid #ccc",
          paddingLeft: "15px",
          paddingRight: "15px",
-
          marginRight: 5,
          marginLeft: "0px",
          marginTop: 0,
@@ -56,6 +28,7 @@ const useStyles = makeStyles({
 
 function Notation(props) {
    const classes = useStyles();
+   const theme = useTheme()
    const [menuState, setMenuState] = useState(initialState);
    const [contextMove, setContextMove] = useState(null);
    const matchesOnlyXS = useMediaQuery(theme.breakpoints.only('xs'))
@@ -135,33 +108,32 @@ function Notation(props) {
       )
    }
 
-   return (
-     <ThemeProvider theme={theme}>
-        <div className={classes.root}>
-           {nodes.length > 1 ? renderTree(nodes) :
-             <Typography variant="h4" color="textSecondary"
-                         style={{opacity: 0.2}}>{!matchesOnlyXS && "Notation"}</Typography>}
-        </div>
-        <Menu
-          transitionDuration={0}
-          className={classes.menu}
-          keepMounted
-          open={menuState.mouseY !== null}
-          onClose={handleClose}
-          anchorReference="anchorPosition"
-          anchorPosition={
-             menuState.mouseY !== null && menuState.mouseX !== null
-               ? {top: menuState.mouseY, left: menuState.mouseX}
-               : undefined
-          }
-        >
-           <MenuItem tabIndex={0} disableRipple onClick={() => handleClose(ACTIONS.PROMOTE)}>promote line</MenuItem>
-           <MenuItem tabIndex={0} disableRipple onClick={() => handleClose(ACTIONS.DELETE_NEXT)}>delete next
-              moves</MenuItem>
-           <MenuItem tabIndex={0} disableRipple onClick={() => handleClose(ACTIONS.DELETE_LINE)}>delete line</MenuItem>
-        </Menu>
-     </ThemeProvider>
-   )
+   return <>
+      <div className={classes.root}>
+         {nodes.length > 1 ? renderTree(nodes) :
+           <Typography variant="h4" color="textSecondary"
+                       style={{opacity: 0.2}}>{!matchesOnlyXS && "Notation"}</Typography>}
+      </div>
+      <Menu
+        transitionDuration={0}
+        className={classes.menu}
+        keepMounted
+        open={menuState.mouseY !== null}
+        onClose={handleClose}
+        anchorReference="anchorPosition"
+        anchorPosition={
+           menuState.mouseY !== null && menuState.mouseX !== null
+             ? {top: menuState.mouseY, left: menuState.mouseX}
+             : undefined
+        }
+      >
+         <MenuItem tabIndex={0} disableRipple onClick={() => handleClose(ACTIONS.PROMOTE)}>promote line</MenuItem>
+         <MenuItem tabIndex={0} disableRipple onClick={() => handleClose(ACTIONS.DELETE_NEXT)}>delete next
+            moves</MenuItem>
+         <MenuItem tabIndex={0} disableRipple onClick={() => handleClose(ACTIONS.DELETE_LINE)}>delete line</MenuItem>
+      </Menu>
+   </>
+
 }
 
 export default memo(Notation)

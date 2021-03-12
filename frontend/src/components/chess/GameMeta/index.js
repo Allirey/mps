@@ -5,7 +5,7 @@ const useStyles = makeStyles((theme) => ({
    root: {
       userSelect: "none",
       padding: 8,
-      backgroundColor: "#cdeefa",
+      // backgroundColor: "#cdeefa",
       // height: "120px",
       "& $h6": {
          fontSize: "1em",

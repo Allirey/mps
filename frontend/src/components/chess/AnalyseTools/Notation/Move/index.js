@@ -7,7 +7,7 @@ const NAG_TAGS = {
    '$45': '=/∞', '$46': '=/∞', '$132': '⇆', '$139': '⨁', '$140': '∆', '$146': 'N',
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme=>({
    move: {
       cursor: "pointer",
       whiteSpace: 'nowrap',
@@ -16,7 +16,7 @@ const useStyles = makeStyles({
       // fontSize: "0.9em",
       display: "inline-block",
       "&:hover": {
-         backgroundColor: "#d1e4f6",
+         backgroundColor: `${theme.palette.action.hover}`,
       },
       fontWeight: "bold",
    },
@@ -26,10 +26,9 @@ const useStyles = makeStyles({
       paddingRight: "0.2em",
    },
    active: {
-      backgroundColor: "#d1e4f6",
-      "& $span": {backgroundColor: "#d1e4f6",}
+      backgroundColor: `${theme.palette.action.selected} !important`,
    },
-   mobileMove: {fontSize: "0.8em",},
+   mobileMove: {fontSize: "0.9em",},
    // move glyphs color
    brilliant: {color: "#dd9c38"}, // #e69f00
    good: {color: "#33b333"}, // 5A8D03
@@ -37,7 +36,7 @@ const useStyles = makeStyles({
    inaccuracy: {color: "#e28aa0"},
    mistake: {color: "#ee5f5b"},
    blunder: {color: "#ff0000"},
-});
+}));
 
 const Move = ({node, isActive, refs, index, jumpTo, onMenuClick}) => {
    const classes = useStyles();

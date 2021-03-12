@@ -9,7 +9,7 @@ import {
    CardActionArea,
    Typography,
    CardContent,
-   Fab, Chip, Fade, CardMedia, Divider, Button, MenuItem, Menu, ListItemIcon, ListItemText, CardHeader
+   Fab, Chip, Fade, CardMedia, Divider, Button, MenuItem, Menu, ListItemIcon, ListItemText, CardHeader, useTheme
 } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import {Helmet} from "react-helmet";
@@ -26,10 +26,9 @@ const useStyles = makeStyles(theme => ({
       // marginTop: theme.spacing(1),
    },
    card: {
-      backgroundColor: "#e6f6fd",
       "& $a": {
          textDecoration: "none",
-         color: "black",
+         color: theme.palette.text.primary,
          "&:hover": {
             textDecoration: "none",
          }
@@ -39,6 +38,12 @@ const useStyles = makeStyles(theme => ({
    filter: {
       margin: "10px 2px",
    },
+   // filterColorActive: {
+   //    // color: "orange",
+   //    backgroundColor: theme.palette.primary.main,
+   // },
+   // filterMoveActive: {
+   // },
    createBtn: {
       position: "fixed",
       bottom: 50,
@@ -51,13 +56,24 @@ const useStyles = makeStyles(theme => ({
            color: 'blue',
         },
       zIndex: 100,
-   }
+   },
+   chipW: {
+      backgroundColor: 'white',
+      color: '#000',
+      margin: "2px",
+   },
+   chipB: {
+      backgroundColor: '#333',
+      color: 'white',
+      margin: "2px",
+   },
 }));
 
 const COLOR = {ANY: 'Any', WHITE: 'White', BLACK: 'Black'}
 
 const Openings = (props) => {
    const classes = useStyles()
+   const theme = useTheme()
    const [colorFilter, setColorFilter] = useState(COLOR.ANY)
    const [filter, setFilter] = useState('')
 
@@ -117,10 +133,10 @@ const Openings = (props) => {
                  <Chip
                    disableRipple
                    variant={"outlined"}
-                   style={{backgroundColor: value === colorFilter ? 'lightblue' : 'white'}}
+                   style={{backgroundColor: value === colorFilter ? theme.palette.primary.light : null}}
                    key={value}
                    label={value}
-                   className={classes.filter}
+                   className={`${classes.filter}`}
                    onClick={() => setColorFilter(value)}
                  />
                )}
@@ -139,7 +155,7 @@ const Openings = (props) => {
                   <MenuItem disableRipple target={'noopener'} component={Link} to={'/blog/faq-chess-openings'}
                             onClick={handleClose}>
                      <ListItemIcon>
-                        <LiveHelpIcon style={{color: "black"}}/>
+                        <LiveHelpIcon />
                      </ListItemIcon>
                      <ListItemText>
                         FAQ
@@ -148,7 +164,7 @@ const Openings = (props) => {
                   <MenuItem target={'noopener'} component={Link} to={'//t.me/glitchat'} disableRipple
                             onClick={handleClose}>
                      <ListItemIcon>
-                        <FeedbackIcon style={{color: "black"}}/>
+                        <FeedbackIcon />
                      </ListItemIcon>
                      <ListItemText>
                         Feedback
@@ -157,7 +173,7 @@ const Openings = (props) => {
                   <MenuItem disableRipple target={'noopener'} component={Link}
                             to={'/blog/contribute-to-chess-opening-theory'} onClick={handleClose}>
                      <ListItemIcon>
-                        <FavoriteIcon color={"secondary"}/>
+                        <FavoriteIcon/>
                      </ListItemIcon>
                      <ListItemText>
                         Contribute
@@ -174,7 +190,7 @@ const Openings = (props) => {
                  className={classes.filter}
                  variant={"outlined"}
                  label={el}
-                 style={{backgroundColor: el === filter ? 'lightgreen' : 'white'}}
+                 style={{backgroundColor: el === filter ? theme.palette.secondary.light : null}}
                  onClick={() => setFilter(filter === el ? '' : el)}
                />)}
             </Grid>
@@ -203,11 +219,7 @@ const Openings = (props) => {
                                             component="p">{opening.description}</Typography>
                                 {opening.tags.map((tag, i) => <Chip
                                   key={i + '' + tag}
-                                  style={{
-                                     backgroundColor: opening.color === 'w' ? 'white' : '#333',
-                                     color: opening.color === 'w' ? '#000' : 'white',
-                                     margin: "2px",
-                                  }}
+                                  className={opening.color === 'w'? classes.chipW: classes.chipB}
                                   label={tag.name}
                                   size={"small"}
                                   variant={"outlined"}
