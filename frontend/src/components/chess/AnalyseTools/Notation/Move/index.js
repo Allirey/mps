@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme=>({
    active: {
       backgroundColor: `${theme.palette.action.selected} !important`,
    },
-   mobileMove: {fontSize: "0.9em",},
+   mobileMove: {fontSize: "1em",},
    // move glyphs color
    brilliant: {color: "#dd9c38"}, // #e69f00
    good: {color: "#33b333"}, // 5A8D03

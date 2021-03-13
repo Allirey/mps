@@ -10,7 +10,7 @@ import {
    Typography,
    MenuItem,
    Select,
-   FormControl
+   FormControl, Paper
 } from "@material-ui/core";
 import DoneIcon from "@material-ui/icons/Done";
 
@@ -25,10 +25,6 @@ const useStyles = makeStyles(theme => ({
    submit: {
       marginTop: theme.spacing(2),
       marginBottom: theme.spacing(5),
-      backgroundColor: "lightgreen",
-      "&:hover": {
-         backgroundColor: "lightgreen",
-      }
    },
    browseBtn: {
       textTransform: "none",
@@ -38,7 +34,6 @@ const useStyles = makeStyles(theme => ({
       }
    },
    uploadContainer: {
-      backgroundColor: "#c8dadf",
       height: 100,
       marginBottom: 8,
       outline: "2px dashed #92b0b3",
@@ -219,7 +214,7 @@ const CreateOpening = (props) => {
            </Select>
         </FormControl>
 
-        <Grid ref={imageRef} className={classes.uploadContainer} item container justify={"center"}
+        <Grid component={Paper} ref={imageRef} className={classes.uploadContainer} item container justify={"center"}
               alignItems={"center"}>
 
            <input
@@ -239,7 +234,7 @@ const CreateOpening = (props) => {
 
         </Grid>
 
-        <Grid ref={pgnRef} className={classes.uploadContainer} item container justify={"center"} alignItems={"center"}>
+        <Grid component={Paper} ref={pgnRef} className={classes.uploadContainer} item container justify={"center"} alignItems={"center"}>
            <input
              accept=".pgn"
              name="file"

@@ -1,16 +1,15 @@
-import {makeStyles} from '@material-ui/core/styles';
+import {useState} from "react";
+import {Link} from "react-router-dom";
 import {
    SwipeableDrawer, List, Divider, ListItem, ListItemIcon, ListItemText,
-   IconButton, AppBar, Toolbar, Box, Button
+   IconButton, AppBar, Toolbar, Box, Button, makeStyles
 } from "@material-ui/core";
-import MenuIcon from '@material-ui/icons/Menu';
-import {Link} from "react-router-dom";
 import {Search, Home, Info, ChromeReaderMode} from '@material-ui/icons';
-import Menu from '../Menu';
 import {Skeleton} from '@material-ui/lab';
-import {useState} from "react";
+import MenuIcon from '@material-ui/icons/Menu';
 import Brightness7Icon from "@material-ui/icons/Brightness7";
 import Brightness4Icon from "@material-ui/icons/Brightness4";
+import Menu from './Menu';
 
 const useStyles = makeStyles(theme => ({
    root: {},
@@ -104,19 +103,14 @@ export default function SwipeableTemporaryDrawer(props) {
               {/*</Typography>*/}
               <Box flexGrow={1}/>
 
-                       <Button size={"small"} disableRipple onClick={props.toggleTheme}>{props.theme === 'dark' ? <Brightness7Icon/> :
-           <Brightness4Icon/>}</Button>
+              <Button size={"small"} disableRipple onClick={props.toggleTheme}>{props.theme === 'dark' ?
+                <Brightness7Icon/> :
+                <Brightness4Icon/>}
+              </Button>
 
               {props.isLoading ? <Skeleton variant={"circle"} width={25} height={25} style={{marginRight: 19}}/> :
-
                 !props.currentUser ?
-                  <Button disableRipple style={{maxWidth: "200px", backgroundColor: "#FFffff"}}>
-                     <Link to="/login"
-                           style={{
-                              textDecoration: 'none',
-                              color: "grey"
-                           }}>Sign
-                        in</Link></Button> :
+                  <Button disableRipple component={Link} to="/login">Sign in</Button> :
                   <Menu logout={props.logout} username={props.currentUser.username}/>}
            </Toolbar>
         </AppBar>

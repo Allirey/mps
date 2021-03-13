@@ -1,6 +1,6 @@
 import {AppBar, Button, Container, makeStyles, Toolbar, Box} from "@material-ui/core";
 import {Link} from "react-router-dom";
-import Menu from '../Menu';
+import Menu from './Menu';
 import {Skeleton} from '@material-ui/lab';
 import Brightness7Icon from '@material-ui/icons/Brightness7';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
